@@ -5,6 +5,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import { postNewUser } from '../../utils/api';
 
 export default function CreateAccount() {
     const [name, setName] = useState("");
@@ -26,6 +27,8 @@ export default function CreateAccount() {
         try {
           setError("")
           const res = await createUserWithEmailAndPassword(auth, email, password)
+
+          const resNewUser = await postNewUser(name, 30, email, avator )
     
           Alert.alert("You've successfully registered!")
         }
