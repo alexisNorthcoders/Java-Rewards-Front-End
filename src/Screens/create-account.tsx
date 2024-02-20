@@ -28,11 +28,15 @@ export default function CreateAccount() {
           const res = await createUserWithEmailAndPassword(auth, email, password)
 
           const resNewUser = await postNewUser(name, 30, email, avatar )
+
           setName("")
           setEmail("")
           setPassword("")
           setAvatarUrl("")
-          Alert.alert("You've successfully registered!")
+
+          if(res && resNewUser) {
+            Alert.alert("You've successfully registered!")
+          }
         }
         catch (err: any) {
           console.log(err)
@@ -46,6 +50,7 @@ export default function CreateAccount() {
     return(
         <View style={styles.form}>
             <Text>Create An Account</Text>
+            {error && <View style={styles.error}><Text>{error}</Text></View>}
             <View>
                 <TextInput
             value={name}
@@ -132,5 +137,10 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         fontSize: 16,
         textAlign: "center"
+      },
+      error: {
+        marginTop: 10,
+        padding: 10,
+        color: '#fff',
       },
 })
