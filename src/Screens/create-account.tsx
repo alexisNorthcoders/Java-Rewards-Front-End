@@ -1,9 +1,8 @@
-import { Alert, View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { Alert, View, Text, TextInput, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useState } from 'react';
 import { auth } from '../config/firebase';
 import {
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
 } from "firebase/auth";
 import { postNewUser } from '../../utils/api';
 
@@ -11,7 +10,7 @@ export default function CreateAccount() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [avator, setAvatorUrl] = useState("");
+    const [avatar, setAvatarUrl] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("")
 
@@ -28,8 +27,11 @@ export default function CreateAccount() {
           setError("")
           const res = await createUserWithEmailAndPassword(auth, email, password)
 
-          const resNewUser = await postNewUser(name, 30, email, avator )
-    
+          const resNewUser = await postNewUser(name, 30, email, avatar )
+          setName("")
+          setEmail("")
+          setPassword("")
+          setAvatarUrl("")
           Alert.alert("You've successfully registered!")
         }
         catch (err: any) {
@@ -71,20 +73,24 @@ export default function CreateAccount() {
                 setPassword(text);
             }}/>
             <TextInput
-            value={avator}
+            value={avatar}
             style={styles.input}
-            placeholder="Avator"
+            placeholder="Avatar URL"
             autoCapitalize="none"
             onChangeText={(text) => {
-                setAvatorUrl(text);
+                setAvatarUrl(text);
             }}/>
-            <TouchableOpacity
-              onPress={signUp}
-              style={[styles.button, styles.buttonOutline]}
-            >
-              <Text style={styles.buttonOutlineText}>Register</Text>
-            </TouchableOpacity>
+            </View>
 
+            <View style={styles.buttonContainer}>
+            {loading ? (
+          <ActivityIndicator size="large" color="0000ff" />
+        ) : ( <TouchableOpacity
+                onPress={signUp}
+                style={[styles.button, styles.buttonOutline]}
+              >
+                <Text style={styles.buttonOutlineText}>Register</Text>
+              </TouchableOpacity> )}
             </View>
         </View>
     )
@@ -104,6 +110,10 @@ const styles = StyleSheet.create({
         marginTop: 5,
         width: 300
       },
+      buttonContainer: {
+        width: "60%",
+        marginTop: 40,
+      },
       button: {
         backgroundColor: "#bf6240",
         width: '100%',
@@ -121,5 +131,6 @@ const styles = StyleSheet.create({
         color: "#bf6240",
         fontWeight: '700',
         fontSize: 16,
+        textAlign: "center"
       },
 })
