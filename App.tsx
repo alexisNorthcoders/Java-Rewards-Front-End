@@ -8,12 +8,13 @@ import {
 } from 'react-native-safe-area-context';
 import Constants from 'expo-constants';
 import BusinessProfile from './src/Screens/business-profile';
+import CreateAccount from './src/Screens/create-account';
 
 export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar />
-      <BusinessProfile/>
+      <CreateAccount/>
     </SafeAreaView>
   );
 }
