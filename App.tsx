@@ -7,12 +7,13 @@ import {
   SafeAreaView
 } from 'react-native-safe-area-context';
 import Constants from 'expo-constants';
+import BusinessProfile from './src/Screens/business-profile';
 
 export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar />
-      <Homepage/>
+      <BusinessProfile/>
     </SafeAreaView>
   );
 }
