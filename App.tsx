@@ -7,13 +7,16 @@ import {
   SafeAreaView
 } from 'react-native-safe-area-context';
 import Constants from 'expo-constants';
+import Shopprofile from './src/Screens/shop-profile';
+import {NavigationContainer} from '@react-navigation/native';
 
 export default function App() {
   return (
+    
     <SafeAreaView style={styles.container}>
       <StatusBar />
-      <Homepage/>
-    </SafeAreaView>
+      <Shopprofile/>
+    </SafeAreaView >
   );
 }
 
