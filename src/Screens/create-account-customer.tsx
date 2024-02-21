@@ -24,8 +24,7 @@ export default function CreateAccountCustomer() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const { accountType, setAccountType } = useAccountContext();
-  console.log(accountType);
+  // const { accountType, setAccountType } = useAccountContext();
 
   const signUp = async () => {
     setLoading(true);

@@ -5,14 +5,12 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
-  ActivityIndicator,
-  Button
+  ActivityIndicator
 } from "react-native";
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import { auth } from "../config/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { postNewUser } from "../../utils/api";
-import { useAccountContext } from "../contexts/AccountContext";
+import { postNewShop} from "../../utils/api";
 import * as Location from "expo-location";
 
 export default function CreateAccountBusiness() {
@@ -23,21 +21,20 @@ export default function CreateAccountBusiness() {
   const [avatar, setAvatarUrl] = useState("");
   const [description, setDescription] = useState("");
   const [address, setAddress] = useState("");
-  const [location, setLocation] = useState({});
+  const [lat, setLat] = useState(0)
+  const [long, setLong] = useState(0)
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const { accountType, setAccountType } = useAccountContext();
-  console.log(accountType);
-
-  
     const geoCode = async () => {
       const geoCodedLocation = await Location.geocodeAsync(address)
-      console.log(geoCodedLocation)
+      setLat(geoCodedLocation[0].latitude)
+      setLong(geoCodedLocation[0].longitude)
     }
 
   const signUp = async () => {
     setLoading(true);
+    await geoCode()
 
     if (email === "" || password === "") {
       setError("Email and password are mandatory.");
@@ -48,17 +45,17 @@ export default function CreateAccountBusiness() {
     try {
       setError("");
       const res = await createUserWithEmailAndPassword(auth, email, password);
-
-      const resNewUser = await postNewUser(name, 30, email, avatar);
+      const resNewShop = await postNewShop(name, email, lat, long, description, avatar)
 
       setName("");
       setEmail("");
       setPassword("");
       setAvatarUrl("");
       setDescription("");
-      setLocation({});
+      setLat(0)
+      setLong(0)
 
-      if (res && resNewUser) {
+      if (res && resNewShop) {
         Alert.alert("You've successfully registered!");
       }
     } catch (err: any) {
@@ -81,7 +78,7 @@ export default function CreateAccountBusiness() {
         <TextInput
           value={name}
           style={styles.input}
-          placeholder="Name"
+          placeholder="Business Name"
           autoCapitalize="none"
           onChangeText={(text) => {
             setName(text);
@@ -116,7 +113,6 @@ export default function CreateAccountBusiness() {
             setAddress(text);
           }}
         />
-        <Button title="Address" onPress={geoCode}></Button>
         <TextInput
           value={avatar}
           style={styles.input}
@@ -124,6 +120,15 @@ export default function CreateAccountBusiness() {
           autoCapitalize="none"
           onChangeText={(text) => {
             setAvatarUrl(text);
+          }}
+        />
+        <TextInput
+          value={description}
+          style={styles.input}
+          placeholder="Shop Bio"
+          autoCapitalize="none"
+          onChangeText={(text) => {
+            setDescription(text);
           }}
         />
       </View>

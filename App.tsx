@@ -19,11 +19,10 @@ import { auth } from "./src/config/firebase";
 import RootNavigation from "./src/navigation";
 import * as Location from "expo-location";
 
-
 const Stack = createNativeStackNavigator();
 
-
 export default function App() {
+  
   const [location, setLocation] = useState({});
   useEffect(() => {
     const getPermissions = async () => {
@@ -34,10 +33,10 @@ export default function App() {
     }
     let currentLocation = await Location.getCurrentPositionAsync({})
     setLocation(currentLocation)
-    console.log(currentLocation)
     }
     getPermissions()
   }, [])
+
   return (
     <UserProvider>
       <RootNavigation/>
