@@ -6,12 +6,14 @@ import {
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
+  Button
 } from "react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { auth } from "../config/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { postNewUser } from "../../utils/api";
 import { useAccountContext } from "../contexts/AccountContext";
+import * as Location from "expo-location";
 
 export default function CreateAccountBusiness() {
   const [name, setName] = useState("");
@@ -19,11 +21,20 @@ export default function CreateAccountBusiness() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [avatar, setAvatarUrl] = useState("");
+  const [description, setDescription] = useState("");
+  const [address, setAddress] = useState("");
+  const [location, setLocation] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const { accountType, setAccountType } = useAccountContext();
   console.log(accountType);
+
+  
+    const geoCode = async () => {
+      const geoCodedLocation = await Location.geocodeAsync(address)
+      console.log(geoCodedLocation)
+    }
 
   const signUp = async () => {
     setLoading(true);
@@ -44,6 +55,8 @@ export default function CreateAccountBusiness() {
       setEmail("");
       setPassword("");
       setAvatarUrl("");
+      setDescription("");
+      setLocation({});
 
       if (res && resNewUser) {
         Alert.alert("You've successfully registered!");
@@ -94,6 +107,16 @@ export default function CreateAccountBusiness() {
             setPassword(text);
           }}
         />
+        <TextInput
+          value={address}
+          style={styles.input}
+          placeholder="Postcode"
+          autoCapitalize="none"
+          onChangeText={(text) => {
+            setAddress(text);
+          }}
+        />
+        <Button title="Address" onPress={geoCode}></Button>
         <TextInput
           value={avatar}
           style={styles.input}
