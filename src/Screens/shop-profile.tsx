@@ -1,20 +1,33 @@
 import { StyleSheet, ImageBackground, Image,} from "react-native"
 import { Button, View, Text } from "react-native-ui-lib"
-import background from '../../'
+import Map from "./Map"
 import Navbar from "./Nav"
+import { useEffect, useState } from "react"
+import axios from 'axios';
 
-export default function Shopprofile() { 
+export default function Shopprofile() {
+    const [shop, setShop] = useState()
+
+    const email = {
+        email: 'mancunianbrew@example.com'
+    }
+
+    useEffect(() => {
+        axios.get(`http://192.168.100.47:5050/shops`).then((res) => {
+            console.log(res.data)
+            setShop(res.data)
+        })
+    }, [])
 
     return <View style={styles.root}>
     <Text  text30BO color={'#bf6240'}> Shop Name </Text> 
      <Image src='' />
      <Text> About us</Text>
      <Text>Lorum Ipsum eowfnhe2</Text>
-     {/* Child componant for map here */}
+     <Map/>
      <Text > Reviews</Text>
      <Button size={Button.sizes.large} backgroundColor={'#bf6240'} text60BO label='Order Now'></Button> 
-     <Navbar></Navbar>
-    
+
     </View>
     
 }

@@ -1,5 +1,6 @@
+import 'react-native-gesture-handler'
+import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
-
 import { StyleSheet, Text, View } from 'react-native';
 import Login from './src/Screens/login';
 import Homepage from './src/Screens/home-page';
@@ -8,15 +9,19 @@ import {
 } from 'react-native-safe-area-context';
 import Constants from 'expo-constants';
 import Shopprofile from './src/Screens/shop-profile';
-import {NavigationContainer} from '@react-navigation/native';
+import Navigation from './src/Screens/Nav';
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    
-    <SafeAreaView style={styles.container}>
-      <StatusBar />
-      <Shopprofile/>
-    </SafeAreaView >
+    <NavigationContainer>
+      <Stack.Navigator>
+            <Stack.Screen name='Home' component={Homepage}></Stack.Screen>
+            <Stack.Screen name='Login' component={Login}></Stack.Screen>
+        </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
