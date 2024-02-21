@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity} from 'reac
 import { Card, Button } from '@rneui/themed';
 import { LineChart } from 'react-native-chart-kit';
 import profile from '../Images/7LUyy3-LogoMakr (1).png';
-
+import { auth } from '../config/firebase';
 
 
 
@@ -24,6 +24,7 @@ export default function BusinessProfile() {
                     titleStyle={{fontWeight: "bold", fontSize: 13}}
                     buttonStyle={{backgroundColor: "#bf6240"}}
                     />
+                    <Button onPress={() => {auth.signOut()}}>Sign Out</Button>
                     </Card>
             </View>
             
