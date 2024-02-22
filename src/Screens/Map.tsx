@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
-import { StyleSheet, View, Dimensions, Text, Pressable } from "react-native";
+import { StyleSheet, View, Dimensions, Pressable } from "react-native";
+import { Text } from "react-native-ui-lib";
 import * as Location from "expo-location";
+import axios from "axios";
 
 type MapInfo = {
   latitude: number;
@@ -11,15 +13,24 @@ type MapInfo = {
 }
 
 type GeoCode = {
-  geocodes: {
-      main: {
-          longitude: number;
-          latitude: number;
-      };
-  }
+    name: string,
+    location: {
+        long: number;
+        lat: number;
+    };
 }
 
-export default function Map() {
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
+
+interface Props {
+  longitude: number;
+  latitude: number;
+  name: string;
+}
+
+export default function Map({latitude, longitude, name}: Props ) {
+
   const { width, height } = Dimensions.get("window");
 
   const ASPECT_RATIO = width / height;
@@ -49,54 +60,69 @@ export default function Map() {
     })
   };
 
-  const options = {
-    method: "GET",
-    headers: {
-      accept: 'spplication/json',
-      Authorization: 'fsq3XWC+lwpQPOnGwwcl9tPoxaxCM3TyWkcIveFR/mgZiUo='
-    }
-  }
-
   useEffect(() => {
     userLocation()
     
-    fetch(`https://api.foursquare.com/v3/places/search?query=coffee&ll=${mapInfo.latitude}%2C${mapInfo.longitude}&radius=5000&categories=13035`, options).then((res) => {
-      return res.json()
-    }).then(({results}) => {
-      setGeoCodes(results)
+    axios.get('https://javarewards-api.onrender.com/shops')
+    .then((res) => {
+      setGeoCodes(res.data.shops)
     })
   }, [])
 
-  function handleZoom() {
-    // e.preventDefault()
-    // console.log(mapInfo)
-    
-    //  mapRef.current?.animateCamera({center: coffeShop, zoom: 18}, { duration: 2000 })
+  const mapRef = useRef(null);
+
+  function handleZoom(latitude: number, longitude: number) {
+    if (mapRef.current) {
+      const region = {
+          latitude,
+          longitude,
+          latitudeDelta: LATITUDE_DELTA,
+          longitudeDelta: LONGITUDE_DELTA,
+      };
+      mapRef.current.animateCamera({center: region, zoom: 18}, { duration: 2000 });
+  }
   }
 
-  //implement ternary with map zoom for individual coffee shop for props - for mapInfo
   return (
     <>
-      <Text>Find us on Google</Text>
+      <Text text80BO>Find us on Google</Text>
       <MapView
         style={styles.map}
         provider={PROVIDER_GOOGLE}
-        initialRegion={mapInfo}
+        initialRegion={{
+          ...mapInfo,
+          latitude: latitude || mapInfo.latitude,
+          longitude: longitude || mapInfo.longitude,
+          latitudeDelta: latitude && longitude ? 0.002 : mapInfo.latitudeDelta,
+          longitudeDelta: latitude && longitude ? 0.002 : mapInfo.longitudeDelta
+        }}
         showsUserLocation
         showsMyLocationButton
-        // ref={mapRef}
+        ref={mapRef}
       >
-      {geoCodes.map((geoCode, index) => (
+      {latitude && longitude ? 
+      (<Marker
+      coordinate={{
+        latitude: latitude,
+        longitude: longitude,
+      }}
+      title={name}
+      onPress={(e) => {
+        handleZoom(latitude, longitude)
+        console.log(e.nativeEvent)
+      }
+    }
+      />) : geoCodes.map((geoCode, index) => (
         <Marker
           key={index}
           coordinate={{
-            latitude: geoCode.geocodes.main.latitude,
-            longitude: geoCode.geocodes.main.longitude,
+            latitude: geoCode.location.lat,
+            longitude: geoCode.location.long,
           }}
           title={geoCode.name}
+          onPress={() => handleZoom(geoCode.location.lat, geoCode.location.long)}
         />
         ))}
-        {/* <Marker coordinate={coffeeShop1} title={coffeeShop1.name} onPress={handleZoom}/> */}
       </MapView>
     </>
   );
@@ -110,11 +136,32 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     borderColor: 'black',
     width: '100%',
-    height: '100%'
   },
   map: {
-    width: "80%",
-    height: "25%",
-    marginBottom: 80
+    width: windowWidth * 0.8,
+    height: windowHeight * 0.2,
+    alignItems: 'center',
+    borderRadius: 10
   },
 });
+
+
+
+// const options = {
+//   method: "GET",
+//   headers: {
+//     accept: 'spplication/json',
+//     Authorization: 'fsq3XWC+lwpQPOnGwwcl9tPoxaxCM3TyWkcIveFR/mgZiUo='
+//   }
+// }
+
+// useEffect(() => {
+//   userLocation()
+  
+//   fetch(`https://api.foursquare.com/v3/places/search?query=coffee&ll=${mapInfo.latitude}%2C${mapInfo.longitude}&radius=5000&categories=13035`, options).then((res) => {
+//     return res.json()
+//   }).then(({results}) => {
+//     setGeoCodes(results)
+//     console.log(results)
+//   })
+// }, [geoCodes])
