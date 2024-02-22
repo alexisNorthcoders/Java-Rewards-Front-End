@@ -17,6 +17,7 @@ import Constants from 'expo-constants';
 import BusinessProfile from './src/Screens/business-profile';
 import UserProfile from './src/Screens/user-profile';
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import NavUser from "./src/Screens/NavUser";
 
 
 const Stack = createNativeStackNavigator();
@@ -41,6 +42,7 @@ export default function App() {
 
     <UserProvider>
       <RootNavigation/>
+      {/* <NavUser /> */}
     </UserProvider>
     
 

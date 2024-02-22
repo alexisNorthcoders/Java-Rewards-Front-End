@@ -24,7 +24,7 @@ export default function NavUser() {
   };
 
   return (
-    <NavigationContainer>
+    <NavigationContainer >
       <Tab.Navigator screenOptions={screenOptions}>
         <Tab.Screen
           name={"Home"}
