@@ -1,3 +1,12 @@
+import CreateAccountCustomer from "./src/Screens/create-account-customer";
+import {
+  UserProvider
+} from "./src/contexts/AccountContext";
+import { useState, useEffect } from "react";
+import CreateAccountBusiness from "./src/Screens/create-account-business";
+import { auth } from "./src/config/firebase";
+import RootNavigation from "./src/navigation";
+import * as Location from "expo-location";
 import 'react-native-gesture-handler'
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
@@ -12,13 +21,32 @@ import Navigation from './src/Screens/Nav';
 import UserProfile from './src/Screens/user-profile';
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  
+  const [location, setLocation] = useState({});
+  useEffect(() => {
+    const getPermissions = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync()
+    if (status !== "granted") {
+      Alert.alert("Please grant location permission")
+      return
+    }
+    let currentLocation = await Location.getCurrentPositionAsync({})
+    setLocation(currentLocation)
+    }
+    getPermissions()
+  }, [])
+
   return (
 
-   <UserProfile/>
+    <UserProvider>
+      <RootNavigation/>
+    </UserProvider>
     
+
   );
 }
 

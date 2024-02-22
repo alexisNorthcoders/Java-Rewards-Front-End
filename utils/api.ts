@@ -22,3 +22,13 @@ export function postNewUser(name: string, age: number, email: string, avatar_url
       return res.data
     })
 }
+
+export function postNewShop(name: string, email: string, lat: number, long: number, description: string, avatar_url: string) {
+  return api.post('/shops', { name, email, lat , long, description , avatar_url})
+    .then((res) => {
+      return res.data
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+}
