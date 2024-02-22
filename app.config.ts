@@ -12,6 +12,7 @@ export default {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
+      
     },
     "assetBundlePatterns": [
       "**/*"
@@ -43,6 +44,13 @@ export default {
         {
           "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
         }
+      ],[
+        
+          "expo-camera",
+          {
+            "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
+          }
+        
       ]
     ]
 

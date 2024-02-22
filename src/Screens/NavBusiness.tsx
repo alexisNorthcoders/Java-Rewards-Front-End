@@ -5,12 +5,12 @@ import Homepage from "./home-page";
 import Login from "./login";
 import IndividualShop from "./IndividualShop";
 import { Entypo, AntDesign, Feather } from "@expo/vector-icons";
+import QrcodeScan from "./CodeScanner";
 
 const Tab = createBottomTabNavigator();
 
 export default function NavBusiness() {
-  
-    const screenOptions = {
+  const screenOptions = {
     tabBarShowLabel: false,
     headerShown: false,
     tabBarStyle: {
@@ -38,8 +38,7 @@ export default function NavBusiness() {
                     alignItems: "center",
                     justifyContent: "center",
                     paddingTop: 20,
-                  }}
-                >
+                  }}>
                   <Entypo
                     name="home"
                     size={24}
@@ -52,8 +51,8 @@ export default function NavBusiness() {
           }}
         />
         <Tab.Screen
-          name={"Login"}
-          component={Login}
+          name={"Qrcode scanner"}
+          component={QrcodeScan}
           options={{
             tabBarIcon: ({ focused }) => {
               return (
@@ -62,16 +61,13 @@ export default function NavBusiness() {
                     alignItems: "center",
                     justifyContent: "center",
                     paddingTop: 20,
-                  }}
-                >
-                  <Feather 
-                    name="camera" 
+                  }}>
+                  <Feather
+                    name="camera"
                     size={24}
                     color={focused ? "#16247d" : "#111"}
                   />
-                  <Text style={{ fontSize: 12, color: "#16247d" }}>
-                    CAMERA
-                  </Text>
+                  <Text style={{ fontSize: 12, color: "#16247d" }}>CAMERA</Text>
                 </View>
               );
             },
@@ -88,8 +84,7 @@ export default function NavBusiness() {
                     alignItems: "center",
                     justifyContent: "center",
                     paddingTop: 20,
-                  }}
-                >
+                  }}>
                   <AntDesign
                     name="profile"
                     size={24}

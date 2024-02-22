@@ -32,3 +32,5 @@ export function postNewShop(name: string, email: string, lat: number, long: numb
       console.log(err)
     })
 }
+
+
