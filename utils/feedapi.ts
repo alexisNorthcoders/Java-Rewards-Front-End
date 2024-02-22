@@ -32,4 +32,7 @@ export function postOrder(order:{}){
 export function getBusinessOrders(){
   return api.get('/orders?shop_id=1').then(({data}) => data)
 }
+export function updateOrderStatus(order_id:number){
+  return api.patch('orders/status',{_id:order_id}).then(({data:{order}})=> order)
+}
 

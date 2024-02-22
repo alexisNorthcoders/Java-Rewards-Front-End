@@ -5,10 +5,12 @@ import Homepage from "./home-page";
 import Login from "./login";
 import IndividualShop from "./IndividualShop";
 import { Entypo, AntDesign } from "@expo/vector-icons";
+import CustomerHomeScreen from "./CustomerHomesceen";
 
 const Tab = createBottomTabNavigator();
 
 export default function NavUser() {
+
   const screenOptions = {
     tabBarShowLabel: false,
     headerShown: false,
@@ -24,11 +26,11 @@ export default function NavUser() {
   };
 
   return (
-    <NavigationContainer >
+    // <NavigationContainer >
       <Tab.Navigator screenOptions={screenOptions}>
         <Tab.Screen
           name={"Home"}
-          component={Homepage}
+          component={CustomerHomeScreen}
           options={{
             tabBarIcon: ({ focused }) => {
               return (
@@ -103,6 +105,6 @@ export default function NavUser() {
           }}
         />
       </Tab.Navigator>
-    </NavigationContainer>
+    // </NavigationContainer>
   );
 }

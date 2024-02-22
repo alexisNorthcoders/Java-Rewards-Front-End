@@ -5,13 +5,15 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
-  ActivityIndicator
+  ActivityIndicator,
+  ScrollView
 } from "react-native";
 import { useState} from "react";
 import { auth } from "../config/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { postNewShop} from "../../utils/api";
 import * as Location from "expo-location";
+import { validateAvatarURL, validateEmail, validatePassword, validatePostcode } from "../../utils/formValidation";
 
 export default function CreateAccountBusiness() {
   const [name, setName] = useState("");
@@ -20,14 +22,19 @@ export default function CreateAccountBusiness() {
   const [password, setPassword] = useState("");
   const [avatar, setAvatarUrl] = useState("");
   const [description, setDescription] = useState("");
-  const [address, setAddress] = useState("");
+  const [postcode, setPostcode] = useState("");
   const [lat, setLat] = useState(0)
   const [long, setLong] = useState(0)
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [emailValid, setEmailValid] = useState(true);
+  const [passwordValid, setPasswordValid] = useState(true);
+  const [urlValid, setURLValid] = useState(true);
+  const [postcodeValid, setPostcodeValid] = useState(true)
+ 
 
     const geoCode = async () => {
-      const geoCodedLocation = await Location.geocodeAsync(address)
+      const geoCodedLocation = await Location.geocodeAsync(postcode)
       setLat(geoCodedLocation[0].latitude)
       setLong(geoCodedLocation[0].longitude)
     }
@@ -67,13 +74,31 @@ export default function CreateAccountBusiness() {
   };
 
   return (
-    <View style={styles.form}>
+    <ScrollView automaticallyAdjustKeyboardInsets={true} 
+    style={styles.form}  
+    contentContainerStyle={{
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+    }}>
       <Text>Create a Business Account</Text>
       {error && (
         <View style={styles.error}>
           <Text>{error}</Text>
         </View>
       )}
+
+      <View>
+        {!emailValid && <Text style={styles.error}>Email is invalid</Text>}
+        {!passwordValid && (
+          <Text style={styles.error}>
+            Password should be at least 6 characters
+          </Text>
+        )}
+        {!urlValid && <Text style={styles.error}>URL is invalid</Text>}
+        {!postcodeValid && <Text style={styles.error}>Postcode is invalid</Text>}
+      </View>
+
       <View>
         <TextInput
           value={name}
@@ -93,6 +118,7 @@ export default function CreateAccountBusiness() {
           onChangeText={(text) => {
             setEmail(text);
           }}
+          onBlur={() => {validateEmail(setEmailValid, email)}}
         />
         <TextInput
           value={password}
@@ -103,15 +129,17 @@ export default function CreateAccountBusiness() {
           onChangeText={(text) => {
             setPassword(text);
           }}
+          onBlur={() => {validatePassword(setPasswordValid, password)}}
         />
         <TextInput
-          value={address}
+          value={postcode}
           style={styles.input}
           placeholder="Postcode"
           autoCapitalize="none"
           onChangeText={(text) => {
-            setAddress(text);
+            setPostcode(text);
           }}
+          onBlur={() => {validatePostcode(setPostcodeValid, postcode)}}
         />
         <TextInput
           value={avatar}
@@ -121,11 +149,12 @@ export default function CreateAccountBusiness() {
           onChangeText={(text) => {
             setAvatarUrl(text);
           }}
+          onBlur={() => {validateAvatarURL(setURLValid, avatar)}}
         />
         <TextInput
           value={description}
           style={styles.input}
-          placeholder="Shop Bio"
+          placeholder="Add a brief description of your business"
           autoCapitalize="none"
           onChangeText={(text) => {
             setDescription(text);
@@ -145,15 +174,13 @@ export default function CreateAccountBusiness() {
           </TouchableOpacity>
         )}
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   form: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    flex: 1
   },
   input: {
     paddingHorizontal: 15,
@@ -189,6 +216,6 @@ const styles = StyleSheet.create({
   error: {
     marginTop: 10,
     padding: 10,
-    color: "#fff",
+    color: "red",
   },
 });

@@ -7,11 +7,14 @@ import QrcodeScan from "../Screens/CodeScanner";
 const Stack = createStackNavigator();
 
 export default function UserStack() {
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
+
         
-        <Stack.Screen name="Nav" component={NavUser} />
+        <Stack.Screen name="Nav" component={NavUser}/>
+
       </Stack.Navigator>
     </NavigationContainer>
   );

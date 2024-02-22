@@ -7,6 +7,7 @@ import IndividualShop from "./IndividualShop";
 import { Entypo, AntDesign, Feather } from "@expo/vector-icons";
 import QrcodeScan from "./CodeScanner";
 
+
 const Tab = createBottomTabNavigator();
 
 export default function NavBusiness() {
@@ -25,7 +26,6 @@ export default function NavBusiness() {
   };
 
   return (
-    <NavigationContainer>
       <Tab.Navigator screenOptions={screenOptions}>
         <Tab.Screen
           name={"Home"}
@@ -74,8 +74,9 @@ export default function NavBusiness() {
           }}
         />
         <Tab.Screen
-          name={"IndividualShop"}
-          component={IndividualShop}
+          name={"Profile"}
+          component={BusinessProfile}
+          initialParams={BusinessProfile}
           options={{
             tabBarIcon: ({ focused }) => {
               return (
@@ -99,6 +100,5 @@ export default function NavBusiness() {
           }}
         />
       </Tab.Navigator>
-    </NavigationContainer>
   );
 }
