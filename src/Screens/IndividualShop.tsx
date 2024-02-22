@@ -24,8 +24,6 @@ export default function IndividualShop() {
       });
   }, []);
 
-  console.log(shop);
-
   return loading ? (
     <View>
       <Text>...Loading</Text>

@@ -6,13 +6,12 @@ import NavUser from "../Screens/NavUser";
 const Stack = createStackNavigator();
 
 export default function UserStack() {
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Customer Homepage" component={CustomerHomeScreen} />
-       <Stack.Screen name="Nav" component={NavUser}/>
+        <Stack.Screen name="Nav" component={NavUser}/>
       </Stack.Navigator>
-     
     </NavigationContainer>
   )
 }

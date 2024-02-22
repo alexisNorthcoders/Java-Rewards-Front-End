@@ -6,7 +6,6 @@ import BusinessStack from "./BusinessStack";
 
 export default function RootNavigation() {
   const { user } = useAuth();
-  console.log(user)
 
   const {accountType} = useAccountContext()
 

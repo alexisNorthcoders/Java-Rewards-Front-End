@@ -39,13 +39,9 @@ export default function App() {
   }, [])
 
   return (
-
     <UserProvider>
       <RootNavigation/>
-      {/* <NavUser /> */}
     </UserProvider>
-    
-
   );
 }
 
