@@ -9,11 +9,12 @@ import {
   KeyboardAvoidingView,
   ScrollView,
 } from "react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { auth } from "../config/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { postNewUser } from "../../utils/api";
 import { useAccountContext } from "../contexts/AccountContext";
+import { validateEmail, validateAvatarURL, validatePassword } from "../../utils/formValidation";
 
 export default function CreateAccountCustomer() {
   const [name, setName] = useState("");
@@ -23,8 +24,18 @@ export default function CreateAccountCustomer() {
   const [avatar, setAvatarUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [emailValid, setEmailValid] = useState(true);
+  const [passwordValid, setPasswordValid] = useState(true);
+  const [urlValid, setURLValid] = useState(true);
 
   // const { accountType, setAccountType } = useAccountContext();
+
+  interface FormErrType {
+    email: string;
+    password: string;
+  }
+
+ 
 
   const signUp = async () => {
     setLoading(true);
@@ -39,7 +50,7 @@ export default function CreateAccountCustomer() {
       setError("");
       const res = await createUserWithEmailAndPassword(auth, email, password);
 
-      const resNewUser = await postNewUser(name,  Number(age), email, avatar);
+      const resNewUser = await postNewUser(name, Number(age), email, avatar);
 
       setName("");
       setAge("");
@@ -74,6 +85,17 @@ export default function CreateAccountCustomer() {
           <Text>{error}</Text>
         </View>
       )}
+
+      <View>
+        {!emailValid && <Text style={styles.error}>Email is invalid</Text>}
+        {!passwordValid && (
+          <Text style={styles.error}>
+            Password should be at least 6 characters
+          </Text>
+        )}
+        {!urlValid && <Text style={styles.error}>URL is invalid</Text>}
+      </View>
+
       <View>
         <TextInput
           value={name}
@@ -88,6 +110,7 @@ export default function CreateAccountCustomer() {
           value={age}
           style={styles.input}
           placeholder="Age"
+          
           keyboardType="numeric"
           autoCapitalize="none"
           onChangeText={(text) => {
@@ -102,6 +125,7 @@ export default function CreateAccountCustomer() {
           onChangeText={(text) => {
             setEmail(text);
           }}
+          onBlur={() => {validateEmail(setEmailValid, email)}}
         />
         <TextInput
           value={password}
@@ -112,6 +136,7 @@ export default function CreateAccountCustomer() {
           onChangeText={(text) => {
             setPassword(text);
           }}
+          onBlur={() => {validatePassword(setPasswordValid, password)}}
         />
         <TextInput
           value={avatar}
@@ -121,6 +146,7 @@ export default function CreateAccountCustomer() {
           onChangeText={(text) => {
             setAvatarUrl(text);
           }}
+          onBlur={() => {validateAvatarURL(setURLValid, avatar)}}
         />
       </View>
 
@@ -178,6 +204,6 @@ const styles = StyleSheet.create({
   error: {
     marginTop: 10,
     padding: 10,
-    color: "#fff",
+    color: "red",
   },
 });
