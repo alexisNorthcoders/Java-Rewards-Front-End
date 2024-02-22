@@ -9,18 +9,16 @@ import BusinessProfile from './src/Screens/business-profile';
 import CreateAccount from './src/Screens/create-account';
 import Shopprofile from './src/Screens/shop-profile';
 import Navigation from './src/Screens/Nav';
+import UserProfile from './src/Screens/user-profile';
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-            <Stack.Screen name='Home' component={Homepage}></Stack.Screen>
-            <Stack.Screen name='Login' component={Login}></Stack.Screen>
-        </Stack.Navigator>
-    </NavigationContainer>
+
+   <UserProfile/>
+    
   );
 }
 
