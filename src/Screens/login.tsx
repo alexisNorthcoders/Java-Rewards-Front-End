@@ -15,14 +15,9 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-<<<<<<< HEAD
-import background from '../../images/loginbkg.jpg'
-import { useNavigation } from "@react-navigation/native"
-=======
 import background from "../../images/loginbkg.jpg";
 import { useNavigation } from "@react-navigation/native";
 import { useAccountContext} from "../contexts/AccountContext";
->>>>>>> 7b0e167857e2d71954af9cfdf2c4a8d97fbefcf5
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -31,8 +26,6 @@ export default function Login() {
   const [error, setError] = useState("");
 
   const { accountType } = useAccountContext()
-
-  const navigation = useNavigation();
 
   const navigation = useNavigation<any>()
 
@@ -92,30 +85,6 @@ export default function Login() {
             }}
           ></TextInput>
 
-<<<<<<< HEAD
-      <View style={styles.buttonContainer}>
-        {loading ? (
-          <ActivityIndicator size="large" color="0000ff" />
-        ) : (
-          <>
-            <TouchableOpacity style={styles.button} 
-              onPress={() => {
-                signIn
-                navigation.navigate('IndividualShop')
-              }}>
-              <Text style={styles.buttonText}>Login</Text>
-            </TouchableOpacity>
-            <Text style={styles.orText}>Or</Text>
-            <TouchableOpacity
-              onPress={signUp}
-              style={[styles.button, styles.buttonOutline]}
-            >
-              <Text style={styles.buttonOutlineText}>Register</Text>
-            </TouchableOpacity>
-          </>
-        )}
-      </View>
-=======
           <TextInput
             value={password}
             style={styles.input}
@@ -127,7 +96,6 @@ export default function Login() {
             }}
           ></TextInput>
         </View>
->>>>>>> 7b0e167857e2d71954af9cfdf2c4a8d97fbefcf5
 
         <View style={styles.buttonContainer}>
           {loading ? (
