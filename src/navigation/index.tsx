@@ -37,7 +37,7 @@ export default function RootNavigation() {
         return <BusinessStack />
       } else if (!isLoading && user && accountType === 'Customer') {
         return <UserStack />
-      } else if (!isLoading && !user) {
+      } else {
         return <AuthStack/>
       }
   

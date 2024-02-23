@@ -17,6 +17,7 @@ export default function QrcodeScan() {
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
+    console.log(data, "Scanned data")
     Alert.alert(
       "Scanned",
       `Type: ${type}\nData: ${data}`,
@@ -25,7 +26,7 @@ export default function QrcodeScan() {
     );
     axios
       .patch("https://javarewards-api.onrender.com/users/coffee", {
-        email: "michael@example.com",
+        email: `${data}`,
       })
       .then((res) => {
         console.log(res, "response here");

@@ -4,6 +4,7 @@ import BusinessProfile from "../Screens/business-profile";
 import CustomerHomeScreen from "../Screens/CustomerHomesceen";
 import NavUser from "../Screens/NavUser";
 import QrcodeScan from "../Screens/CodeScanner";
+import Menu from "../Components/Menu";
 const Stack = createStackNavigator();
 
 export default function UserStack() {
@@ -14,7 +15,7 @@ export default function UserStack() {
         headerShown: false
       }}>
         <Stack.Screen name="Nav" component={NavUser}/>
-
+        <Stack.Screen name="Menu" component={Menu} />
       </Stack.Navigator>
     </NavigationContainer>
   );
