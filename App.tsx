@@ -23,11 +23,17 @@ export default function App() {
   }, []);
 
   return (
+
     <UserProvider>
       <RootNavigation />
     </UserProvider>
   );
 }
+
+{/* <UserProvider>
+      <RootNavigation/>
+    </UserProvider> */}
+
 
 // const styles = StyleSheet.create({
 //   container: {
