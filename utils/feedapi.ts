@@ -21,6 +21,8 @@ export function getMenuByEmail(email:string) {
     email: email,
   })
   .then(({data:{shop}}) => {
+    console.log(`fetching menu from ${email}`);
+    
     const menu = shop[0].menu
     const menuWithQuantity = menu.map((item: {}) => ({ ...item, quantity: 0 }));
     return menuWithQuantity
