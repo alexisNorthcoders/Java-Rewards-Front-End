@@ -3,11 +3,21 @@ import { Button, View, Text, Card } from "react-native-ui-lib";
 import Map from "./Map";
 import { useEffect, useState } from "react";
 import axios from "axios";
-
+import { useNavigation } from "@react-navigation/native";
+interface ShopItem {
+  name: string;
+  avatar_url: string;
+  description: string;
+  location:any;
+  lat:number;
+  long:number;
+  totalRating:any;
+  shop_email:string;
+}
 export default function IndividualShop() {
-  const baseShop: object[] = [];
-
-  const [shop, setShop] = useState<(typeof baseShop)[]>([]);
+  
+  const navigation = useNavigation();
+  const [shop, setShop] = useState<(ShopItem)[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   //email/shop_id needs to be passed in as a prop to make component dynamic
@@ -65,7 +75,7 @@ export default function IndividualShop() {
           contentStyle={{ alignItems: "center" }}
         />
       </Card>
-      <Button style={styles.button} text60BO label="Order Now"></Button>
+      <Button style={styles.button} text60BO label="Order Now" onPress={()=> navigation.navigate('Menu',{ shop_email: shop[0].email })}></Button>
     </View>
   );
 }
