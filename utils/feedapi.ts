@@ -42,4 +42,7 @@ export function updateOrderStatus(order_id:number){
 
 export function updateOffer(email,offer:{}){
  return api.patch("/shops/offers",{email:email,offers:offer}).then(({data})=> data.offers)
+ .catch(err=> {console.log(err) 
+  return err;
+ })
 }

@@ -66,32 +66,34 @@ export default function Menu({ route }: any) {
             });
 
             if (error) {
-                console.error(error);
+                console.log(error);
                 Alert.alert(`Error code: ${error.code}`, error.message);
                 return;
             }
 
-            return await presentPaymentSheet({ clientSecret: paymentIntent })
+            await presentPaymentSheet({ clientSecret: paymentIntent })
             
 
         } catch (error) {
-            console.error(error);
+            console.log(error);
             Alert.alert('Error', 'Unable to initialize payment sheet');
+            
         }
     };
 
     const handlePayment = async () => {
         const orderItems: any = []
+        const { email } = await getUserEmail()
         state.menu.forEach(item => {
             if (item.quantity > 0) {
                 orderItems.push({ price: item.cost, item_name: item.item, quantity: item.quantity })
             }
         });
-        const { email } = await getUserEmail()
         if (orderItems.length === 0) {
             Alert.alert('Invalid Order', 'You must order at least one item.');
             return;
         }
+     
         const order: Order = {
             shop_email: shop_email,
             user_email: email,
@@ -102,18 +104,23 @@ export default function Menu({ route }: any) {
         const totalCostInCents = Math.round(totalCost * 100);
         try {
             const response: any = await initializePaymentSheet(totalCostInCents);
-            if (response.error){
+            console.log(response, )
+            if (!response){
+                await postOrder(order).then((res) => {
+                    setPostedOrder(res)
+                    setModalVisible(true)
+                })
+               
+            }
+            else{
                 console.log(response.error)
                 Alert.alert('Order canceled.');
                 return
-            }
-            postOrder(order).then((res) => {
-                setPostedOrder(res)
-                setModalVisible(true)
-            })
+               }
+            //return response
         }
         catch (err) {
-            console.error(err)
+            console.log(err)
             Alert.alert('Payment error.');
 
         }
@@ -170,7 +177,8 @@ export default function Menu({ route }: any) {
 
     const handleOrder = async () => {
         const orderItems: any = []
-
+        const { email } = await getUserEmail()
+       
         state.menu.forEach(item => {
             if (item.quantity > 0) {
                 orderItems.push({ price: item.cost, item_name: item.item, quantity: item.quantity })
@@ -181,8 +189,8 @@ export default function Menu({ route }: any) {
             return;
         }
         const order: Order = {
-            shop_email: "northernroast@example.com",
-            user_email: "john@example.com",
+            shop_email: shop_email,
+            user_email: email,
             items: orderItems
         }
         postOrder(order).then((res) => {
