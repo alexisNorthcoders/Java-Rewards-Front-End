@@ -6,6 +6,8 @@ import Login from "./login";
 import IndividualShop from "./IndividualShop";
 import { Entypo, AntDesign } from "@expo/vector-icons";
 import CustomerHomeScreen from "./CustomerHomesceen";
+import QRCodePage from "./QRCodePage";
+import UserProfile from "./user-profile";
 
 const Tab = createBottomTabNavigator();
 
@@ -52,8 +54,8 @@ export default function NavUser() {
         }}
       />
       <Tab.Screen
-        name={"Login"}
-        component={Login}
+        name={"QRCode"}
+        component={QRCodePage}
         options={{
           tabBarIcon: ({ focused }) => {
             return (
