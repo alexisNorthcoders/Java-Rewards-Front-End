@@ -8,6 +8,7 @@ import { Entypo, AntDesign } from "@expo/vector-icons";
 import CustomerHomeScreen from "./CustomerHomesceen";
 import QRCodePage from "./QRCodePage";
 import UserProfile from "./user-profile";
+import Menu from "../Components/Menu";
 
 const Tab = createBottomTabNavigator();
 
@@ -54,6 +55,13 @@ export default function NavUser() {
         }}
       />
       <Tab.Screen
+        name={"Menu"}
+        component={Menu}
+        options={{
+          tabBarIconStyle: { display: "none" },
+        }}
+      />
+      <Tab.Screen
         name={"QRCode"}
         component={QRCodePage}
         options={{
@@ -80,6 +88,13 @@ export default function NavUser() {
       <Tab.Screen
         name={"IndividualShop"}
         component={IndividualShop}
+        options={{
+          tabBarIconStyle: { display: "none" },
+        }}
+      />
+      <Tab.Screen
+        name={"Profile"}
+        component={UserProfile}
         options={{
           tabBarIcon: ({ focused }) => {
             return (

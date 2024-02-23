@@ -15,7 +15,6 @@ export default function UserStack() {
         headerShown: false
       }}>
         <Stack.Screen name="Nav" component={NavUser}/>
-        <Stack.Screen name="Menu" component={Menu} />
       </Stack.Navigator>
     </NavigationContainer>
   );
