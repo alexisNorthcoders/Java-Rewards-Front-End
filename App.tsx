@@ -39,11 +39,14 @@ export default function App() {
   }, [])
 
   return (
-    <UserProvider>
-      <RootNavigation/>
-    </UserProvider>
+   <UserProfile></UserProfile>
   );
 }
+
+{/* <UserProvider>
+      <RootNavigation/>
+    </UserProvider> */}
+
 
 // const styles = StyleSheet.create({
 //   container: {
