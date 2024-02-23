@@ -10,9 +10,9 @@ export default function UserStack() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-
-        
+      <Stack.Navigator screenOptions={{
+        headerShown: false
+      }}>
         <Stack.Screen name="Nav" component={NavUser}/>
 
       </Stack.Navigator>

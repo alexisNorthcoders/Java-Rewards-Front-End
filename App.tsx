@@ -1,45 +1,32 @@
-import CreateAccountCustomer from "./src/Screens/create-account-customer";
-import {
-  UserProvider
-} from "./src/contexts/AccountContext";
+import { UserProvider } from "./src/contexts/AccountContext";
 import { useState, useEffect } from "react";
-import CreateAccountBusiness from "./src/Screens/create-account-business";
-import { auth } from "./src/config/firebase";
 import RootNavigation from "./src/navigation";
 import * as Location from "expo-location";
-import 'react-native-gesture-handler'
-import { NavigationContainer } from '@react-navigation/native';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import Login from './src/Screens/login';
-import Homepage from './src/Screens/home-page';
-import Constants from 'expo-constants';
-import BusinessProfile from './src/Screens/business-profile';
-import UserProfile from './src/Screens/user-profile';
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import NavUser from "./src/Screens/NavUser";
-
+import "react-native-gesture-handler";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  
   const [location, setLocation] = useState({});
   useEffect(() => {
     const getPermissions = async () => {
-    let { status } = await Location.requestForegroundPermissionsAsync()
-    if (status !== "granted") {
-      Alert.alert("Please grant location permission")
-      return
-    }
-    let currentLocation = await Location.getCurrentPositionAsync({})
-    setLocation(currentLocation)
-    }
-    getPermissions()
-  }, [])
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert("Please grant location permission");
+        return;
+      }
+      let currentLocation = await Location.getCurrentPositionAsync({});
+      setLocation(currentLocation);
+    };
+    getPermissions();
+  }, []);
 
   return (
-   <UserProfile></UserProfile>
+
+    <UserProvider>
+      <RootNavigation />
+    </UserProvider>
   );
 }
 
