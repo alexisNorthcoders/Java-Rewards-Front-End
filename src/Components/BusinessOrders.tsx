@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, Dimensions, Button } from 'react-native';
 import SingleOrder from './SingleOrder';
-import { getBusinessOrders,updateOrderStatus } from '../../utils/feedapi';
+import { getBusinessOrders,updateOrderStatus } from "../../utils/feedapi"
 
 
 export default function BusinessOrders() {
