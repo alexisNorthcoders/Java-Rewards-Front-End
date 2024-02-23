@@ -3,6 +3,7 @@ import { View, Text, Image, StyleSheet, ScrollView, Button, TouchableOpacity, Mo
 import { getMenuByEmail, postOrder } from "../../utils/feedapi"
 
 import { useStripe } from '@stripe/stripe-react-native';
+import { getUserEmail } from '../../utils/rememberUserType';
 
 type MenuItem = {
     item: string;
@@ -10,7 +11,7 @@ type MenuItem = {
     description: string;
     item_img: string;
     quantity: number;
-   
+
 };
 type Order = {
     user_email: string;
@@ -19,7 +20,7 @@ type Order = {
 };
 type PostedOrder = {
     totalCost: number;
-    order_id:number;
+    order_id: number;
 };
 
 type Menu = MenuItem[];
@@ -29,8 +30,9 @@ type State = {
     isLoading: boolean;
 };
 
-export default function Menu() {
-
+export default function Menu({ route }: any) {
+    const {shop_email} = route.params;
+    
     const [state, setState] = useState<State>({ menu: [], isLoading: true });
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [postedOrder, setPostedOrder] = useState<PostedOrder>({ totalCost: 0 })
@@ -86,9 +88,11 @@ export default function Menu() {
                 orderItems.push({ price: item.cost, item_name: item.item, quantity: item.quantity })
             }
         });
+        const { email } = await getUserEmail()
+
         const order: Order = {
-            shop_email: "northernroast@example.com",
-            user_email: "john@example.com",
+            shop_email: shop_email,
+            user_email: email,
             items: orderItems
         }
         const totalCost = state.menu.reduce((acc, item) => acc + item.cost * item.quantity, 0);
@@ -98,18 +102,17 @@ export default function Menu() {
         await initializePaymentSheet(totalCostInCents);
         postOrder(order).then((res) => {
             setPostedOrder(res)
-                setModalVisible(true)
-           
+            setModalVisible(true)
         })
-        
-
     };
     useEffect(() => {
-        getMenuByEmail("northernroast@example.com").then((res) => {
+        
+        getMenuByEmail(shop_email).then((res) => {
+            
             setState({ menu: res, isLoading: false })
         })
             .catch(() => setState({ menu: [], isLoading: false }))
-    }, []);
+    }, [shop_email]);
 
     const increaseQuantity = (index: number) => {
         const newMenu = [...state.menu];
@@ -164,9 +167,9 @@ export default function Menu() {
         }
         postOrder(order).then((res) => {
             setPostedOrder(res)
-            
-                setModalVisible(true)
-           
+
+            setModalVisible(true)
+
         })
 
     }
@@ -185,7 +188,7 @@ export default function Menu() {
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
                         <Text style={styles.modalText}>Your order has been placed!</Text>
-                        <Text style={{fontSize:20}}>Order Number: <Text style={{fontSize:50, backgroundColor:"beige", fontWeight:"bold",borderColor:"black"}}>{postedOrder.order_id}</Text></Text>
+                        <Text style={{ fontSize: 20 }}>Order Number: <Text style={{ fontSize: 50, backgroundColor: "beige", fontWeight: "bold", borderColor: "black" }}>{postedOrder.order_id}</Text></Text>
                         <Text style={{ fontSize: 30 }}>Total Cost: £{postedOrder.totalCost}</Text>
                         <Button
                             title="Close"
