@@ -29,7 +29,7 @@ interface Props {
   name: string;
 }
 
-export default function Map({latitude, longitude, name}: Props ) {
+export default function Map({latitude = 0, longitude = 0, name = ''}: Props ) {
 
   const { width, height } = Dimensions.get("window");
 
@@ -69,7 +69,7 @@ export default function Map({latitude, longitude, name}: Props ) {
     })
   }, [])
 
-  const mapRef = useRef(null);
+  const mapRef = useRef<MapView | null>(null);
 
   function handleZoom(latitude: number, longitude: number) {
     if (mapRef.current) {
@@ -85,7 +85,7 @@ export default function Map({latitude, longitude, name}: Props ) {
 
   return (
     <>
-      <Text text80BO>Find us on Google</Text>
+      <Text text80BO>Maps</Text>
       <MapView
         style={styles.map}
         provider={PROVIDER_GOOGLE}

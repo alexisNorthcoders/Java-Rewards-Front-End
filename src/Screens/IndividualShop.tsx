@@ -4,27 +4,39 @@ import Map from "./Map";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export default function IndividualShop() {
-  const baseShop: object[] = [];
+export default function IndividualShop({route}: any) {
 
-  const [shop, setShop] = useState<(typeof baseShop)[]>([]);
+  const { email } = route.params;
+
+  type Shop = {
+    avatar_url: string;
+    name: string;
+    description: string;
+    location: {
+      lat: number;
+      long: number;
+    };
+    totalRating: {
+      rating: number;
+    }
+  }
+
+  const [shop, setShop] = useState<Shop[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  //email/shop_id needs to be passed in as a prop to make component dynamic
   useEffect(() => {
     setLoading(true);
     axios
       .post(`https://javarewards-api.onrender.com/shops/email`, {
-        email: "mancunianbrew@example.com",
+        email: email,
       })
       .then((res) => {
-        console.log(res);
         setShop(res.data.shop);
         setLoading(false);
       });
-  }, []);
+  }, [email]);
 
-  return loading ? (
+  return loading || !shop || shop.length === 0 ? (
     <View>
       <Text>...Loading</Text>
     </View>
@@ -42,9 +54,9 @@ export default function IndividualShop() {
         />
         <Card.Section
           content={[
-            { text: `${shop[0].description}`, text70: true, grey10: true },
-          ]}
-          contentStyle={{ alignItems: "center" }}
+          { text: `${shop[0].description}`, text70: true, grey10: true },
+        ]}
+        contentStyle={{ alignItems: "center" }}
         />
       </Card>
       <Card style={styles.card2}>
