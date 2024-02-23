@@ -89,7 +89,10 @@ export default function Menu({ route }: any) {
             }
         });
         const { email } = await getUserEmail()
-
+        if (orderItems.length === 0) {
+            Alert.alert('Invalid Order', 'You must order at least one item.');
+            return;
+        }
         const order: Order = {
             shop_email: shop_email,
             user_email: email,
@@ -121,8 +124,10 @@ export default function Menu({ route }: any) {
     };
     const decreaseQuantity = (index: number) => {
         const newMenu = [...state.menu];
-        newMenu[index].quantity -= 1;
-        setState({ ...state, menu: newMenu });
+        if (newMenu[index].quantity > 0) {
+            newMenu[index].quantity -= 1;
+            setState({ ...state, menu: newMenu });
+        }
     };
 
     const renderMenuItems = (menu: Menu) => {
@@ -155,11 +160,16 @@ export default function Menu({ route }: any) {
 
     const handleOrder = async () => {
         const orderItems: any = []
+        
         state.menu.forEach(item => {
             if (item.quantity > 0) {
                 orderItems.push({ price: item.cost, item_name: item.item, quantity: item.quantity })
             }
         });
+        if (orderItems.length === 0) {
+            Alert.alert('Invalid Order', 'You must order at least one item.');
+            return;
+        }
         const order: Order = {
             shop_email: "northernroast@example.com",
             user_email: "john@example.com",
