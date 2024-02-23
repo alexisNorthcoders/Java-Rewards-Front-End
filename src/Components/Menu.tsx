@@ -31,8 +31,8 @@ type State = {
 };
 
 export default function Menu({ route }: any) {
-    const {shop_email} = route.params;
-    
+    const { shop_email } = route.params;
+
     const [state, setState] = useState<State>({ menu: [], isLoading: true });
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [postedOrder, setPostedOrder] = useState<PostedOrder>({ totalCost: 0 })
@@ -49,10 +49,8 @@ export default function Menu({ route }: any) {
                 },
                 body: JSON.stringify({ totalCost }),
             });
-            console.log(response)
-            const { paymentIntent, ephemeralKey, customer, publishableKey } = await response.json();
-            console.log(paymentIntent, "response from server")
 
+            const { paymentIntent, ephemeralKey, customer, publishableKey } = await response.json();
 
             if (!response.ok) return Alert.alert('Failed to initialize payment sheet');
 
@@ -73,7 +71,8 @@ export default function Menu({ route }: any) {
                 return;
             }
 
-            await presentPaymentSheet({ clientSecret: paymentIntent }).catch((Err) => console.log(Err))
+            return await presentPaymentSheet({ clientSecret: paymentIntent })
+            
 
         } catch (error) {
             console.error(error);
@@ -101,17 +100,28 @@ export default function Menu({ route }: any) {
         const totalCost = state.menu.reduce((acc, item) => acc + item.cost * item.quantity, 0);
 
         const totalCostInCents = Math.round(totalCost * 100);
-        console.log("initialize payment sheet")
-        await initializePaymentSheet(totalCostInCents);
-        postOrder(order).then((res) => {
-            setPostedOrder(res)
-            setModalVisible(true)
-        })
+        try {
+            const response: any = await initializePaymentSheet(totalCostInCents);
+            if (response.error){
+                console.log(response.error)
+                Alert.alert('Order canceled.');
+                return
+            }
+            postOrder(order).then((res) => {
+                setPostedOrder(res)
+                setModalVisible(true)
+            })
+        }
+        catch (err) {
+            console.error(err)
+            Alert.alert('Payment error.');
+
+        }
     };
     useEffect(() => {
-        
+
         getMenuByEmail(shop_email).then((res) => {
-            
+
             setState({ menu: res, isLoading: false })
         })
             .catch(() => setState({ menu: [], isLoading: false }))
@@ -160,7 +170,7 @@ export default function Menu({ route }: any) {
 
     const handleOrder = async () => {
         const orderItems: any = []
-        
+
         state.menu.forEach(item => {
             if (item.quantity > 0) {
                 orderItems.push({ price: item.cost, item_name: item.item, quantity: item.quantity })
