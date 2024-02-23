@@ -18,6 +18,7 @@ import {
 import background from "../../images/loginbkg.jpg";
 import { useNavigation } from "@react-navigation/native";
 import { useAccountContext} from "../contexts/AccountContext";
+import { storeUserEmail, storeUserType } from "../../utils/rememberUserType";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -34,6 +35,8 @@ export default function Login() {
 
     try {
       const res = await signInWithEmailAndPassword(auth, email, password);
+      storeUserType(accountType)
+      storeUserEmail(email)
       Alert.alert("Sign in successful!");
     } catch (err: any) {
       console.log(err);

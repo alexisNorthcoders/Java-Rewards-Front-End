@@ -5,6 +5,7 @@ import { Entypo, AntDesign, Feather } from "@expo/vector-icons";
 import BusinessProfile from "./business-profile";
 import IntroPage from "./IntroPage";
 import QrcodeScan from "./CodeScanner";
+import Feed from "../Components/Feed";
 
 const Tab = createBottomTabNavigator();
 
@@ -27,7 +28,7 @@ export default function NavBusiness() {
       <Tab.Navigator screenOptions={screenOptions}>
         <Tab.Screen
           name={"Home"}
-          component={Homepage}
+          component={Feed}
           options={{
             tabBarIcon: ({ focused }) => {
               return (
