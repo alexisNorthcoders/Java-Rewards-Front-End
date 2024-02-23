@@ -3,10 +3,15 @@ import { StyleSheet, ImageBackground } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import background from "../Images/coffee-background.jpeg";
 import { useAccountContext} from "../contexts/AccountContext";
-import { useContext } from "react";
+import { StackNavigationProp } from "@react-navigation/stack";
 
-export default function Homepage() {
-  const navigation = useNavigation();
+type StackNavigationList = {
+  Login: undefined
+}
+
+export default function IntroPage() {
+
+  const navigation = useNavigation<StackNavigationProp<StackNavigationList>>();
   const { accountType, setAccountType } = useAccountContext();
 
   return (

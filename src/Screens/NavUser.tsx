@@ -1,7 +1,7 @@
 import { View, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Homepage from "./home-page";
+import Homepage from "./IntroPage";
 import Login from "./login";
 import IndividualShop from "./IndividualShop";
 import { Entypo, AntDesign } from "@expo/vector-icons";
@@ -10,7 +10,6 @@ import CustomerHomeScreen from "./CustomerHomesceen";
 const Tab = createBottomTabNavigator();
 
 export default function NavUser() {
-
   const screenOptions = {
     tabBarShowLabel: false,
     headerShown: false,
@@ -27,84 +26,80 @@ export default function NavUser() {
 
   return (
     // <NavigationContainer >
-      <Tab.Navigator screenOptions={screenOptions}>
-        <Tab.Screen
-          name={"Home"}
-          component={CustomerHomeScreen}
-          options={{
-            tabBarIcon: ({ focused }) => {
-              return (
-                <View
-                  style={{
-                    alignItems: "center",
-                    justifyContent: "center",
-                    paddingTop: 20,
-                  }}
-                >
-                  <Entypo
-                    name="home"
-                    size={24}
-                    color={focused ? "#16247d" : "#111"}
-                  />
-                  <Text style={{ fontSize: 12, color: "#16247d" }}>HOME</Text>
-                </View>
-              );
-            },
-          }}
-        />
-        <Tab.Screen
-          name={"Login"}
-          component={Login}
-          options={{
-            tabBarIcon: ({ focused }) => {
-              return (
-                <View
-                  style={{
-                    alignItems: "center",
-                    justifyContent: "center",
-                    paddingTop: 20,
-                  }}
-                >
-                  <AntDesign
-                    name="qrcode"
-                    size={24}
-                    color={focused ? "#16247d" : "#111"}
-                  />
-                  <Text style={{ fontSize: 12, color: "#16247d" }}>
-                    QR CODE
-                  </Text>
-                </View>
-              );
-            },
-          }}
-        />
-        <Tab.Screen
-          name={"IndividualShop"}
-          component={IndividualShop}
-          options={{
-            tabBarIcon: ({ focused }) => {
-              return (
-                <View
-                  style={{
-                    alignItems: "center",
-                    justifyContent: "center",
-                    paddingTop: 20,
-                  }}
-                >
-                  <AntDesign
-                    name="profile"
-                    size={24}
-                    color={focused ? "#16247d" : "#111"}
-                  />
-                  <Text style={{ fontSize: 12, color: "#16247d" }}>
-                    PROFILE
-                  </Text>
-                </View>
-              );
-            },
-          }}
-        />
-      </Tab.Navigator>
+    <Tab.Navigator screenOptions={screenOptions}>
+      <Tab.Screen
+        name={"Home"}
+        component={CustomerHomeScreen}
+        options={{
+          tabBarIcon: ({ focused }) => {
+            return (
+              <View
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  paddingTop: 20,
+                }}
+              >
+                <Entypo
+                  name="home"
+                  size={24}
+                  color={focused ? "#16247d" : "#111"}
+                />
+                <Text style={{ fontSize: 12, color: "#16247d" }}>HOME</Text>
+              </View>
+            );
+          },
+        }}
+      />
+      <Tab.Screen
+        name={"Login"}
+        component={Login}
+        options={{
+          tabBarIcon: ({ focused }) => {
+            return (
+              <View
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  paddingTop: 20,
+                }}
+              >
+                <AntDesign
+                  name="qrcode"
+                  size={24}
+                  color={focused ? "#16247d" : "#111"}
+                />
+                <Text style={{ fontSize: 12, color: "#16247d" }}>QR CODE</Text>
+              </View>
+            );
+          },
+        }}
+      />
+      <Tab.Screen
+        name={"IndividualShop"}
+        component={IndividualShop}
+        options={{
+          tabBarIcon: ({ focused }) => {
+            return (
+              <View
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  paddingTop: 20,
+                }}
+              >
+                <AntDesign
+                  name="profile"
+                  size={24}
+                  color={focused ? "#16247d" : "#111"}
+                />
+                <Text style={{ fontSize: 12, color: "#16247d" }}>PROFILE</Text>
+              </View>
+            );
+          },
+        }}
+      />
+    </Tab.Navigator>
     // </NavigationContainer>
   );
 }

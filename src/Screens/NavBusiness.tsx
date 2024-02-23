@@ -1,12 +1,10 @@
 import { View, Text } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Homepage from "./home-page";
 import Login from "./login";
-import IndividualShop from "./IndividualShop";
 import { Entypo, AntDesign, Feather } from "@expo/vector-icons";
+import BusinessProfile from "./business-profile";
+import IntroPage from "./IntroPage";
 import QrcodeScan from "./CodeScanner";
-
 
 const Tab = createBottomTabNavigator();
 
