@@ -1,6 +1,5 @@
 import { View, Text, Image, StyleSheet, ScrollView, Dimensions, Button } from 'react-native';
 
-
 export default function SingleOrder({items}:any) {
 
     return <View style={styles.middle}>
