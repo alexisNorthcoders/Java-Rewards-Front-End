@@ -3,10 +3,13 @@ import { Button, View, Text, Card } from "react-native-ui-lib";
 import Map from "./Map";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigation } from "@react-navigation/native";
 
 export default function IndividualShop({route}: any) {
 
   const { email } = route.params;
+    
+  const navigation = useNavigation();
 
   type Shop = {
     avatar_url: string;
@@ -77,7 +80,7 @@ export default function IndividualShop({route}: any) {
           contentStyle={{ alignItems: "center" }}
         />
       </Card>
-      <Button style={styles.button} text60BO label="Order Now"></Button>
+      <Button style={styles.button} text60BO label="Order Now" onPress={()=> navigation.navigate('Menu',{ shop_email: shop[0].email })}></Button>
     </View>
   );
 }
