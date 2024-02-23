@@ -25,15 +25,15 @@ type State = {
     isLoading: boolean;
 };
 
-export default function Menu() {
-
+export default function Menu({route}) {
+    const { shop_email } = route.params;
     const [state, setState] = useState<State>({ menu: [], isLoading: true });
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [postedOrder,setPostedOrder] = useState<PostedOrder>({totalCost: 0})
 
 
     useEffect(() => {
-        getMenuByEmail("northernroast@example.com").then((res) => {
+        getMenuByEmail(shop_email).then((res) => {
             setState({ menu: res, isLoading: false })
         })
             .catch(() => setState({ menu: [], isLoading: false }))
@@ -86,7 +86,7 @@ export default function Menu() {
             }
        });
        const order:Order= {
-        shop_email: "northernroast@example.com",
+        shop_email: shop_email,
         user_email: "john@example.com",
         items: orderItems
        }
