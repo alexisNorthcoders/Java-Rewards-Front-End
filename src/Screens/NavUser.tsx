@@ -41,6 +41,7 @@ export default function NavUser() {
                   alignItems: "center",
                   justifyContent: "center",
                   paddingTop: 20,
+                  marginLeft: 30,
                 }}
               >
                 <Entypo
@@ -57,6 +58,11 @@ export default function NavUser() {
       <Tab.Screen
         name={"Menu"}
         component={Menu}
+        listeners={{
+          tabPress: e => {
+            e.preventDefault();
+          }}
+        }
         options={{
           tabBarIconStyle: { display: "none" },
         }}
@@ -91,6 +97,11 @@ export default function NavUser() {
         options={{
           tabBarIconStyle: { display: "none" },
         }}
+        listeners={{
+          tabPress: e => {
+            e.preventDefault();
+          }}
+        }
       />
       <Tab.Screen
         name={"Profile"}
@@ -103,6 +114,7 @@ export default function NavUser() {
                   alignItems: "center",
                   justifyContent: "center",
                   paddingTop: 20,
+                  marginRight: 30,
                 }}
               >
                 <AntDesign
