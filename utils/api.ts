@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: "https://javarewards-api.onrender.com/"
+ baseURL: "https://javarewards-api.onrender.com/"
+ //baseURL: "http://192.168.248.249:9999/"
 })
 
 interface SuccessfulUserPost {
