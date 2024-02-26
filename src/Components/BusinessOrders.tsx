@@ -6,7 +6,7 @@ import SingleOrder from './SingleOrder';
 import { auth } from '../config/firebase';
 import { formatDate, getBusinessOrders, updateOrderStatus } from "../../utils/feedapi"
 import Loading from '../Screens/Loading';
-import { getUserEmail } from '../../utils/rememberUserType';
+import { clearUserEmail, clearUserType, getUserEmail } from '../../utils/rememberUserType';
 import { getShopData } from '../../utils/api';
 import { prepareUIRegistry } from 'react-native-reanimated/lib/typescript/reanimated2/frameCallback/FrameCallbackRegistryUI';
 
@@ -19,20 +19,23 @@ export default function BusinessOrders() {
     function handleUpdateStatus(order_id: number) {
         setHide((current) => ({ ...current, [order_id]: true }))
         updateOrderStatus(order_id).then(() => {
-            })
+        })
     }
     useEffect(() => {
         getUserEmail().then(({ email }) => {
+            console.log(email, "email after getUserEmail")
+            if (!email) { return }
             getShopData(email).then(({ _id, name }) => {
                 setShop((previousShop) => ({ ...previousShop, id: _id, name: name }))
                 getBusinessOrders(_id).then((data: any) => {
-                   setBusinessOrders(data.orders);
+                    setBusinessOrders(data.orders);
 
                     setIsLoading(false)
                 });
             })
         })
         const interval = setInterval(() => {
+
             setShop(previousShop => {
                 getBusinessOrders(previousShop.id).then((data: any) => {
                     setBusinessOrders(data.orders);
@@ -54,6 +57,8 @@ export default function BusinessOrders() {
                 titleStyle={{ fontWeight: "bold", fontSize: 13 }}
                 buttonStyle={{ backgroundColor: "#bf6240" }}
                 onPress={() => {
+                    clearUserType()
+                    clearUserEmail()
                     auth.signOut();
                 }}
             />

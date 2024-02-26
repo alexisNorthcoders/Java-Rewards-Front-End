@@ -13,7 +13,7 @@ import {
 import axios from "axios";
 import { useState, useEffect } from "react";
 import DisplayPreviousOrders from "./display-previous-orders(child)";
-import { getUserEmail } from "../../utils/rememberUserType";
+import { clearUserEmail, clearUserType, getUserEmail } from "../../utils/rememberUserType";
 import ProgressBar from "react-native-progress/Bar";
 import { auth } from "../config/firebase";
 
@@ -81,6 +81,8 @@ export default function UserProfile() {
             titleStyle={{ fontWeight: "bold", fontSize: 13 }}
             buttonStyle={{ backgroundColor: "#bf6240" }}
             onPress={() => {
+              clearUserType()
+              clearUserEmail()
               auth.signOut();
             }}>
             Sign Out

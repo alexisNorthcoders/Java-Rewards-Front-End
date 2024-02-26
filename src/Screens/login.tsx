@@ -34,14 +34,17 @@ export default function Login() {
     setLoading(true);
 
     try {
+      await storeUserType(accountType)
+       await storeUserEmail(email)
       const res = await signInWithEmailAndPassword(auth, email, password);
-      storeUserType(accountType)
-      storeUserEmail(email)
+       
+       
       Alert.alert("Sign in successful!");
     } catch (err: any) {
       console.log(err);
       Alert.alert("Sign in failed" + err.message);
     } finally {
+      
       setLoading(false);
     }
   };

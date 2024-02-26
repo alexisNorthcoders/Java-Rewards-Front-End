@@ -5,7 +5,6 @@ import { Entypo, AntDesign, Feather } from "@expo/vector-icons";
 import BusinessProfile from "./business-profile";
 import IntroPage from "./IntroPage";
 import QrcodeScan from "./CodeScanner";
-import Feed from "../Components/Feed";
 import BusinessOrders from "../Components/BusinessOrders";
 
 const Tab = createBottomTabNavigator();
