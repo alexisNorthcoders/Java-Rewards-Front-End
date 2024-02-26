@@ -4,6 +4,7 @@ import RootNavigation from "./src/navigation";
 import * as Location from "expo-location";
 import "react-native-gesture-handler";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import UserProfile from "./src/Screens/user-profile";
 
 const Stack = createNativeStackNavigator();
 
@@ -24,9 +25,7 @@ export default function App() {
 
   return (
 
-    <UserProvider>
-      <RootNavigation />
-    </UserProvider>
+   <UserProfile/>
   );
 }
 

@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, Animated} from 'react-native';
+import { green } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 
 
 export default function DisplayPreviousOrders({items}) {
@@ -6,34 +7,37 @@ export default function DisplayPreviousOrders({items}) {
 
     const itemsArr = items.items;
 
-   
+   console.log(items.totalCost)
 
     return (<>
-    <Text>{items.date}</Text>
+    <View style={styles.orderView}>
+    <Text>Order on {items.date}</Text>
     
     {
         itemsArr.map((item) => {
 
-            return <View> 
-              <Text>{item.item_name}</Text>
-              <Text>{item.price}</Text>
-              <Text>{item.quantity}</Text>
-            </View>
-
-            console.log(item)
-
+            return <Text>{item.quantity} x {item.item_name} £{item.price}</Text>
 
         })
     }
-       
-    
-    
-    
+
+    <Text>Total cost: £{items.totalCost}</Text>
+
+    </View>
     </>)
-    
-    
-    
-
-
 
 }
+
+const styles = StyleSheet.create({
+
+    orderView: {
+
+        margin: 10,
+        padding: 10,
+        backgroundColor: "green",
+        borderRadius: 10,
+        borderBlockColor: "brown",
+        borderWidth: 3
+    }
+
+})
