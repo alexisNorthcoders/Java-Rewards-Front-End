@@ -4,11 +4,12 @@ import Map from "./Map";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
+import { auth } from "../config/firebase";
+import { clearUserEmail, clearUserType, storeUserType } from "../../utils/rememberUserType";
 
 export default function IndividualShop({route}: any) {
 
   const { email } = route.params;
-    
   const navigation = useNavigation();
 
   type Shop = {
@@ -81,6 +82,11 @@ export default function IndividualShop({route}: any) {
         />
       </Card>
       <Button style={styles.button} text60BO label="Order Now" onPress={()=> navigation.navigate('Menu',{ shop_email: shop[0].email })}></Button>
+      <Button style={styles.button} text60BO label="Sign Out" onPress={()=> {
+        clearUserType()
+        clearUserEmail()
+        auth.signOut() 
+        }}></Button>
     </View>
   );
 }

@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, Button, TouchableOpacity, Modal} from 'react-native';
-import { getMenuByEmail, postOrder } from '../../utils/feedapi';
+import { View, Text, Image, StyleSheet, ScrollView, Button, TouchableOpacity, Modal, Alert } from 'react-native';
+import { getMenuByEmail, postOrder } from "../../utils/feedapi"
+
+import { useStripe } from '@stripe/stripe-react-native';
+import { getUserEmail } from '../../utils/rememberUserType';
 
 type MenuItem = {
     item: string;
@@ -8,14 +11,16 @@ type MenuItem = {
     description: string;
     item_img: string;
     quantity: number;
+
 };
 type Order = {
-       user_email:string;
-    shop_email:string;
-    items:[];
+    user_email: string;
+    shop_email: string;
+    items: [];
 };
 type PostedOrder = {
-    totalCost:number;
+    totalCost: number;
+    order_id: number;
 };
 
 type Menu = MenuItem[];
@@ -25,19 +30,109 @@ type State = {
     isLoading: boolean;
 };
 
-export default function Menu({route}) {
+export default function Menu({ route }: any) {
     const { shop_email } = route.params;
+
     const [state, setState] = useState<State>({ menu: [], isLoading: true });
     const [modalVisible, setModalVisible] = useState<boolean>(false);
-    const [postedOrder,setPostedOrder] = useState<PostedOrder>({totalCost: 0})
+    const [postedOrder, setPostedOrder] = useState<PostedOrder>({ totalCost: 0 })
 
+    const { initPaymentSheet, presentPaymentSheet } = useStripe();
 
+    const initializePaymentSheet = async (totalCost: number) => {
+        try {
+
+            const response = await fetch('https://javarewards-api.onrender.com/payment-sheet', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ totalCost }),
+            });
+
+            const { paymentIntent, ephemeralKey, customer, publishableKey } = await response.json();
+
+            if (!response.ok) return Alert.alert('Failed to initialize payment sheet');
+
+            // Initialize the payment sheet
+            const { error } = await initPaymentSheet({
+                customerId: customer,
+                customerEphemeralKeySecret: ephemeralKey,
+                paymentIntentClientSecret: paymentIntent,
+                merchantDisplayName: 'JavaRewards',
+                customFlow: false,
+                style: 'alwaysDark',
+                // Set other options if needed
+            });
+
+            if (error) {
+                console.log(error);
+                Alert.alert(`Error code: ${error.code}`, error.message);
+                return;
+            }
+
+            await presentPaymentSheet({ clientSecret: paymentIntent })
+            
+
+        } catch (error) {
+            console.log(error);
+            Alert.alert('Error', 'Unable to initialize payment sheet');
+            
+        }
+    };
+
+    const handlePayment = async () => {
+        const orderItems: any = []
+        const { email } = await getUserEmail()
+        state.menu.forEach(item => {
+            if (item.quantity > 0) {
+                orderItems.push({ price: item.cost, item_name: item.item, quantity: item.quantity })
+            }
+        });
+        if (orderItems.length === 0) {
+            Alert.alert('Invalid Order', 'You must order at least one item.');
+            return;
+        }
+     
+        const order: Order = {
+            shop_email: shop_email,
+            user_email: email,
+            items: orderItems
+        }
+        const totalCost = state.menu.reduce((acc, item) => acc + item.cost * item.quantity, 0);
+
+        const totalCostInCents = Math.round(totalCost * 100);
+        try {
+            const response: any = await initializePaymentSheet(totalCostInCents);
+            console.log(response, )
+            if (!response){
+                await postOrder(order).then((res) => {
+                    setPostedOrder(res)
+                    setModalVisible(true)
+                })
+               
+            }
+            else{
+                console.log(response.error)
+                Alert.alert('Order canceled.');
+                return
+               }
+            //return response
+        }
+        catch (err) {
+            console.log(err)
+            Alert.alert('Payment error.');
+
+        }
+    };
     useEffect(() => {
+
         getMenuByEmail(shop_email).then((res) => {
+
             setState({ menu: res, isLoading: false })
         })
             .catch(() => setState({ menu: [], isLoading: false }))
-    }, []);
+    }, [shop_email]);
 
     const increaseQuantity = (index: number) => {
         const newMenu = [...state.menu];
@@ -46,8 +141,10 @@ export default function Menu({route}) {
     };
     const decreaseQuantity = (index: number) => {
         const newMenu = [...state.menu];
-        newMenu[index].quantity -= 1;
-        setState({ ...state, menu: newMenu });
+        if (newMenu[index].quantity > 0) {
+            newMenu[index].quantity -= 1;
+            setState({ ...state, menu: newMenu });
+        }
     };
 
     const renderMenuItems = (menu: Menu) => {
@@ -79,54 +176,64 @@ export default function Menu({route}) {
     };
 
     const handleOrder = async () => {
-        const orderItems:any = []
+        const orderItems: any = []
+        const { email } = await getUserEmail()
+       
         state.menu.forEach(item => {
-            if (item.quantity > 0){
-                orderItems.push({price:item.cost,item_name:item.item,quantity:item.quantity} )
+            if (item.quantity > 0) {
+                orderItems.push({ price: item.cost, item_name: item.item, quantity: item.quantity })
             }
-       });
-       const order:Order= {
-        shop_email: shop_email,
-        user_email: "john@example.com",
-        items: orderItems
-       }
-        postOrder(order).then((res)=> {
-            console.log(res);
-            
+        });
+        if (orderItems.length === 0) {
+            Alert.alert('Invalid Order', 'You must order at least one item.');
+            return;
+        }
+        const order: Order = {
+            shop_email: shop_email,
+            user_email: email,
+            items: orderItems
+        }
+        postOrder(order).then((res) => {
             setPostedOrder(res)
-            setModalVisible(true)})
+
+            setModalVisible(true)
+
+        })
+
     }
 
 
     return (
         <ScrollView style={styles.container}>
-              <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-                setModalVisible(!modalVisible);
-            }}
-        >
-            <View style={styles.centeredView}>
-                <View style={styles.modalView}>
-                    <Text style={styles.modalText}>Your order has been placed!</Text>
-                    <Text style={styles.modalText}>Total Cost: {postedOrder.totalCost}</Text>
-                    <Button
-                        title="Close"
-                        onPress={() => setModalVisible(!modalVisible)}
-                    />
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+                }}
+            >
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>Your order has been placed!</Text>
+                        <Text style={{ fontSize: 20 }}>Order Number: <Text style={{ fontSize: 50, backgroundColor: "beige", fontWeight: "bold", borderColor: "black" }}>{postedOrder.order_id}</Text></Text>
+                        <Text style={{ fontSize: 30 }}>Total Cost: £{postedOrder.totalCost}</Text>
+                        <Button
+                            title="Close"
+                            onPress={() => setModalVisible(!modalVisible)}
+                        />
+                    </View>
                 </View>
-            </View>
-        </Modal>
+            </Modal>
             {state.isLoading ? (
                 <Text>Loading menu...</Text>
             ) : (
-                <>
+                <><Text style={{ fontSize: 40, textAlign: "center", marginBottom: 20, marginTop: 20 }}>Menu</Text>
                     {renderMenuItems(state.menu)}
-                    <Button title="Place Order" onPress={handleOrder} />
+                    <Button title="Order and Pay in Store" onPress={handleOrder} />
                 </>
             )}
+            <Button title="Order and Pay with Stripe" onPress={handlePayment} />
         </ScrollView>
     );
 }
@@ -135,8 +242,10 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 10,
+        marginTop: 20,
     },
     menuItem: {
+
         flexDirection: 'row',
         marginBottom: 20,
     },
@@ -156,21 +265,22 @@ const styles = StyleSheet.create({
     quantityContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        textAlign:"center"
+        textAlign: "center"
     },
     quantityButton: {
         backgroundColor: '#ddd',
-        width:30,
-        height:30,
-        justifyContent:"center"
-        
+        width: 30,
+        height: 30,
+        justifyContent: "center"
+
     },
     quantityText: {
         fontSize: 16,
         paddingHorizontal: 5,
-        textAlign:"center"
+        textAlign: "center"
     },
     centeredView: {
+
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
