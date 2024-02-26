@@ -63,7 +63,7 @@ export default function UserProfile() {
                         style={styles.profileImage}
                     />
                     <Text style={styles.userName} >{userList[0].name}</Text>
-                    <Button title="Logout"/>
+                    <Button style={styles.crazy} title="Logout"/>
                 </View>
             )}
             <View>
@@ -81,44 +81,48 @@ export default function UserProfile() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: '#fff', 
-    },
-    title: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      marginBottom: 20,
-      textAlign: 'center', 
-    },
-    profileContainer: {
-      flexDirection: 'row', 
-      alignItems: 'center',
-      marginBottom: 20,
-    },
-    profileImage: {
-        width: 100, 
-        height: 100, 
-        borderRadius: 50, 
-        marginBottom: 10,
-      },
-    userName: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginBottom: 10, 
-      },
-    coffeeMessage: {
-      fontSize: 16,
-      marginBottom: 20,
-      textAlign: 'center', 
-    },
-    profileContainer: {
-        flexDirection: 'column', 
-        alignItems: 'center', 
-        marginBottom: 20,
-      },
+  profileContainer: {
+    flexDirection: 'row', 
+    alignItems: 'flex-start', 
+    marginBottom: 20,
+  },
+  profileImage: {
+    width: 100, 
+    height: 100, 
+    borderRadius: 50, 
+    marginRight: 10, 
+  },
+  userInfoContainer: {
+    flex: 1,
+    flexDirection: 'column', 
+  },
+  userName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  coffeeMessage: {
+    fontSize: 16,
+    marginBottom: 20,
+    textAlign: 'center', 
+  },
+  title: {
+    paddingTop: 30, 
+    paddingBottom: 10,
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: 'bold'
+
+  },
+  crazy: {
+    backgroundColor: 'red',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    alignItems: 'center',
+
+  },
+
+  
   });
   
 
