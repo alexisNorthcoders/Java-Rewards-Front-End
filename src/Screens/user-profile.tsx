@@ -1,3 +1,116 @@
+
+
+
+        
+
+import { useIsFocused } from "@react-navigation/native";
+
+
+import ProgressBar from "react-native-progress/Bar";
+import { auth } from "../config/firebase";
+
+
+
+
+  const [progress, setProgress] = useState();
+
+  const newProgress = progress % 8;
+
+
+        
+
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    if (isFocused) {
+      axios
+        .post(`https://javarewards-api.onrender.com/users/email`, {
+          email: "john@example.com",
+        })
+        .then((res) => {
+          setUserList(res.data.user);
+          setProgress(res.data.user[0].coffee_count);
+        });
+    }
+  }, [isFocused]);
+
+  return (
+    <ScrollView>
+      <Text style={styles.title}>Profile</Text>
+      {userList.length > 0 && (
+        <View style={styles.profileContainer}>
+          <Image
+            source={{ uri: userList[0].avatar_url }}
+            style={styles.profileImage}
+          />
+          <Text style={styles.userName}>{userList[0].name}</Text>
+          <Button
+            containerStyle={styles.button}
+            title="log out"
+            titleStyle={{ fontWeight: "bold", fontSize: 13 }}
+            buttonStyle={{ backgroundColor: "#bf6240" }}
+            onPress={() => {
+              auth.signOut();
+            }}>
+            Sign Out
+          </Button>
+        </View>
+      )}
+      <View>
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <View>
+            <ProgressBar
+              width={200}
+              height={20}
+              color="#d2691e"
+              borderWidth={2}
+              newProgress={newProgress}
+            />
+          </View>
+        </View>
+        <Text style={styles.coffeeMessage}>
+          4 more coffees to go before a free coffee!
+        </Text>
+      </View>
+      <View>
+        <Text>Previous Orders</Text>
+        {previousOrders.map((item) => (
+          <DisplayPreviousOrders key={item._id} items={item} />
+        ))}
+      </View>
+    </ScrollView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#fff",
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  profileContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  profileImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: 10,
+  },
+  userName: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+
 import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, Animated, Button, ScrollView} from 'react-native';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
@@ -52,31 +165,7 @@ export default function UserProfile() {
    
 
 
-    return (
-        
-            <ScrollView > 
-            <Text style={styles.title}>Profile</Text>
-            {userList.length > 0 && (
-                <View style={styles.profileContainer}>
-                    <Image 
-                        source={{ uri: userList[0].avatar_url }}
-                        style={styles.profileImage}
-                    />
-                    <Text style={styles.userName} >{userList[0].name}</Text>
-                    <Button style={styles.crazy} title="Logout"/>
-                </View>
-            )}
-            <View>
-                <Text style={styles.coffeeMessage}>4 more coffees to go before a free coffee!</Text>
-            </View>
-            <View>
-                <Text>Previous Orders</Text>
-                {previousOrders.map((item) => (
-                    <DisplayPreviousOrders key={item._id} items={item}/>
-                ))}
-            </View>
-         </ScrollView>
-    ); 
+    
 
 }
 
@@ -99,10 +188,16 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 18,
     fontWeight: 'bold',
+
   },
   coffeeMessage: {
     fontSize: 16,
     marginBottom: 20,
+
+    textAlign: "center",
+  },
+});
+
     textAlign: 'center', 
   },
   title: {
@@ -130,12 +225,13 @@ const styles = StyleSheet.create({
 
 
 
+
 // const styles = StyleSheet.create({
 //     container: {
 //       flex: 1,
 //       alignItems: 'center',
 //       justifyContent: 'center',
-//       backgroundColor: '#fff', 
+//       backgroundColor: '#fff',
 //     },
 //     title: {
 //       fontSize: 24,
@@ -159,4 +255,3 @@ const styles = StyleSheet.create({
 //       marginBottom: 20,
 //     },
 //   });
-  
