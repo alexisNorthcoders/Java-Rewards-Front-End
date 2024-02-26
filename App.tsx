@@ -25,13 +25,17 @@ export default function App() {
     getPermissions();
   }, []);
 
+  
   return (
-
+    <StripeProvider
+    publishableKey="pk_test_51OkRuMIEw4TLc4pSBaJKzQx2JlNMxJxVs4orWx4CUWwNwf4WkNpXCS6Z0PydUSWdK32vuYBPNphYrDrBAbYh4tim00TQesbcaB"
+    urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
+    merchantIdentifier="merchant.com.{{JavaRewards}}" // required for Apple Pay
+  >
     <UserProvider>
       <RootNavigation />
     </UserProvider>
     </StripeProvider>
-
   );
 }
 
