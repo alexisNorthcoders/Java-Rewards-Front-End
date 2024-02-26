@@ -13,7 +13,7 @@ export default function AuthStack() {
       <Stack.Navigator screenOptions={{
         headerShown: false
       }}>
-        <Stack.Screen name="Home" component={Homepage}></Stack.Screen>
+        {<Stack.Screen name="Home" component={Homepage}></Stack.Screen>}
         <Stack.Screen name="Login" component={Login}></Stack.Screen>
         <Stack.Screen
           name="CreateAccCustomer"

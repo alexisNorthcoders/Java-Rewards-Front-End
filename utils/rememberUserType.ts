@@ -12,7 +12,7 @@ export const storeUserType = async (accountType: string) => {
 export const storeUserEmail = async (email: string) => {
   try {
     await AsyncStorage.setItem('email', JSON.stringify(email))
-    console.log('User email stored on log-in')
+    console.log(`User email stored on log-in ${email}`)
   }
   catch (err) {
     console.log('Error storing user email')
@@ -23,7 +23,7 @@ export const storeUserEmail = async (email: string) => {
 export const getUserType = async () => {
   try {
     const type = JSON.parse(await AsyncStorage.getItem('type'))
-    console.log('Getting account type')
+    console.log(`Getting account type ${type}`)
     return type !== null ? {type} : {type: ''}
   } 
   catch (err) {
