@@ -3,8 +3,8 @@ import { View, Text, Image, StyleSheet, ScrollView, Dimensions, Button } from 'r
 export default function SingleOrder({items}:any) {
 
     return <View style={styles.middle}>
-        {items.map((item:any)=>{
-            return  <Text style={{fontSize:20}}> {item.quantity} x {item.item_name}</Text>
+        {items.map((item:any,index)=>{
+            return  <Text key={`${index}_${item.item_name}`}style={{fontSize:20}}> {item.quantity} x {item.item_name}</Text>
            
         })}
     </View>

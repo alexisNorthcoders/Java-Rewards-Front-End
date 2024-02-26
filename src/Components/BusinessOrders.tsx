@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, Dimensions, Button } from 'react-native';
 import SingleOrder from './SingleOrder';
-import { getBusinessOrders,updateOrderStatus } from "../../utils/feedapi"
+import { formatDate, getBusinessOrders,updateOrderStatus } from "../../utils/feedapi"
 
 
 export default function BusinessOrders() {
@@ -31,12 +31,12 @@ export default function BusinessOrders() {
                 return order.orders.map((singleorder: any) => {
                     if (singleorder.status === "closed") { return }
                     return (
-                        <View key={order.date} style={styles.card}>
-                            <Button onPress={() => { handleUpdateStatus(singleorder._id) }} title="Close Order" color={singleorder.status === "open" ? "gray" : "red"} accessibilityLabel="Change order status" />
+                        <View key={singleorder.date} style={styles.card}>
+                            <Button onPress={() => { handleUpdateStatus(singleorder.order_id) }} title="Close Order" color={singleorder.status === "open" ? "gray" : "red"} accessibilityLabel="Change order status" />
                             <View style={styles.cardContent}>
-                                <Text style={styles.shopName}>Order # {singleorder._id}</Text>
-                                <Text style={styles.description}>Customer #{order.user_id}</Text>
-                                <Text style={styles.description}>{singleorder.date}</Text>
+                                <Text style={styles.shopName}>Order # {singleorder.order_id}</Text>
+                                <Text style={styles.description}>Customer #{singleorder.user_id}</Text>
+                                <Text style={styles.description}>{formatDate(singleorder.date)}</Text>
                               
                                 <SingleOrder items={singleorder.items}></SingleOrder>
                             </View>
@@ -44,14 +44,11 @@ export default function BusinessOrders() {
                         </View>
                     );
                 })
-
-
-            }):<Text style={styles.h1}>You have no pending orders</Text>}
+}):<Text style={styles.h1}>You have no pending orders</Text>}
             { }
         </ScrollView>
     );
 }
-
 const { width } = Dimensions.get('window');
 const styles = StyleSheet.create({
     container: {
