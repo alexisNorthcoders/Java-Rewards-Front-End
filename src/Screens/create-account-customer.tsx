@@ -49,7 +49,7 @@ export default function CreateAccountCustomer() {
     try {
       setError("");
       const res = await createUserWithEmailAndPassword(auth, email, password);
-
+      
       const resNewUser = await postNewUser(name, Number(age), email, avatar);
 
       setName("");

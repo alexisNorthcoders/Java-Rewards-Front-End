@@ -7,7 +7,6 @@ import { getUserEmail } from "../../utils/rememberUserType";
 export default function QRCodePage() {
   const [email, setEmail] = useState("")
 
-
   useEffect(() => {
     
     const fetchEmailFromStorage = async () => {

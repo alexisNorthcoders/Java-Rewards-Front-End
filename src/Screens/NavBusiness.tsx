@@ -6,6 +6,7 @@ import BusinessProfile from "./business-profile";
 import IntroPage from "./IntroPage";
 import QrcodeScan from "./CodeScanner";
 import Feed from "../Components/Feed";
+import BusinessOrders from "../Components/BusinessOrders";
 
 const Tab = createBottomTabNavigator();
 
@@ -28,7 +29,7 @@ export default function NavBusiness() {
       <Tab.Navigator screenOptions={screenOptions}>
         <Tab.Screen
           name={"Home"}
-          component={Feed}
+          component={BusinessOrders}
           options={{
             tabBarIcon: ({ focused }) => {
               return (
