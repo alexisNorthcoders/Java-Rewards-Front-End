@@ -33,7 +33,7 @@ export default function QRCodePage() {
   }
   return (
     <View style={styles.fixToText}>
-    <Text onPress={handleBackBtn}>Back to Profile</Text>
+    <Text style={styles.between} onPress={handleBackBtn}>Back to Profile</Text>
     <QRCode value={email}/>
     </View>
   )
@@ -44,6 +44,9 @@ const styles = StyleSheet.create({
     display: 'flex',
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
+  between: {
+    padding: 50
+  }
 });

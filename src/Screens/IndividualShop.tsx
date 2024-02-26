@@ -40,6 +40,7 @@ export default function IndividualShop({route}: any) {
       });
   }, [email]);
 
+
   return loading || !shop || shop.length === 0 ? (
     <View>
       <Text>...Loading</Text>
@@ -82,11 +83,11 @@ export default function IndividualShop({route}: any) {
         />
       </Card>
       <Button style={styles.button} text60BO label="Order Now" onPress={()=> navigation.navigate('Menu',{ shop_email: shop[0].email })}></Button>
-      <Button style={styles.button} text60BO label="Sign Out" onPress={()=> {
+      {/* <Button style={styles.button} text60BO label="Sign Out" onPress={()=> {
         clearUserType()
         clearUserEmail()
         auth.signOut() 
-        }}></Button>
+        }}></Button> */}
     </View>
   );
 }

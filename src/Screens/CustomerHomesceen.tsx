@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native"
+import { StyleSheet, StatusBar } from "react-native"
 import { auth } from "../config/firebase"
 import { useState, useEffect, Component } from 'react'
 import axios from "axios";
@@ -34,7 +34,8 @@ export default function CustomerHomeScreen({navigation}: any) {
       <Text>...Loading</Text>
     </View>
   ) : (
-    <SafeAreaView>
+    <SafeAreaView style={styles.safeArea}>
+    <StatusBar backgroundColor={'black'}/>
     <ScrollView>
       <View style={styles.root}>
       <Card style={styles.card0}>
@@ -45,7 +46,10 @@ export default function CustomerHomeScreen({navigation}: any) {
       </Card>
       {shops.map((shop,index) => {
         return (
-          <View key={`${shop.email}_${index}`}style={styles.root}>
+
+          
+          <View style={styles.root} key={shop.email}>
+
           <Card style={styles.card1} onPress={() => {
             navigation.navigate("IndividualShop", {email: shop.email})
         }}>
@@ -108,5 +112,8 @@ const styles = StyleSheet.create({
   image: {
     width: "95%",
     borderRadius: 10,
+  },
+  safeArea: {
+    marginBottom: 30
   }
 });
