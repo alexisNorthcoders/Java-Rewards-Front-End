@@ -6,6 +6,7 @@ import { View, Card, Button, Text} from 'react-native-ui-lib'
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-gesture-handler";
 import Map from "./Map";
+import Feed from "../Components/Feed";
 
 export default function CustomerHomeScreen({navigation}: any) {
 
@@ -42,9 +43,9 @@ export default function CustomerHomeScreen({navigation}: any) {
           contentStyle={{ alignItems: "center" }}
         />
       </Card>
-      {shops.map((shop) => {
+      {shops.map((shop,index) => {
         return (
-          <View style={styles.root}>
+          <View key={`${shop.email}_${index}`}style={styles.root}>
           <Card style={styles.card1} onPress={() => {
             navigation.navigate("IndividualShop", {email: shop.email})
         }}>
@@ -69,7 +70,9 @@ export default function CustomerHomeScreen({navigation}: any) {
       })
     } 
       </View>
+      <Feed></Feed>
       </ScrollView>
+      
       </SafeAreaView>
     // <Button title="Sign Out"onPress={() => {auth.signOut()}}></Button>
   )
