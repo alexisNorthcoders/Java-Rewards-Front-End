@@ -1,7 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import BusinessProfile from "../Screens/business-profile";
 import NavBusiness from "../Screens/NavBusiness";
+import UpdateBusinessProfile from "../Screens/UpdateBusinessProfile";
 
 const Stack = createStackNavigator();
 
@@ -12,6 +12,7 @@ export default function BusinessStack() {
         headerShown: false
       }}>
       <Stack.Screen name="Nav" component={NavBusiness}/>
+      <Stack.Screen name="UpdateProfile" component={UpdateBusinessProfile} />
       </Stack.Navigator>
     </NavigationContainer>
   )

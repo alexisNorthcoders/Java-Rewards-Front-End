@@ -16,6 +16,17 @@ interface SuccessfulUserPost {
     }
   }
 }
+
+interface ShopType {
+      email: string
+      avatar_url: string
+      location: {
+        lat: number,
+        long: number
+      },
+      description: string
+}
+
 export function postNewUser(name: string, age: number, email: string, avatar_url: string) {
   return api.post('/users', {name, age, email, avatar_url})
     .then((res: SuccessfulUserPost) => {
@@ -33,4 +44,24 @@ export function postNewShop(name: string, email: string, lat: number, long: numb
     })
 }
 
+export function getShopData(email: string) {
+  return api.post('/shops/email', {email: email}).then((res) => {
+   return res.data.shop[0]
+  })
+  .catch((err) => {
+    console.log(err)
+  })
+}
 
+export function updateShopData({
+      email,
+      avatar_url,
+      location,
+      description,
+}:ShopType) {
+  return api.patch('/shops/email', {email, avatar_url, location, description})
+}
+
+export function getOrdersByShopId(id: number) {
+  return api.get(`/orders?shop_id=${id}`)
+}
