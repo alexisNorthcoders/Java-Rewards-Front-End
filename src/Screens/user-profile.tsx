@@ -1,8 +1,8 @@
-import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, Animated, Button} from 'react-native';
+import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, Animated, Button, ScrollView} from 'react-native';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import DisplayPreviousOrders from './display-previous-orders(child)';
-
+import { getUserEmail } from '../../utils/rememberUserType';
 
 
 export default function UserProfile() {
@@ -13,22 +13,39 @@ export default function UserProfile() {
         name: string
     }
 
-
     const currentUserId = 1
     const [userList, setUserList] = useState<User[]>([]);
     const [previousOrders, setPreviousOrders] = useState([]);
     const [profileImage, setProfileImage] = useState('');
+    const [email, setEmail] = useState("")
+
+   
 
     useEffect(() => {
         axios.get(`https://javarewards-api.onrender.com/orders?user_id=9`).then((res) => {
-            // console.log(res.data.orders[0].orders)
             setPreviousOrders(res.data.orders[0].orders);
-
         })
+    }, [])
+    useEffect(() => {
+    
+        const fetchEmailFromStorage = async () => {
+          try {
+            const {email} = await getUserEmail()
+            setEmail(email)
+            
+          }
+          catch (err) {
+      
+            console.log("Error fetching account email")
+          }
+    
+          
+      }
+      fetchEmailFromStorage()
     }, [])
 
     useEffect(() => { 
-        axios.post(`https://javarewards-api.onrender.com/users/email`, {email: 'jane@example.com'}).then((res) => {
+        axios.post(`https://javarewards-api.onrender.com/users/email`, {email: email}).then((res) => {
             setUserList(res.data.user)
         })
     }, [])
@@ -36,7 +53,8 @@ export default function UserProfile() {
 
 
     return (
-        <>
+        
+            <ScrollView > 
             <Text style={styles.title}>Profile</Text>
             {userList.length > 0 && (
                 <View style={styles.profileContainer}>
@@ -57,7 +75,7 @@ export default function UserProfile() {
                     <DisplayPreviousOrders key={item._id} items={item}/>
                 ))}
             </View>
-        </>
+         </ScrollView>
     ); 
 
 }
