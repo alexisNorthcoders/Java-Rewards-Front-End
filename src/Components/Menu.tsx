@@ -3,6 +3,7 @@ import { View, Text, Image, StyleSheet, ScrollView, Button, TouchableOpacity, Mo
 import { getMenuByEmail, postOrder } from "../../utils/feedapi"
 
 import { useStripe } from '@stripe/stripe-react-native';
+import { getUserEmail } from '../../utils/rememberUserType';
 
 type MenuItem = {
     item: string;
@@ -10,7 +11,7 @@ type MenuItem = {
     description: string;
     item_img: string;
     quantity: number;
-   
+
 };
 type Order = {
     user_email: string;
@@ -19,7 +20,7 @@ type Order = {
 };
 type PostedOrder = {
     totalCost: number;
-    order_id:number;
+    order_id: number;
 };
 
 type Menu = MenuItem[];
@@ -29,7 +30,8 @@ type State = {
     isLoading: boolean;
 };
 
-export default function Menu() {
+export default function Menu({ route }: any) {
+    const { shop_email } = route.params;
 
     const [state, setState] = useState<State>({ menu: [], isLoading: true });
     const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -47,10 +49,8 @@ export default function Menu() {
                 },
                 body: JSON.stringify({ totalCost }),
             });
-            console.log(response)
-            const { paymentIntent, ephemeralKey, customer, publishableKey } = await response.json();
-            console.log(paymentIntent, "response from server")
 
+            const { paymentIntent, ephemeralKey, customer, publishableKey } = await response.json();
 
             if (!response.ok) return Alert.alert('Failed to initialize payment sheet');
 
@@ -66,50 +66,73 @@ export default function Menu() {
             });
 
             if (error) {
-                console.error(error);
+                console.log(error);
                 Alert.alert(`Error code: ${error.code}`, error.message);
                 return;
             }
 
-            await presentPaymentSheet({ clientSecret: paymentIntent }).catch((Err) => console.log(Err))
+            await presentPaymentSheet({ clientSecret: paymentIntent })
+            
 
         } catch (error) {
-            console.error(error);
+            console.log(error);
             Alert.alert('Error', 'Unable to initialize payment sheet');
+            
         }
     };
 
     const handlePayment = async () => {
         const orderItems: any = []
+        const { email } = await getUserEmail()
         state.menu.forEach(item => {
             if (item.quantity > 0) {
                 orderItems.push({ price: item.cost, item_name: item.item, quantity: item.quantity })
             }
         });
+        if (orderItems.length === 0) {
+            Alert.alert('Invalid Order', 'You must order at least one item.');
+            return;
+        }
+     
         const order: Order = {
-            shop_email: "northernroast@example.com",
-            user_email: "john@example.com",
+            shop_email: shop_email,
+            user_email: email,
             items: orderItems
         }
         const totalCost = state.menu.reduce((acc, item) => acc + item.cost * item.quantity, 0);
 
         const totalCostInCents = Math.round(totalCost * 100);
-        console.log("initialize payment sheet")
-        await initializePaymentSheet(totalCostInCents);
-        postOrder(order).then((res) => {
-            setPostedOrder(res)
-                setModalVisible(true)
-           
-        })
-        
+        try {
+            const response: any = await initializePaymentSheet(totalCostInCents);
+            console.log(response, )
+            if (!response){
+                await postOrder(order).then((res) => {
+                    setPostedOrder(res)
+                    setModalVisible(true)
+                })
+               
+            }
+            else{
+                console.log(response.error)
+                Alert.alert('Order canceled.');
+                return
+               }
+            //return response
+        }
+        catch (err) {
+            console.log(err)
+            Alert.alert('Payment error.');
 
+        }
     };
     useEffect(() => {
-        getMenuByEmail("northernroast@example.com").then((res) => {
+
+        getMenuByEmail(shop_email).then((res) => {
+
             setState({ menu: res, isLoading: false })
         })
             .catch(() => setState({ menu: [], isLoading: false }))
-    }, []);
+    }, [shop_email]);
 
     const increaseQuantity = (index: number) => {
         const newMenu = [...state.menu];
@@ -118,8 +141,10 @@ export default function Menu() {
     };
     const decreaseQuantity = (index: number) => {
         const newMenu = [...state.menu];
-        newMenu[index].quantity -= 1;
-        setState({ ...state, menu: newMenu });
+        if (newMenu[index].quantity > 0) {
+            newMenu[index].quantity -= 1;
+            setState({ ...state, menu: newMenu });
+        }
     };
 
     const renderMenuItems = (menu: Menu) => {
@@ -152,21 +177,27 @@ export default function Menu() {
 
     const handleOrder = async () => {
         const orderItems: any = []
+        const { email } = await getUserEmail()
+       
         state.menu.forEach(item => {
             if (item.quantity > 0) {
                 orderItems.push({ price: item.cost, item_name: item.item, quantity: item.quantity })
             }
         });
+        if (orderItems.length === 0) {
+            Alert.alert('Invalid Order', 'You must order at least one item.');
+            return;
+        }
         const order: Order = {
-            shop_email: "northernroast@example.com",
-            user_email: "john@example.com",
+            shop_email: shop_email,
+            user_email: email,
             items: orderItems
         }
         postOrder(order).then((res) => {
             setPostedOrder(res)
-            
-                setModalVisible(true)
-           
+
+            setModalVisible(true)
+
         })
 
     }
@@ -185,7 +216,7 @@ export default function Menu() {
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
                         <Text style={styles.modalText}>Your order has been placed!</Text>
-                        <Text style={{fontSize:20}}>Order Number: <Text style={{fontSize:50, backgroundColor:"beige", fontWeight:"bold",borderColor:"black"}}>{postedOrder.order_id}</Text></Text>
+                        <Text style={{ fontSize: 20 }}>Order Number: <Text style={{ fontSize: 50, backgroundColor: "beige", fontWeight: "bold", borderColor: "black" }}>{postedOrder.order_id}</Text></Text>
                         <Text style={{ fontSize: 30 }}>Total Cost: £{postedOrder.totalCost}</Text>
                         <Button
                             title="Close"

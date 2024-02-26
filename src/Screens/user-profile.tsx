@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, Animated} from 'react-native';
+import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, Animated, Button} from 'react-native';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import DisplayPreviousOrders from './display-previous-orders(child)';
@@ -37,20 +37,22 @@ export default function UserProfile() {
 
     return (
         <>
-            <Text>Profile</Text>
+            <Text style={styles.title}>Profile</Text>
             {userList.length > 0 && (
-                <View>
+                <View style={styles.profileContainer}>
                     <Image 
                         source={{ uri: userList[0].avatar_url }}
-                        style={{ width: 400, height: 400 }} 
+                        style={styles.profileImage}
                     />
-                    <Text>{userList[0].name}</Text>
+                    <Text style={styles.userName} >{userList[0].name}</Text>
+                    <Button title="Logout"/>
                 </View>
             )}
             <View>
-                <Text>4 more coffees to go before a free coffee!</Text>
+                <Text style={styles.coffeeMessage}>4 more coffees to go before a free coffee!</Text>
             </View>
             <View>
+                <Text>Previous Orders</Text>
                 {previousOrders.map((item) => (
                     <DisplayPreviousOrders key={item._id} items={item}/>
                 ))}
@@ -60,3 +62,79 @@ export default function UserProfile() {
 
 }
 
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#fff', 
+    },
+    title: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      marginBottom: 20,
+      textAlign: 'center', 
+    },
+    profileContainer: {
+      flexDirection: 'row', 
+      alignItems: 'center',
+      marginBottom: 20,
+    },
+    profileImage: {
+        width: 100, 
+        height: 100, 
+        borderRadius: 50, 
+        marginBottom: 10,
+      },
+    userName: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 10, 
+      },
+    coffeeMessage: {
+      fontSize: 16,
+      marginBottom: 20,
+      textAlign: 'center', 
+    },
+    profileContainer: {
+        flexDirection: 'column', 
+        alignItems: 'center', 
+        marginBottom: 20,
+      },
+  });
+  
+
+
+
+
+
+// const styles = StyleSheet.create({
+//     container: {
+//       flex: 1,
+//       alignItems: 'center',
+//       justifyContent: 'center',
+//       backgroundColor: '#fff', 
+//     },
+//     title: {
+//       fontSize: 24,
+//       fontWeight: 'bold',
+//       marginBottom: 20,
+//     },
+//     profileImage: {
+//       width: 200,
+//       height: 200,
+//       borderRadius: 100,
+//       marginBottom: 10,
+//     },
+//     userName: {
+//       fontSize: 18,
+//       fontWeight: 'bold',
+//       textAlign: 'center',
+//       marginBottom: 20,
+//     },
+//     coffeeMessage: {
+//       fontSize: 16,
+//       marginBottom: 20,
+//     },
+//   });
+  
