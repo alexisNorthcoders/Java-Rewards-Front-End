@@ -1,42 +1,23 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  Dimensions,
-  TouchableOpacity,
-  Animated,
-  Button,
-} from "react-native";
-import axios from "axios";
-import { useState, useEffect } from "react";
+
+
+
+        
+
 import { useIsFocused } from "@react-navigation/native";
-import DisplayPreviousOrders from "./display-previous-orders(child)";
-import { ScrollView } from "react-native-gesture-handler";
+
+
 import ProgressBar from "react-native-progress/Bar";
 import { auth } from "../config/firebase";
 
-export default function UserProfile() {
-  interface User {
-    avatar_url: string;
-    name: string;
-  }
 
-  const currentUserId = 1;
-  const [userList, setUserList] = useState<User[]>([]);
-  const [previousOrders, setPreviousOrders] = useState([]);
-  const [profileImage, setProfileImage] = useState("");
+
+
   const [progress, setProgress] = useState();
 
   const newProgress = progress % 8;
 
-  useEffect(() => {
-    axios
-      .get(`https://javarewards-api.onrender.com/orders?user_id=9`)
-      .then((res) => {
-        setPreviousOrders(res.data.orders[0].orders);
-      });
-  }, []);
+
+        
 
   const isFocused = useIsFocused();
   useEffect(() => {
@@ -129,13 +110,121 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
+
+import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, Animated, Button, ScrollView} from 'react-native';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
+import DisplayPreviousOrders from './display-previous-orders(child)';
+import { getUserEmail } from '../../utils/rememberUserType';
+
+
+export default function UserProfile() {
+
+
+    interface User {
+        avatar_url: string;
+        name: string
+    }
+
+    const currentUserId = 1
+    const [userList, setUserList] = useState<User[]>([]);
+    const [previousOrders, setPreviousOrders] = useState([]);
+    const [profileImage, setProfileImage] = useState('');
+    const [email, setEmail] = useState("")
+
+   
+
+    useEffect(() => {
+        axios.get(`https://javarewards-api.onrender.com/orders?user_id=9`).then((res) => {
+            setPreviousOrders(res.data.orders[0].orders);
+        })
+    }, [])
+    useEffect(() => {
+    
+        const fetchEmailFromStorage = async () => {
+          try {
+            const {email} = await getUserEmail()
+            setEmail(email)
+            
+          }
+          catch (err) {
+      
+            console.log("Error fetching account email")
+          }
+    
+          
+      }
+      fetchEmailFromStorage()
+    }, [])
+
+    useEffect(() => { 
+        axios.post(`https://javarewards-api.onrender.com/users/email`, {email: email}).then((res) => {
+            setUserList(res.data.user)
+        })
+    }, [])
+   
+
+
+    
+
+}
+
+const styles = StyleSheet.create({
+  profileContainer: {
+    flexDirection: 'row', 
+    alignItems: 'flex-start', 
+    marginBottom: 20,
+  },
+  profileImage: {
+    width: 100, 
+    height: 100, 
+    borderRadius: 50, 
+    marginRight: 10, 
+  },
+  userInfoContainer: {
+    flex: 1,
+    flexDirection: 'column', 
+  },
+  userName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+
   },
   coffeeMessage: {
     fontSize: 16,
     marginBottom: 20,
+
     textAlign: "center",
   },
 });
+
+    textAlign: 'center', 
+  },
+  title: {
+    paddingTop: 30, 
+    paddingBottom: 10,
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: 'bold'
+
+  },
+  crazy: {
+    backgroundColor: 'red',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    alignItems: 'center',
+
+  },
+
+  
+  });
+  
+
+
+
+
+
 
 // const styles = StyleSheet.create({
 //     container: {

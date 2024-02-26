@@ -45,7 +45,6 @@ export const clearUserType = async () => {
 export const getUserEmail = async () => {
   try {
     const email = JSON.parse(await AsyncStorage.getItem('email'))
-    console.log('Getting account email')
     return email !== null ? {email} : {email: ''}
   } 
   catch (err) {
