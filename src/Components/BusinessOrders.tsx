@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, Dimensions, Button } from 'react-native';
 import SingleOrder from './SingleOrder';
+
+import { auth } from '../config/firebase';
 import { formatDate, getBusinessOrders,updateOrderStatus } from "../../utils/feedapi"
 
 
@@ -26,6 +28,13 @@ export default function BusinessOrders() {
             <View>
                 <Text style={styles.h1}>Current Orders</Text>
             </View>
+            <Button title="Sign Out" containerStyle={styles.button}
+                titleStyle={{ fontWeight: "bold", fontSize: 13 }}
+                buttonStyle={{ backgroundColor: "#bf6240" }}
+              onPress={() => {
+                auth.signOut();
+              }}
+            />
             {businessOrders.some((order)=>order.orders.some((singleorder:any)=> singleorder.status==="open"))? businessOrders.map((order) => {
 
                 return order.orders.map((singleorder: any) => {
