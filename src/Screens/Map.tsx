@@ -147,21 +147,3 @@ const styles = StyleSheet.create({
 
 
 
-// const options = {
-//   method: "GET",
-//   headers: {
-//     accept: 'spplication/json',
-//     Authorization: 'fsq3XWC+lwpQPOnGwwcl9tPoxaxCM3TyWkcIveFR/mgZiUo='
-//   }
-// }
-
-// useEffect(() => {
-//   userLocation()
-  
-//   fetch(`https://api.foursquare.com/v3/places/search?query=coffee&ll=${mapInfo.latitude}%2C${mapInfo.longitude}&radius=5000&categories=13035`, options).then((res) => {
-//     return res.json()
-//   }).then(({results}) => {
-//     setGeoCodes(results)
-//     console.log(results)
-//   })
-// }, [geoCodes])

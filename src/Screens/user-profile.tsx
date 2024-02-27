@@ -28,8 +28,7 @@ export default function UserProfile() {
   const [previousOrders, setPreviousOrders] = useState([]);
   const [profileImage, setProfileImage] = useState("");
   const [email, setEmail] = useState("");
-  const [progress, setProgress] = useState();
-  const newProgress = progress % 8;
+  const [CoffeCount, setCoffeCount] = useState(0);
 
   useEffect(() => {
     axios
@@ -48,7 +47,7 @@ export default function UserProfile() {
         })
         .then((res) => {
           setUserList(res.data.user);
-          setProgress(res.data.user[0].coffee_count);
+          setCoffeCount(res.data.user[0].coffee_count + 100);
         });
     }
   }, [isFocused]);
@@ -92,11 +91,10 @@ export default function UserProfile() {
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
           <View>
             <ProgressBar
-              width={200}
+              width={CoffeCount}
               height={20}
               color="#d2691e"
               borderWidth={2}
-              newProgress={newProgress}
             />
           </View>
         </View>
@@ -142,5 +140,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
+  },
+  ProgressBar: {
+    backgroundColor: "yellow",
   },
 });
