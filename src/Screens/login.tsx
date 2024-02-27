@@ -15,10 +15,11 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import background from "../../images/loginbkg.jpg";
+import background from "../../images/login_background.jpg";
 import { useNavigation } from "@react-navigation/native";
 import { useAccountContext} from "../contexts/AccountContext";
 import { storeUserEmail, storeUserType } from "../../utils/rememberUserType";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -49,31 +50,11 @@ export default function Login() {
     }
   };
 
-  const signUp = async () => {
-    setLoading(true);
-
-    if (email === "" || password === "") {
-      setError("Email and password are mandatory.");
-      setLoading(false);
-      return;
-    }
-
-    try {
-      setError("");
-      const res = await createUserWithEmailAndPassword(auth, email, password);
-
-      Alert.alert("You've successfully registered!");
-    } catch (err: any) {
-      console.log(err);
-      Alert.alert("Sign up failed" + err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
-    <KeyboardAvoidingView behavior="padding" style={styles.container}>
-      <ImageBackground source={background} style={styles.background}>
+    <SafeAreaView style={styles.container}>
+      <ImageBackground source={background} style={styles.background}
+        resizeMode="cover"
+      >
         <View style={styles.inputContainer}>
           <Text style={styles.title}>Welcome to Java Rewards!</Text>
           {error && (
@@ -128,7 +109,7 @@ export default function Login() {
           )}
         </View>
       </ImageBackground>
-    </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
@@ -157,6 +138,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 5,
     width: 300,
+    borderColor: "brown",
+    borderWidth: 1,
   },
   inputContainer: {
     width: "90%",
