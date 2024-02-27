@@ -121,7 +121,6 @@ export default function BusinessProfile() {
           </Card>
           <Card containerStyle={{ borderRadius: 8, alignItems: 'center' }}>
             <Card.Title>Menu</Card.Title>
-            {console.log(menu)}
             {menu.map((item, i) => {
               return (
                 <View key={i} style={styles.singleItem}>

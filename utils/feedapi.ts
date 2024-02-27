@@ -36,7 +36,6 @@ export function postOrder(order:{}){
     return data.order})
 }
 export function getBusinessOrders(id){
-  console.log(id,"   in api utils")
   return api.get(`/orders?shop_id=${id}`).then(({data}) => data)
 }
 export function updateOrderStatus(order_id:number){
