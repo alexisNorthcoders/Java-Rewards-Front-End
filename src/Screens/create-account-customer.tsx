@@ -1,20 +1,21 @@
 import {
   Alert,
   View,
-  Text,
   TextInput,
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
-  KeyboardAvoidingView,
+  ImageBackground,
   ScrollView,
 } from "react-native";
+import { Text } from "@rneui/themed";
 import { useEffect, useState } from "react";
 import { auth } from "../config/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { postNewUser } from "../../utils/api";
-import { useAccountContext } from "../contexts/AccountContext";
 import { validateEmail, validateAvatarURL, validatePassword } from "../../utils/formValidation";
+import background from "../Images/coffee-background.jpeg";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function CreateAccountCustomer() {
   const [name, setName] = useState("");
@@ -27,24 +28,17 @@ export default function CreateAccountCustomer() {
   const [emailValid, setEmailValid] = useState(true);
   const [passwordValid, setPasswordValid] = useState(true);
   const [urlValid, setURLValid] = useState(true);
+  const [allFieldsComplete, setAllFieldsComplete] = useState(true)
 
-  // const { accountType, setAccountType } = useAccountContext();
+
 
   interface FormErrType {
     email: string;
     password: string;
   }
 
- 
-
   const signUp = async () => {
     setLoading(true);
-
-    if (email === "" || password === "") {
-      setError("Email and password are mandatory.");
-      setLoading(false);
-      return;
-    }
 
     try {
       setError("");
@@ -63,106 +57,118 @@ export default function CreateAccountCustomer() {
       }
     } catch (err: any) {
       console.log(err);
-      Alert.alert("Sign up failed" + err.message);
+      Alert.alert("Sign up failed, please try again");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <ScrollView
-      automaticallyAdjustKeyboardInsets={true}
-      style={styles.form}
-      contentContainerStyle={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text>Create An Account</Text>
-      {error && (
-        <View style={styles.error}>
-          <Text>{error}</Text>
+    <SafeAreaView style={{flex: 1}}>
+
+    
+      <ScrollView
+        automaticallyAdjustKeyboardInsets={true}
+        style={styles.form}
+        contentContainerStyle={{
+          flex: 1
+        }}
+      >
+        <ImageBackground
+          source={background}
+          style={styles.container}
+          imageStyle={styles.image}
+        >
+
+        <Text h4 style={{color: "#bf6240"}}>Create An Account</Text>
+
+        <View style={styles.errContainer}>
+          {!allFieldsComplete && <Text style={styles.error}>All fields must be completed</Text>}
+            {!emailValid && <Text style={styles.error}>Email is invalid</Text>}
+            {!passwordValid && (
+              <Text style={styles.error}>
+                Password should be at least 6 characters
+              </Text>
+            )}
+          {!urlValid && <Text style={styles.error}>URL is invalid</Text>}
         </View>
-      )}
 
-      <View>
-        {!emailValid && <Text style={styles.error}>Email is invalid</Text>}
-        {!passwordValid && (
-          <Text style={styles.error}>
-            Password should be at least 6 characters
-          </Text>
-        )}
-        {!urlValid && <Text style={styles.error}>URL is invalid</Text>}
-      </View>
+        <View>
+          <TextInput
+            value={name}
+            style={styles.input}
+            placeholder="Name"
+            autoCapitalize="none"
+            onChangeText={(text) => {
+              setName(text);
+            }}
+          />
+          <TextInput
+            value={age}
+            style={styles.input}
+            placeholder="Age"
+            
+            keyboardType="numeric"
+            autoCapitalize="none"
+            onChangeText={(text) => {
+              setAge(text);
+            }}
+          />
+          <TextInput
+            value={email}
+            style={styles.input}
+            placeholder="Email"
+            autoCapitalize="none"
+            onChangeText={(text) => {
+              setEmail(text);
+            }}
+            onBlur={() => {validateEmail(setEmailValid, email)}}
+          />
+          <TextInput
+            value={password}
+            style={styles.input}
+            secureTextEntry={true}
+            placeholder="Password"
+            autoCapitalize="none"
+            onChangeText={(text) => {
+              setPassword(text);
+            }}
+            onBlur={() => {validatePassword(setPasswordValid, password)}}
+          />
+          <TextInput
+            value={avatar}
+            style={styles.input}
+            placeholder="Avatar URL"
+            autoCapitalize="none"
+            onChangeText={(text) => {
+              setAvatarUrl(text);
+            }}
+            onBlur={() => {validateAvatarURL(setURLValid, avatar)}}
+          />
+        </View>
 
-      <View>
-        <TextInput
-          value={name}
-          style={styles.input}
-          placeholder="Name"
-          autoCapitalize="none"
-          onChangeText={(text) => {
-            setName(text);
-          }}
-        />
-        <TextInput
-          value={age}
-          style={styles.input}
-          placeholder="Age"
-          
-          keyboardType="numeric"
-          autoCapitalize="none"
-          onChangeText={(text) => {
-            setAge(text);
-          }}
-        />
-        <TextInput
-          value={email}
-          style={styles.input}
-          placeholder="Email"
-          autoCapitalize="none"
-          onChangeText={(text) => {
-            setEmail(text);
-          }}
-          onBlur={() => {validateEmail(setEmailValid, email)}}
-        />
-        <TextInput
-          value={password}
-          style={styles.input}
-          secureTextEntry={true}
-          placeholder="Password"
-          autoCapitalize="none"
-          onChangeText={(text) => {
-            setPassword(text);
-          }}
-          onBlur={() => {validatePassword(setPasswordValid, password)}}
-        />
-        <TextInput
-          value={avatar}
-          style={styles.input}
-          placeholder="Avatar URL"
-          autoCapitalize="none"
-          onChangeText={(text) => {
-            setAvatarUrl(text);
-          }}
-          onBlur={() => {validateAvatarURL(setURLValid, avatar)}}
-        />
-      </View>
+        <View style={styles.buttonContainer}>
+          {loading ? (
+            <ActivityIndicator size="large" color="0000ff" />
+          ) : (
+            <TouchableOpacity
+              onPress={ () => {
+                if(!name || !age || !email || !avatar || !password || !emailValid || !passwordValid || !urlValid) {
+                    setAllFieldsComplete(false)
+                } else {
+                  setAllFieldsComplete(true)
+                  signUp()}
 
-      <View style={styles.buttonContainer}>
-        {loading ? (
-          <ActivityIndicator size="large" color="0000ff" />
-        ) : (
-          <TouchableOpacity
-            onPress={signUp}
-            style={[styles.button, styles.buttonOutline]}
-          >
-            <Text style={styles.buttonOutlineText}>Register</Text>
-          </TouchableOpacity>
-        )}
-      </View>
-    </ScrollView>
+                }}
+              style={[styles.button, styles.buttonOutline]}
+            >
+              <Text style={styles.buttonOutlineText}>Register</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+        </ImageBackground>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -177,6 +183,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 5,
     width: 300,
+    borderColor: "brown",
+    borderWidth: 1,
   },
   buttonContainer: {
     width: "60%",
@@ -202,8 +210,19 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   error: {
-    marginTop: 10,
-    padding: 10,
+    margin: 1,
+    padding: 1,
     color: "red",
   },
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "space-evenly",
+  },
+  image: {
+    opacity: 0.2,
+  },
+  errContainer: {
+    marginTop: 2
+  }
 });
