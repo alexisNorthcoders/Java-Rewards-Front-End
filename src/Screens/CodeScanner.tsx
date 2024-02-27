@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, Button, Alert } from "react-native";
 import { Camera } from "expo-camera";
 import axios, { Axios } from "axios";
-import { err } from "react-native-svg";
 
 export default function QrcodeScan() {
   const [hasPermission, setHasPermission] = useState(null);
@@ -17,7 +16,7 @@ export default function QrcodeScan() {
 
   const handleBarCodeScanned = ({ data }) => {
     setScanned(true);
-    console.log(data, "Scanned data")
+    console.log(data, "Scanned data");
     Alert.alert(
       "Scanned successfully!",
       ``,
@@ -28,10 +27,7 @@ export default function QrcodeScan() {
       .patch("https://javarewards-api.onrender.com/users/coffee", {
         email: `${data}`,
       })
-      .then((res) => {
-        console.log(res, "response here");
-        console.log("coffee added");
-      })
+      .then((res) => {})
       .catch((err) => {
         console.log(err);
       });
@@ -51,6 +47,7 @@ export default function QrcodeScan() {
         type={Camera.Constants.Type.back}
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
       />
+
       {scanned && (
         <Button title={"Tap to Scan Again"} onPress={() => setScanned(false)} />
       )}

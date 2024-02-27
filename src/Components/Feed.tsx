@@ -7,9 +7,9 @@ export default function Feed() {
 
     useEffect(() => {
         getOffers().then((data) => {
+            
           setOffers(data);
-          console.log(data)
-        });
+         });
       }, []);
     
     return (

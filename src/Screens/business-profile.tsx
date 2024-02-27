@@ -6,7 +6,7 @@ import {
   SafeAreaView,
   StatusBar,
 } from "react-native";
-import { Card, Button} from "@rneui/themed";
+import { Card, Button } from "@rneui/themed";
 import { StarRatingDisplay } from 'react-native-star-rating-widget';
 import { ScrollView } from "react-native-gesture-handler";
 
@@ -36,11 +36,11 @@ export default function BusinessProfile() {
 
   const isFocused = useIsFocused()
   useEffect(() => {
-    if(isFocused) {
-    setIsLoading(true);
-    getUserEmail().then((res) => {
-      return getShopData(res.email)
-    }).then((shopData) => {
+    if (isFocused) {
+      setIsLoading(true);
+      getUserEmail().then((res) => {
+        return getShopData(res.email)
+      }).then((shopData) => {
         setShopData({
           name: shopData.name,
           email: shopData.email,
@@ -53,15 +53,16 @@ export default function BusinessProfile() {
         setIsLoading(false);
         setRating(shopData.totalRating.average_rating)
       })
-      .catch((err) => {
-        console.log(err);
-      });
-  }}, [isFocused]);
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [isFocused]);
 
   return isLoading ? (
     <Loading />
   ) : (
-    <SafeAreaView style={{flexGrow: 1}}>
+    <SafeAreaView style={{ flexGrow: 1 }}>
       <StatusBar />
       <ScrollView
         automaticallyAdjustKeyboardInsets={true}
@@ -73,21 +74,22 @@ export default function BusinessProfile() {
         }}
       >
 
-        <View style={{flex: 1, flexDirection: "row", justifyContent: "space-between"}}>
+        <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between" }}>
 
           <Text style={styles.h1}>My Profile</Text>
           <Button containerStyle={styles.button}
-                titleStyle={{ fontWeight: "bold", fontSize: 13 }}
-                buttonStyle={{ backgroundColor: "#bf6240" }}
-              onPress={() => {
-                clearUserType()
-                clearUserEmail()
-                auth.signOut();
-              }}
-            >
-              Sign Out
-            </Button>
-          
+
+            titleStyle={{ fontWeight: "bold", fontSize: 13 }}
+            buttonStyle={{ backgroundColor: "#bf6240" }}
+            onPress={() => {
+              clearUserType()
+              clearUserEmail()
+              auth.signOut();
+            }}
+          >
+            Sign Out
+          </Button>
+
         </View>
         <View style={styles.profile}>
           <Card containerStyle={{ borderRadius: 8 }}>
@@ -96,11 +98,11 @@ export default function BusinessProfile() {
               source={{ uri: `${shopData.avatar_url}` }}
               height={100}
             ></Card.Image>
-            
+
           </Card>
           <Card containerStyle={{ borderRadius: 8, alignItems: 'center' }}>
             <Card.Title>Customer Rating {rating}/5</Card.Title>
-            <StarRatingDisplay rating={rating}/>
+            <StarRatingDisplay rating={rating} />
           </Card>
           <Card containerStyle={{ borderRadius: 8 }}>
             <Card.Title>
@@ -141,9 +143,9 @@ export default function BusinessProfile() {
           </Card>
         </View>
 
-          <BusinessStats shopData={shopData} id={id} />
-          
-        
+        <BusinessStats shopData={shopData} id={id} />
+
+
       </ScrollView>
     </SafeAreaView>
   );

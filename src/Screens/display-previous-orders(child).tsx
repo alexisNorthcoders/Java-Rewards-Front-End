@@ -7,8 +7,6 @@ export default function DisplayPreviousOrders({items}) {
 
     const itemsArr = items.items;
 
-
-
     return (<>
     <View style={styles.orderView}>
     <Text>Order on {items.date}</Text>
@@ -34,7 +32,7 @@ const styles = StyleSheet.create({
 
         margin: 10,
         padding: 10,
-        backgroundColor: "green",
+        backgroundColor: "brown",
         borderRadius: 10,
         borderBlockColor: "brown",
         borderWidth: 3
