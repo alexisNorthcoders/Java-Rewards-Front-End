@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, Animated, 
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import DisplayPreviousOrders from './display-previous-orders(child)';
-
+import { auth } from '../config/firebase';
 
 
 export default function UserProfile() {
@@ -45,7 +45,9 @@ export default function UserProfile() {
                         style={styles.profileImage}
                     />
                     <Text style={styles.userName} >{userList[0].name}</Text>
-                    <Button title="Logout"/>
+                    <Button title="Logout" onPress={() => {
+                auth.signOut();
+              }}/>
                 </View>
             )}
             <View>
