@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "center",
     flexDirection: "column",
-    backgroundColor: "#C4A484",
+    backgroundColor: "#f5e7da",
   },
   card0: {
     flex: 1.5,

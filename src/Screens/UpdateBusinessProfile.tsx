@@ -27,8 +27,6 @@ const UpdateBusinessProfile = ({route}) => {
                 marginVertical: 10,
               }}
               onPress={() => {
-                console.log(shop)
-                console.log(newDesc)
                 updateShopData({...shop, description: newDesc })
               .then((navigation.navigate("Nav")))}}
             />

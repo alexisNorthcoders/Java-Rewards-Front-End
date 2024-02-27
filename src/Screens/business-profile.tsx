@@ -1,4 +1,5 @@
 import {
+  Image,
   View,
   Text,
   StyleSheet,
@@ -31,6 +32,7 @@ export default function BusinessProfile() {
   });
   const [id, setId] = useState()
   const [rating, setRating] = useState()
+  const [menu, setMenu] = useState()
 
   const isFocused = useIsFocused()
   useEffect(() => {
@@ -47,8 +49,9 @@ export default function BusinessProfile() {
           description: shopData.description,
         });
         setId(shopData._id)
+        setMenu(shopData.menu)
         setIsLoading(false);
-        setRating(shopData.totalRating.rating)
+        setRating(shopData.totalRating.average_rating)
       })
         .catch((err) => {
           console.log(err);
@@ -75,6 +78,7 @@ export default function BusinessProfile() {
 
           <Text style={styles.h1}>My Profile</Text>
           <Button containerStyle={styles.button}
+
             titleStyle={{ fontWeight: "bold", fontSize: 13 }}
             buttonStyle={{ backgroundColor: "#bf6240" }}
             onPress={() => {
@@ -114,6 +118,28 @@ export default function BusinessProfile() {
               titleStyle={{ fontWeight: "bold", fontSize: 13 }}
               buttonStyle={{ backgroundColor: "#bf6240" }}
             />
+          </Card>
+          <Card containerStyle={{ borderRadius: 8, alignItems: 'center' }}>
+            <Card.Title>Menu</Card.Title>
+            {console.log(menu)}
+            {menu.map((item, i) => {
+              return (
+                <View key={i} style={styles.singleItem}>
+                  <Image source={{uri: item.item_img}} style={styles.img} />
+                  <View  style={styles.menuItem} >
+                    <Text>{item.item}</Text>
+                    <Text>£{item.cost}</Text>
+                  </View>
+                </View>
+              )
+            })}
+            <Button title="Add Item" containerStyle={styles.button}
+                    titleStyle={{fontWeight: "bold", fontSize: 13}}
+                    buttonStyle={{backgroundColor: "#BF6240"}}
+                    onPress={() => {
+                      navigation.navigate("updateMenu", { menu: menu });
+                    }}
+                    />
           </Card>
         </View>
 
@@ -157,4 +183,16 @@ const styles = StyleSheet.create({
   businessName: {
     fontWeight: "700",
   },
+  menuItem: {
+    flexDirection: 'row',
+    columnGap: 10,
+    justifyContent: 'space-between'
+  },
+  img: {
+    width: 100,
+    height: 100
+  },
+  singleItem: {
+    flexDirection: 'row'
+  }
 });

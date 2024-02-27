@@ -7,8 +7,6 @@ export default function DisplayPreviousOrders({items}) {
 
     const itemsArr = items.items;
 
-   
-
     return (<>
     <View style={styles.orderView}>
     <Text>Order on {items.date}</Text>
