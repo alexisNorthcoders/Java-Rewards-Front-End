@@ -33,6 +33,7 @@ export default function BusinessProfile() {
   const [id, setId] = useState()
   const [rating, setRating] = useState()
   const [menu, setMenu] = useState()
+  const [offers, setOffers] = useState()
 
   const isFocused = useIsFocused()
   useEffect(() => {
@@ -50,6 +51,7 @@ export default function BusinessProfile() {
         });
         setId(shopData._id)
         setMenu(shopData.menu)
+        setOffers(shopData.offers)
         setIsLoading(false);
         setRating(shopData.totalRating.average_rating)
       })
@@ -140,6 +142,26 @@ export default function BusinessProfile() {
                     }}
                     />
           </Card>
+          <Card containerStyle={{ borderRadius: 8, alignItems: 'center' }}>
+            <Card.Title>Offers</Card.Title>
+                <View style={styles.singleItem}>
+                  <Image source={{uri: offers.img}} style={styles.img} />
+                  <View  style={styles.offers} >
+                    <Text>{offers.description}</Text>
+                    <Text>{offers.date}</Text>
+                  </View>
+                </View>
+              
+            
+            
+            <Button title="Add Offer" containerStyle={styles.button}
+                    titleStyle={{fontWeight: "bold", fontSize: 13}}
+                    buttonStyle={{backgroundColor: "#BF6240"}}
+                    onPress={() => {
+                      navigation.navigate("updateOffers", { offers: offers });
+                    }}
+                    />
+          </Card>
         </View>
 
         <BusinessStats shopData={shopData} id={id} />
@@ -183,6 +205,11 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   menuItem: {
+    flexDirection: 'row',
+    columnGap: 10,
+    justifyContent: 'space-between'
+  },
+  offers: {
     flexDirection: 'row',
     columnGap: 10,
     justifyContent: 'space-between'
