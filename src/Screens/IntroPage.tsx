@@ -4,6 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import background from "../Images/coffee-background.jpeg";
 import { useAccountContext} from "../contexts/AccountContext";
 import { StackNavigationProp } from "@react-navigation/stack";
+import logo from '../Images/7AiXuD-LogoMakr.png'
 
 type StackNavigationList = {
   Login: undefined
@@ -21,14 +22,12 @@ export default function IntroPage() {
         style={styles.container}
         imageStyle={styles.image}
       >
-        <Text text30BO color={"#bf6240"}>
-          Java Rewards
-        </Text>
-        <Image />
+        <Image source={logo}/>
+        <View>
         <Button
           label={"Customer"}
           size={Button.sizes.large}
-          backgroundColor={"#bf6240"}
+          style={{backgroundColor: '#bf6240', marginBottom: 40}}
           text60BO
           onPress={() => {
             navigation.navigate("Login");
@@ -45,6 +44,7 @@ export default function IntroPage() {
             setAccountType("Business");
           }}
         />
+        </View>
       </ImageBackground>
     </View>
   );
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "space-evenly",
+    justifyContent: "space-around",
   },
   image: {
     opacity: 0.2,

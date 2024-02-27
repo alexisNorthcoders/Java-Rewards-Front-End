@@ -1,9 +1,10 @@
-import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, Animated, Button} from 'react-native';
+import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, Animated} from 'react-native';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import DisplayPreviousOrders from './display-previous-orders(child)';
-
-
+import { clearUserEmail, clearUserType } from '../../utils/rememberUserType';
+import { auth } from '../config/firebase';
+import { Button } from '@rneui/themed';
 
 export default function UserProfile() {
 
@@ -45,7 +46,17 @@ export default function UserProfile() {
                         style={styles.profileImage}
                     />
                     <Text style={styles.userName} >{userList[0].name}</Text>
-                    <Button title="Logout"/>
+                    <Button
+                    title="log out"
+                    titleStyle={{ fontWeight: "bold", fontSize: 13 }}
+                    buttonStyle={{ backgroundColor: "#bf6240" }}
+                    onPress={() => {
+                        clearUserType()
+                        clearUserEmail()
+                        auth.signOut();
+                    }}>
+                    Sign Out
+                    </Button>
                 </View>
             )}
             <View>
