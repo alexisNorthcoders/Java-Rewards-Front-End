@@ -29,6 +29,8 @@ export default function UserProfile() {
   const [profileImage, setProfileImage] = useState("");
   const [email, setEmail] = useState("");
   const [CoffeCount, setCoffeCount] = useState(0);
+  let newCoffeeCount = 0.60
+  console.log(newCoffeeCount)
 
   useEffect(() => {
     axios
@@ -47,7 +49,11 @@ export default function UserProfile() {
         })
         .then((res) => {
           setUserList(res.data.user);
-          setCoffeCount(res.data.user[0].coffee_count + 100);
+          setCoffeCount(res.data.user[0].coffee_count);
+          if(res.data.user[0].coffee_count + 1)
+          {
+            updateCoffeeCount(0.15);
+          }   
         });
     }
   }, [isFocused]);
@@ -63,6 +69,10 @@ export default function UserProfile() {
     };
     fetchEmailFromStorage();
   }, []);
+
+  const updateCoffeeCount = (increment: number) => {
+    setCoffeCount((PrevCoffeeCount) => PrevCoffeeCount + increment);
+  }
 
   return (
     <ScrollView>
@@ -93,7 +103,8 @@ export default function UserProfile() {
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
           <Card containerStyle={{ borderRadius: 8 }}>
             <ProgressBar
-              width={CoffeCount}
+              width={300}
+              progress={newCoffeeCount}
               height={20}
               color="#d2691e"
               borderWidth={2}
