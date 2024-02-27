@@ -30,6 +30,19 @@ export function getMenuByEmail(email:string) {
     return menuWithQuantity
     })
 }
+export function getOffersByEmail(email:string) {
+  return api.post('/shops/email',{
+    email: email,
+  })
+  .then(({data:{shop}}) => {
+    console.log(`fetching offers from ${email}`);
+    
+    const offers = shop[0].offers
+    console.log(offers)
+    return offers
+    })
+}
+
 export function postOrder(order:{}){
   return api.post('/orders',order).then(({data}) => {
     console.log(data)
