@@ -1,25 +1,12 @@
+import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, Animated, ScrollView} from 'react-native';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
+import DisplayPreviousOrders from './display-previous-orders(child)';
+import { clearUserEmail, clearUserType, getUserEmail } from '../../utils/rememberUserType';
+import { auth } from '../config/firebase';
+import { Card, Button } from '@rneui/themed';
 import { useIsFocused } from "@react-navigation/native";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  Dimensions,
-  TouchableOpacity,
-  Animated,
-  ScrollView,
-} from "react-native";
-import axios from "axios";
-import { useState, useEffect } from "react";
-import DisplayPreviousOrders from "./display-previous-orders(child)";
-import {
-  clearUserEmail,
-  clearUserType,
-  getUserEmail,
-} from "../../utils/rememberUserType";
 import ProgressBar from "react-native-progress/Bar";
-import { auth } from "../config/firebase";
-import { Card, Button } from "@rneui/themed";
 
 export default function UserProfile() {
   interface User {

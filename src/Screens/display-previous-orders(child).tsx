@@ -8,6 +8,7 @@ export default function DisplayPreviousOrders({items}) {
 
 
     const itemsArr = items.items;
+  
     let orderDate = new Date(items.date)
     const f = new Intl.DateTimeFormat("en-GB", {
     weekday: 'long',

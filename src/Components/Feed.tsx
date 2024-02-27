@@ -9,7 +9,8 @@ export default function Feed() {
         getOffers().then((data) => {
             
           setOffers(data);
-         });
+        });
+
       }, []);
     
     return (

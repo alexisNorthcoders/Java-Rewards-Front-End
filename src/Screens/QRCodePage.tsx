@@ -1,8 +1,9 @@
 import QRCode from "react-qr-code"
-import { StyleSheet, View, Text} from 'react-native';
+import { StyleSheet, ImageBackground, View, Text} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { getUserEmail } from "../../utils/rememberUserType";
+import background from '../Images/top-view-coffee-beans-hole-center-white-background-horizontal.jpg'
 
 export default function QRCodePage() {
   const [email, setEmail] = useState("")
@@ -29,24 +30,35 @@ export default function QRCodePage() {
 
   const navigation = useNavigation();
   function handleBackBtn() {
-    navigation.navigate('UserProfile')
+    navigation.navigate('Profile')
   }
   return (
-    <View style={styles.fixToText}>
-    <Text style={styles.between} onPress={handleBackBtn}>Back to Profile</Text>
+    <>
+    <View style={styles.root}>
+    <ImageBackground 
+      source={background}
+      style={styles.container}
+      imageStyle={styles.image}
+    >
+      <Text>Collect your points</Text>
     <QRCode value={email}/>
+    </ImageBackground>
     </View>
+    </>
   )
 }
 const styles = StyleSheet.create({
-  fixToText: {
-    flexDirection: 'column',
-    display: 'flex',
+  root: { flex: 1, width: "100%" },
+  container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
-  between: {
-    padding: 50
+  image: {
+    opacity: 0.2,
+  },
+  btn: {
+    display: 'flex',
+    justifyContent: 'flex-start'
   }
 });

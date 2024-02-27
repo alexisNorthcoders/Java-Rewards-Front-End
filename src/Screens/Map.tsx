@@ -4,14 +4,12 @@ import { StyleSheet, View, Dimensions, Pressable } from "react-native";
 import { Text } from "react-native-ui-lib";
 import * as Location from "expo-location";
 import axios from "axios";
-
 type MapInfo = {
   latitude: number;
   longitude: number;
   latitudeDelta: number;
   longitudeDelta: number;
 }
-
 type GeoCode = {
     name: string,
     location: {
@@ -19,24 +17,18 @@ type GeoCode = {
         lat: number;
     };
 }
-
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
-
 interface Props {
   longitude: number;
   latitude: number;
   name: string;
 }
-
 export default function Map({latitude = 0, longitude = 0, name = ''}: Props ) {
-
   const { width, height } = Dimensions.get("window");
-
   const ASPECT_RATIO = width / height;
   const LATITUDE_DELTA = 0.02;
   const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
-
   const [errorMsg, setErrorMsg] = useState("");
   const [mapInfo, setMapInfo] = useState<MapInfo>({
     latitude: 53.477992,
@@ -45,11 +37,10 @@ export default function Map({latitude = 0, longitude = 0, name = ''}: Props ) {
     longitudeDelta: LONGITUDE_DELTA,
   });
   const [geoCodes, setGeoCodes] = useState<GeoCode[]>([]);
-
   const userLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== "granted") {
-      setErrorMsg("Permission to access location denied");
+    if (status !== 'granted') {
+      setErrorMsg('Permission to access location denied');
     }
     let location = await Location.getCurrentPositionAsync({});
     setMapInfo({
@@ -59,18 +50,14 @@ export default function Map({latitude = 0, longitude = 0, name = ''}: Props ) {
       longitudeDelta: 0.0421
     })
   };
-
   useEffect(() => {
     userLocation()
-    
     axios.get('https://javarewards-api.onrender.com/shops')
     .then((res) => {
       setGeoCodes(res.data.shops)
     })
   }, [])
-
   const mapRef = useRef<MapView | null>(null);
-
   function handleZoom(latitude: number, longitude: number) {
     if (mapRef.current) {
       const region = {
@@ -82,10 +69,9 @@ export default function Map({latitude = 0, longitude = 0, name = ''}: Props ) {
       mapRef.current.animateCamera({center: region, zoom: 18}, { duration: 2000 });
   }
   }
-
   return (
-    <>
-      <Text text80BO>Maps</Text>
+    <View style={styles.container}>
+      <Text style={{fontSize: 15, fontWeight: 'bold'}}>Maps</Text>
       <MapView
         style={styles.map}
         provider={PROVIDER_GOOGLE}
@@ -100,7 +86,7 @@ export default function Map({latitude = 0, longitude = 0, name = ''}: Props ) {
         showsMyLocationButton
         ref={mapRef}
       >
-      {latitude && longitude ? 
+      {latitude && longitude ?
       (<Marker
       coordinate={{
         latitude: latitude,
@@ -124,26 +110,22 @@ export default function Map({latitude = 0, longitude = 0, name = ''}: Props ) {
         />
         ))}
       </MapView>
-    </>
+    </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: "flex-end",
-    borderColor: 'black',
-    width: '100%',
+    justifyContent: "space-evenly",
+    borderColor: "black",
+    width: "100%",
   },
   map: {
     width: windowWidth * 0.8,
-    height: windowHeight * 0.2,
+    height: windowHeight * 0.25,
     alignItems: 'center',
     borderRadius: 10
   },
 });
-
-
-
