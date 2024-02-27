@@ -9,22 +9,25 @@ import {
   ActivityIndicator,
   ImageBackground,
 } from "react-native";
+import { Input } from "@rneui/themed";
 import { useState } from "react";
 import { auth } from "../config/firebase";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import background from "../../images/loginbkg.jpg";
+import background from "../../images/login_background.jpg";
 import { useNavigation } from "@react-navigation/native";
 import { useAccountContext} from "../contexts/AccountContext";
 import { storeUserEmail, storeUserType } from "../../utils/rememberUserType";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [loginError, setLoginError] = useState("")
 
   const { accountType } = useAccountContext()
 
@@ -34,70 +37,62 @@ export default function Login() {
     setLoading(true);
 
     try {
+      await storeUserType(accountType)
+       await storeUserEmail(email)
       const res = await signInWithEmailAndPassword(auth, email, password);
-      storeUserType(accountType)
-      storeUserEmail(email)
-      Alert.alert("Sign in successful!");
     } catch (err: any) {
       console.log(err);
-      Alert.alert("Sign in failed" + err.message);
+      Alert.alert("Sign in failed, please try again");
     } finally {
-      setLoading(false);
-    }
-  };
-
-  const signUp = async () => {
-    setLoading(true);
-
-    if (email === "" || password === "") {
-      setError("Email and password are mandatory.");
-      setLoading(false);
-      return;
-    }
-
-    try {
-      setError("");
-      const res = await createUserWithEmailAndPassword(auth, email, password);
-
-      Alert.alert("You've successfully registered!");
-    } catch (err: any) {
-      console.log(err);
-      Alert.alert("Sign up failed" + err.message);
-    } finally {
+      
       setLoading(false);
     }
   };
 
   return (
-    <KeyboardAvoidingView behavior="padding" style={styles.container}>
-      <ImageBackground source={background} style={styles.background}>
+    <SafeAreaView style={styles.container}>
+      <ImageBackground source={background} style={styles.background}
+        resizeMode="cover"
+      >
         <View style={styles.inputContainer}>
           <Text style={styles.title}>Welcome to Java Rewards!</Text>
           {error && (
-            <View style={styles.error}>
-              <Text>{error}</Text>
+            <View>
+              <Text style={styles.error}>{error}</Text>
             </View>
           )}
-          <TextInput
+
+        {loginError && (
+            <View >
+              <Text style={styles.error}>{loginError}</Text>
+            </View>
+          )}  
+          
+          <Input
             value={email}
+            inputContainerStyle={{borderBottomWidth:0}}
             style={styles.input}
             placeholder="Email"
             autoCapitalize="none"
             onChangeText={(text) => {
               setEmail(text);
             }}
-          ></TextInput>
+            leftIcon={{type: 'font-awesome', name:'envelope', color: 'white'}}
+          />
 
-          <TextInput
+          <Input
             value={password}
+            
             style={styles.input}
+            inputContainerStyle={{borderBottomWidth:0}}
             secureTextEntry={true}
             placeholder="Password"
             autoCapitalize="none"
             onChangeText={(text) => {
               setPassword(text);
             }}
-          ></TextInput>
+            leftIcon={{type: 'font-awesome', name:'key', color: 'white'}}
+          ></Input>
         </View>
 
         <View style={styles.buttonContainer}>
@@ -105,7 +100,17 @@ export default function Login() {
             <ActivityIndicator size="large" color="0000ff" />
           ) : (
             <>
-              <TouchableOpacity onPress={signIn} style={styles.button}>
+              <TouchableOpacity onPress={() => {
+                if(!email || !password) {
+                  setLoginError("Email and password are required")
+                  return
+                } else {
+                  setLoginError("")
+                  signIn()
+
+                }
+                
+                }} style={styles.button}>
                 <Text style={styles.buttonText}>Login</Text>
               </TouchableOpacity>
               <Text style={styles.orText}>Or</Text>
@@ -125,7 +130,7 @@ export default function Login() {
           )}
         </View>
       </ImageBackground>
-    </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
@@ -142,7 +147,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
-    fontSize: 22,
+    fontSize: 26,
     fontWeight: "bold",
     marginBottom: 60,
     color: "white",
@@ -154,6 +159,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 5,
     width: 300,
+    borderColor: "#BF6240",
+    borderWidth: 1,
+    fontSize: 14
   },
   inputContainer: {
     width: "90%",
@@ -192,7 +200,9 @@ const styles = StyleSheet.create({
   error: {
     marginTop: 10,
     padding: 10,
-    color: "#fff",
+    color: "white",
+    textDecorationStyle: "solid",
+    textDecorationLine: "underline"
   },
   orText: {
     color: "white",

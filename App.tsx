@@ -6,6 +6,7 @@ import "react-native-gesture-handler";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import UserProfile from "./src/Screens/user-profile";
 import { StripeProvider } from '@stripe/stripe-react-native';
+import { Alert } from "react-native";
 
 
 const Stack = createNativeStackNavigator();

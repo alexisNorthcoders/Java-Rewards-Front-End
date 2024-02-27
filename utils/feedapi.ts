@@ -2,6 +2,8 @@ import axios from 'axios';
 
 const api = axios.create({
   baseURL: "https://javarewards-api.onrender.com/"
+  //baseURL: "http://192.168.248.249:9999/"
+
 })
 
 interface Offer {
@@ -28,13 +30,26 @@ export function getMenuByEmail(email:string) {
     return menuWithQuantity
     })
 }
+export function getOffersByEmail(email:string) {
+  return api.post('/shops/email',{
+    email: email,
+  })
+  .then(({data:{shop}}) => {
+    console.log(`fetching offers from ${email}`);
+    
+    const offers = shop[0].offers
+    console.log(offers)
+    return offers
+    })
+}
+
 export function postOrder(order:{}){
   return api.post('/orders',order).then(({data}) => {
     console.log(data)
     return data.order})
 }
-export function getBusinessOrders(){
-  return api.get('/orders?shop_id=1').then(({data}) => data)
+export function getBusinessOrders(id){
+  return api.get(`/orders?shop_id=${id}`).then(({data}) => data)
 }
 export function updateOrderStatus(order_id:number){
   return api.patch('orders/status',{order_id:order_id}).then(({data:{order}})=> order)

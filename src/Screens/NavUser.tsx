@@ -41,6 +41,7 @@ export default function NavUser() {
                   paddingTop: 20,
                   marginLeft: 20,
                   marginRight: -10
+
                 }}
               >
                 <Entypo

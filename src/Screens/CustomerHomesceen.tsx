@@ -45,10 +45,12 @@ export default function CustomerHomeScreen({navigation}: any) {
       <Card containerStyle={styles.card0}>
         <MapHome/>
       </Card>
-      {shops.map((shop) => {
+      {shops.map((shop,index) => {
         return (
+
           
           <View style={styles.root} key={shop.email}>
+
           <TouchableOpacity style={{width: '90%', alignItems: 'center'}} onPress={() => {
             navigation.navigate("IndividualShop", {email: shop.email})
         }}>
@@ -67,7 +69,9 @@ export default function CustomerHomeScreen({navigation}: any) {
       })
     } 
       </View>
+      <Feed></Feed>
       </ScrollView>
+      
       </SafeAreaView>
   )
 }

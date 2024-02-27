@@ -1,15 +1,27 @@
 import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, Animated} from 'react-native';
+import { Card, Button } from "@rneui/themed";
 import { green } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
+import { BorderRadiuses } from 'react-native-ui-lib';
 
 
 export default function DisplayPreviousOrders({items}) {
 
 
     const itemsArr = items.items;
+  
+    let orderDate = new Date(items.date)
+    const f = new Intl.DateTimeFormat("en-GB", {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    day: '2-digit',
+    })
 
-    return (<>
-    <View style={styles.orderView}>
-    <Text>Order on {items.date}</Text>
+    return (
+    <Card containerStyle={{ borderRadius: 8 }} >
+    <Text >Order Number #{items.order_id} </Text>    
+    <Text>Ordered on {f.format(orderDate)}</Text>
     
     {
         itemsArr.map((item) => {
@@ -20,9 +32,8 @@ export default function DisplayPreviousOrders({items}) {
     }
 
     <Text>Total cost: £{items.totalCost}</Text>
-
-    </View>
-    </>)
+    </Card>
+    )
 
 }
 
@@ -32,10 +43,13 @@ const styles = StyleSheet.create({
 
         margin: 10,
         padding: 10,
-        backgroundColor: "green",
+        backgroundColor: "brown",
         borderRadius: 10,
         borderBlockColor: "brown",
         borderWidth: 3
+    }, 
+    card: {
+        borderRadius: 8,
     }
 
 })

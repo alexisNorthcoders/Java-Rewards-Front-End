@@ -7,8 +7,10 @@ export default function Feed() {
 
     useEffect(() => {
         getOffers().then((data) => {
+            
           setOffers(data);
         });
+
       }, []);
     
     return (
@@ -38,6 +40,7 @@ const { width } = Dimensions.get('window');
 const styles = StyleSheet.create({
     container: {
         padding: width * 0.04,
+        backgroundColor: '#f5ece4'
     },
     h1: {
         fontSize: 32,
