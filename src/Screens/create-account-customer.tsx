@@ -8,7 +8,8 @@ import {
   ImageBackground,
   ScrollView,
 } from "react-native";
-import { Text } from "@rneui/themed";
+import { Text, } from "@rneui/themed";
+import { FontAwesome } from '@expo/vector-icons';
 import { useEffect, useState } from "react";
 import { auth } from "../config/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -16,6 +17,8 @@ import { postNewUser } from "../../utils/api";
 import { validateEmail, validateAvatarURL, validatePassword } from "../../utils/formValidation";
 import background from "../Images/coffee-background.jpeg";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Octicons } from '@expo/vector-icons';
+
 
 export default function CreateAccountCustomer() {
   const [name, setName] = useState("");
@@ -94,57 +97,80 @@ export default function CreateAccountCustomer() {
         </View>
 
         <View>
-          <TextInput
-            value={name}
-            style={styles.input}
-            placeholder="Name"
-            autoCapitalize="none"
-            onChangeText={(text) => {
-              setName(text);
-            }}
-          />
-          <TextInput
-            value={age}
-            style={styles.input}
-            placeholder="Age"
-            
-            keyboardType="numeric"
-            autoCapitalize="none"
-            onChangeText={(text) => {
-              setAge(text);
-            }}
-          />
-          <TextInput
-            value={email}
-            style={styles.input}
-            placeholder="Email"
-            autoCapitalize="none"
-            onChangeText={(text) => {
-              setEmail(text);
-            }}
-            onBlur={() => {validateEmail(setEmailValid, email)}}
-          />
-          <TextInput
-            value={password}
-            style={styles.input}
-            secureTextEntry={true}
-            placeholder="Password"
-            autoCapitalize="none"
-            onChangeText={(text) => {
-              setPassword(text);
-            }}
-            onBlur={() => {validatePassword(setPasswordValid, password)}}
-          />
-          <TextInput
-            value={avatar}
-            style={styles.input}
-            placeholder="Avatar URL"
-            autoCapitalize="none"
-            onChangeText={(text) => {
-              setAvatarUrl(text);
-            }}
-            onBlur={() => {validateAvatarURL(setURLValid, avatar)}}
-          />
+          <View style={styles.singleInput}>
+            <FontAwesome name="pencil" size={20} color="#BF6240" />
+              <TextInput
+                value={name}
+                style={styles.input}
+                placeholder="Name"
+                autoCapitalize="none"
+                onChangeText={(text) => {
+                  setName(text);
+                }}
+              />
+
+          </View>
+
+          <View style={styles.singleInput}>
+
+            <Octicons name="number" size={23} color="#BF6240" />
+            <TextInput
+              value={age}
+              style={styles.input}
+              placeholder="Age"
+              
+              keyboardType="numeric"
+              autoCapitalize="none"
+              onChangeText={(text) => {
+                setAge(text);
+              }}
+            />
+          </View>
+
+          <View style={styles.singleInput}>
+            <Octicons name="mail" size={17} color="#BF6240" />
+            <TextInput
+              value={email}
+              style={styles.input}
+              placeholder="Email"
+              autoCapitalize="none"
+              onChangeText={(text) => {
+                setEmail(text);
+              }}
+              onBlur={() => {validateEmail(setEmailValid, email)}}
+            />
+          </View>
+          
+          <View style={styles.singleInput}>
+            <FontAwesome name="key" size={17} color="#BF6240" />
+            <TextInput
+              value={password}
+              style={styles.input}
+              secureTextEntry={true}
+              placeholder="Password"
+              autoCapitalize="none"
+              onChangeText={(text) => {
+                setPassword(text);
+              }}
+              onBlur={() => {validatePassword(setPasswordValid, password)}}
+            />
+
+          </View>
+
+          <View style={styles.singleInput}>
+            <FontAwesome name="file-image-o" size={19} color="#BF6240" />
+            <TextInput
+              value={avatar}
+              style={styles.input}
+              placeholder="Avatar URL"
+              autoCapitalize="none"
+              onChangeText={(text) => {
+                setAvatarUrl(text);
+              }}
+              onBlur={() => {validateAvatarURL(setURLValid, avatar)}}
+            />
+
+          </View>
         </View>
 
         <View style={styles.buttonContainer}>
@@ -182,7 +208,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ECE1DD",
     borderRadius: 10,
     marginTop: 5,
-    width: 300,
+    width: 270,
     borderColor: "brown",
     borderWidth: 1,
   },
@@ -224,5 +250,10 @@ const styles = StyleSheet.create({
   },
   errContainer: {
     marginTop: 2
+  },
+  singleInput: {
+    flexDirection: 'row', 
+    alignItems: 'center',
+    gap: 5
   }
 });

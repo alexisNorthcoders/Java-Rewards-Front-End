@@ -25,6 +25,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import background from "../Images/coffee-background.jpeg";
 import { storeUserEmail, storeUserType } from "../../utils/rememberUserType";
 import { useAccountContext } from "../contexts/AccountContext";
+import { Octicons } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function CreateAccountBusiness() {
   const [name, setName] = useState("");
@@ -121,6 +124,9 @@ export default function CreateAccountBusiness() {
           </View>
 
           <View>
+
+          <View style={styles.singleInput}>
+            <FontAwesome name="pencil" size={20} color="#BF6240" />
             <TextInput
               value={name}
               style={styles.input}
@@ -131,7 +137,10 @@ export default function CreateAccountBusiness() {
                 setName(text);
               }}
             />
+          </View>
 
+          <View style={styles.singleInput}>
+            <Octicons name="mail" size={17} color="#BF6240" />
             <TextInput
               value={email}
               style={styles.input}
@@ -145,6 +154,10 @@ export default function CreateAccountBusiness() {
                 validateEmail(setEmailValid, email);
               }}
             />
+          </View>
+
+          <View style={styles.singleInput}>
+            <FontAwesome name="key" size={17} color="#BF6240" />
             <TextInput
               value={password}
               style={styles.input}
@@ -159,6 +172,10 @@ export default function CreateAccountBusiness() {
                 validatePassword(setPasswordValid, password);
               }}
             />
+          </View>
+            
+          <View style={styles.singleInput}>
+            <Octicons name="location" size={20} color="#BF6240" />
             <TextInput
               value={postcode}
               style={styles.input}
@@ -172,6 +189,10 @@ export default function CreateAccountBusiness() {
                 validatePostcode(setPostcodeValid, postcode);
               }}
             />
+          </View>
+
+          <View style={styles.singleInput}>
+            <FontAwesome name="file-image-o" size={19} color="#BF6240" />
             <TextInput
               value={avatar}
               style={styles.input}
@@ -185,16 +206,21 @@ export default function CreateAccountBusiness() {
                 validateAvatarURL(setURLValid, avatar);
               }}
             />
-            <TextInput
-              value={description}
-              style={styles.input}
-              placeholder="Add a brief description of your business"
-              placeholderTextColor="grey"
-              autoCapitalize="none"
-              onChangeText={(text) => {
-                setDescription(text);
-              }}
-            />
+          </View>
+
+          <View style={styles.singleInput}>
+          <FontAwesome name="file-text" size={19} color="#BF6240" />
+              <TextInput
+                value={description}
+                style={styles.input}
+                placeholder="Add a business description"
+                placeholderTextColor="grey"
+                autoCapitalize="none"
+                onChangeText={(text) => {
+                  setDescription(text);
+                }}
+              />
+          </View>
           </View>
 
           <View style={styles.buttonContainer}>
@@ -242,7 +268,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ECE1DD",
     borderRadius: 10,
     marginTop: 5,
-    width: 300,
+    width: 270,
     borderColor: "brown",
     borderWidth: 1,
   },
@@ -285,4 +311,9 @@ const styles = StyleSheet.create({
   errContainer: {
     marginTop: 2,
   },
+  singleInput: {
+    flexDirection: 'row', 
+    alignItems: 'center',
+    gap: 5
+  }
 });
