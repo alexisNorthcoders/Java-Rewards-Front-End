@@ -36,6 +36,7 @@ export default function UserProfile() {
 
   let newCoffeeCount = CoffeCount % 7;
   let coffeeProg = newCoffeeCount * 0.15;
+  let remainingCoffees = 7 - newCoffeeCount
 
   useEffect(() => {
     axios
@@ -112,7 +113,7 @@ export default function UserProfile() {
               color="#d2691e"
               borderWidth={2}
             />
-            <Text>4 more coffees to go before a free coffee!</Text>
+            <Text>{remainingCoffees} more coffees to go before a free coffee!</Text>
           </Card>
         </View>
       </View>
