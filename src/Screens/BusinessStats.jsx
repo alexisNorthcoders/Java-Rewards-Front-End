@@ -11,7 +11,8 @@ const BusinessStats = ({ shopData, id }) => {
   useEffect(() => {
     getOrdersByShopId(id).then((res) => {
       const orders = res.data.orders;
-
+      
+      if(orders.length === 0) return
       const allOrders = [];
       orders.forEach((order) => {
         allOrders.push(order.orders);
@@ -20,6 +21,9 @@ const BusinessStats = ({ shopData, id }) => {
     });
 
     getItemsByShopId(id).then((items) => {
+      if (items.length === 0) {
+        return
+      }
       setOrderedItems(items)
     })
     .catch((err) => {
@@ -107,7 +111,7 @@ const BusinessStats = ({ shopData, id }) => {
           />
         </Card> */}
 
-        <Card containerStyle={{ borderRadius: 8 }}>
+        {shopOrders ? <Card containerStyle={{ borderRadius: 8 }}>
           <Card.Title style={styles.title}>Stats</Card.Title>
           <Text style={styles.centerText}>Number of orders {'(last 3 months)'}</Text>
           <LineChart
@@ -149,7 +153,8 @@ const BusinessStats = ({ shopData, id }) => {
             }}
             fromZero = {true}
           />
-        </Card>
+        </Card> : null }
+        
 
        {orderedItems ? (<Card containerStyle={{ borderRadius: 8 }}>
           <Card.Title style={styles.title}>Stats</Card.Title>
@@ -158,7 +163,7 @@ const BusinessStats = ({ shopData, id }) => {
             data={
               [
                 {
-                  name: orderedItems[0]._id,
+                  name: orderedItems[0]._id || '',
                   population: orderedItems[0].totalAmount,
                   color: 'orange'
                 },
