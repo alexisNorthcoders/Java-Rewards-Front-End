@@ -69,7 +69,6 @@ export default function CustomerHomeScreen({navigation}: any) {
       })
     } 
       </View>
-      <Feed></Feed>
       </ScrollView>
       
       </SafeAreaView>
