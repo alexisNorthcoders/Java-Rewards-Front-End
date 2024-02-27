@@ -7,7 +7,6 @@ import {
   Dimensions,
   TouchableOpacity,
   Animated,
-  Button,
   ScrollView,
 } from "react-native";
 import axios from "axios";
@@ -16,6 +15,7 @@ import DisplayPreviousOrders from "./display-previous-orders(child)";
 import { clearUserEmail, clearUserType, getUserEmail } from "../../utils/rememberUserType";
 import ProgressBar from "react-native-progress/Bar";
 import { auth } from "../config/firebase";
+import { Card, Button } from "@rneui/themed";
 
 export default function UserProfile() {
   interface User {
@@ -92,7 +92,7 @@ export default function UserProfile() {
       <View>
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-          <View>
+          <Card >
             <ProgressBar
               width={200}
               height={20}
@@ -100,14 +100,15 @@ export default function UserProfile() {
               borderWidth={2}
               newProgress={newProgress}
             />
-          </View>
-        </View>
-        <Text style={styles.coffeeMessage}>
+            <Text >
           4 more coffees to go before a free coffee!
         </Text>
+          </Card>
+        </View>
+        
       </View>
       <View>
-        <Text>Previous Orders</Text>
+        <Text style={styles.previousOrders}>Previous Orders</Text>
         {previousOrders.map((item) => (
           <DisplayPreviousOrders key={item._id} items={item} />
         ))}
@@ -139,10 +140,20 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50,
     marginBottom: 10,
+    marginLeft: 15,
+
   },
   userName: {
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
   },
+  previousOrders:{
+    fontSize: 18,
+    fontWeight: "bold",
+    marginTop: 20,
+    marginBottom: 5,
+    textAlign: "center",
+    
+  }
 });
