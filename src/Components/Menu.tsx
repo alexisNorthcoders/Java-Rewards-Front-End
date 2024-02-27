@@ -5,6 +5,7 @@ import { Card, Button } from "@rneui/themed";
 
 import { useStripe } from '@stripe/stripe-react-native';
 import { getUserEmail } from '../../utils/rememberUserType';
+import { useNavigation } from '@react-navigation/native';
 
 type MenuItem = {
     item: string;
@@ -39,6 +40,7 @@ export default function Menu({ route }: any) {
     const [postedOrder, setPostedOrder] = useState<PostedOrder>({ totalCost: 0 })
     const [total, setTotal] = useState(0)
     const { initPaymentSheet, presentPaymentSheet } = useStripe();
+    const navigation = useNavigation();
 
     const initializePaymentSheet = async (totalCost: number) => {
         try {
@@ -106,6 +108,7 @@ export default function Menu({ route }: any) {
             postOrder(order).then((res) => {
                 setPostedOrder(res)
                 setModalVisible(true)
+
             })
         }
         catch (err) {
@@ -127,7 +130,7 @@ export default function Menu({ route }: any) {
         const newMenu = [...state.menu];
         newMenu[index].quantity += 1;
         let total = state.menu.reduce((acc, item) => acc + item.cost * item.quantity, 0)
-
+        console.log(state.menu[0].quantity)
         setTotal(total.toFixed(2))
         setState({ ...state, menu: newMenu });
     };
@@ -140,6 +143,14 @@ export default function Menu({ route }: any) {
             setState({ ...state, menu: newMenu });
         }
     };
+    const resetQuantity = () => {
+        const newMenu = [...state.menu]
+        newMenu.forEach((item) => {
+            item.quantity = 0
+        })
+        setState({ ...state, menu: newMenu });
+
+    }
 
     const renderMenuItems = (menu: Menu) => {
         return menu.map((menuItem, index) => (
@@ -156,14 +167,15 @@ export default function Menu({ route }: any) {
                         <Button
                             titleStyle={{ color: "white", fontSize: 16, fontWeight: "bold" }}
                             buttonStyle={{ backgroundColor: "#bf6240", borderRadius: 8, marginBottom: 5, width: 40, height: 40 }}
-                            onPress={() => increaseQuantity(index)}
-                        >+</Button>
+                            onPress={() => decreaseQuantity(index)}
+                        >-</Button>
                         <Text style={styles.quantityText}>{menuItem.quantity}</Text>
                         <Button
                             titleStyle={{ color: "white", fontSize: 16, fontWeight: "bold" }}
                             buttonStyle={{ backgroundColor: "#bf6240", borderRadius: 8, marginBottom: 5, width: 40, height: 40 }}
-                            onPress={() => decreaseQuantity(index)}
-                        >-</Button>
+                            onPress={() => increaseQuantity(index)}
+                        >+</Button>
+
                     </View></View>
             </Card>
         ));
@@ -197,24 +209,28 @@ export default function Menu({ route }: any) {
     }
 
 
-    return (
-        <ScrollView style={styles.container}>
+    return (<>
+        <ScrollView style={styles.container} stickyHeaderIndices={[0]}>
+            <View style={{ backgroundColor: "#edd8c5", height: "fit-content", justifyContent: "center", marginBottom: 15 }}><Text style={styles.h1}>Menu</Text></View>
             <Modal
                 animationType="slide"
                 transparent={true}
                 visible={modalVisible}
                 onRequestClose={() => {
-                    setModalVisible(!modalVisible);
+                    setModalVisible(!modalVisible)
                 }}
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <Text style={styles.modalText}>Your order has been placed!</Text>
-                        <Text style={{ fontSize: 20 }}>Order Number: <Text style={{ fontSize: 50, backgroundColor: "beige", fontWeight: "bold", borderColor: "black" }}>{postedOrder.order_id}</Text></Text>
-                        <Text style={{ fontSize: 30 }}>Total Cost: £{postedOrder.totalCost}</Text>
-                        <Button
-                            title="Close"
-                            onPress={() => setModalVisible(!modalVisible)}
+                        <Text style={{ fontSize: 20, marginBottom: 5, fontWeight: "bold" }}>Your order has been placed!</Text>
+                        <View style={{ flexDirection: 'column', width: 150, alignContent: "center", alignItems: "center", alignSelf: "center" }}><Text style={{ fontSize: 20 }}><View style={{ backgroundColor: "#f5ece4", borderRadius: 8 }}><Text style={{ fontSize: 50, fontWeight: "bold" }}>{postedOrder.order_id}</Text></View></Text></View>
+                        <Button titleStyle={{ color: "white", fontSize: 16, fontWeight: "bold" }} buttonStyle={{ backgroundColor: "#bf6240", borderRadius: 8, marginTop: 5, height: 40 }} title="Close"
+                            onPress={() => {
+                                setTotal(0)
+                                resetQuantity()
+                                setModalVisible(!modalVisible)
+                                navigation.navigate('Profile');
+                            }}
                         />
                     </View>
                 </View>
@@ -222,36 +238,36 @@ export default function Menu({ route }: any) {
             {state.isLoading ? (
                 <Text>Loading menu...</Text>
             ) : (
-                <><Text style={styles.h1}>Menu</Text>
+                <>
                     {renderMenuItems(state.menu)}
 
                 </>
             )}
-            <Card containerStyle={{ marginTop: 0, marginBottom: 5, borderRadius: 8, padding: 0, height: 40, justifyContent: "center" }}><Text style={{ fontSize: 20, fontWeight: "bold", alignSelf: "center" }}>Total: £{total}</Text></Card>
-            <View style={{ marginTop: 5, marginLeft: 10, marginRight: 10 }}>
+
+        </ScrollView>
+        <View style={{ alignSelf: "center", backgroundColor: "#edd8c5", width: "100%", }}>
+            <Card containerStyle={{ marginTop: 5, marginBottom: 5, borderRadius: 8, padding: 0, height: 40, alignSelf: "center", justifyContent: "center", width: 300 }}><Text style={{ fontSize: 20, fontWeight: "bold", alignSelf: "center" }}>Total: £{total}</Text></Card>
+            <View style={{ marginTop: 5, alignSelf: "center", width: 300 }}>
 
                 <Button titleStyle={{ color: "white", fontSize: 16, fontWeight: "bold" }} buttonStyle={{ backgroundColor: "#bf6240", borderRadius: 8, marginBottom: 5, height: 40 }} title="Order and Pay in Store" onPress={handleOrder} />
                 <Button titleStyle={{ color: "white", fontSize: 16, fontWeight: "bold" }} buttonStyle={{ backgroundColor: "#bf6240", borderRadius: 8, marginBottom: 5, height: 40 }} title="Order and Pay Online" onPress={handlePayment} />
-            </View>
-            <View style={{ height: 100 }}></View>
-        </ScrollView>
+            </View></View>
+        <View style={{ height: 70 }}></View></>
     );
 }
 
 const styles = StyleSheet.create({
     h1: {
-        marginTop: 20,
+
         fontSize: 32,
         fontWeight: 'bold',
         textAlign: 'center',
-        marginBottom: 20,
+
 
     },
     container: {
         flex: 1,
-
-        marginTop: 20,
-
+        backgroundColor: "#f5ece4"
     },
     itemImage: {
         borderRadius: 8,
@@ -285,13 +301,15 @@ const styles = StyleSheet.create({
         color: "black"
     },
     centeredView: {
-
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
         marginTop: 22
     },
     modalView: {
+        borderWidth: 5,
+        borderColor: "#bf6240",
+        flexDirection: "column",
         margin: 20,
         backgroundColor: "white",
         borderRadius: 20,
