@@ -25,11 +25,9 @@ export default function QrcodeScan() {
     );
     axios
       .patch("https://javarewards-api.onrender.com/users/coffee", {
-        email: "john@example.com",
+        email: `${data}`,
       })
-      .then((res) => {
-        console.log(res.data.user.coffee_count, "in code scanner line 31");
-      })
+      .then((res) => {})
       .catch((err) => {
         console.log(err);
       });
