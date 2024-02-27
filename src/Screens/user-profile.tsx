@@ -7,15 +7,15 @@ import {
   Dimensions,
   TouchableOpacity,
   Animated,
-  Button,
   ScrollView,
 } from "react-native";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import DisplayPreviousOrders from "./display-previous-orders(child)";
-import { getUserEmail } from "../../utils/rememberUserType";
+import { clearUserEmail, clearUserType, getUserEmail } from "../../utils/rememberUserType";
 import ProgressBar from "react-native-progress/Bar";
 import { auth } from "../config/firebase";
+import { Card, Button } from "@rneui/themed";
 
 export default function UserProfile() {
   interface User {
@@ -80,6 +80,8 @@ export default function UserProfile() {
             titleStyle={{ fontWeight: "bold", fontSize: 13 }}
             buttonStyle={{ backgroundColor: "#bf6240" }}
             onPress={() => {
+              clearUserType()
+              clearUserEmail()
               auth.signOut();
             }}>
             Sign Out
@@ -89,21 +91,22 @@ export default function UserProfile() {
       <View>
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-          <View>
+          <Card >
             <ProgressBar
               width={CoffeCount}
               height={20}
               color="#d2691e"
               borderWidth={2}
             />
-          </View>
-        </View>
-        <Text style={styles.coffeeMessage}>
+            <Text >
           4 more coffees to go before a free coffee!
         </Text>
+          </Card>
+        </View>
+        
       </View>
       <View>
-        <Text>Previous Orders</Text>
+        <Text style={styles.previousOrders}>Previous Orders</Text>
         {previousOrders.map((item) => (
           <DisplayPreviousOrders key={item._id} items={item} />
         ))}
@@ -135,13 +138,24 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50,
     marginBottom: 10,
+    marginLeft: 15,
+
   },
   userName: {
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
   },
-  ProgressBar: {
-    backgroundColor: "yellow",
-  },
+
+ 
+
+  previousOrders:{
+    fontSize: 18,
+    fontWeight: "bold",
+    marginTop: 20,
+    marginBottom: 5,
+    textAlign: "center",
+    
+  }
+
 });

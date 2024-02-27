@@ -14,12 +14,12 @@ export default function QrcodeScan() {
     })();
   }, []);
 
-  const handleBarCodeScanned = ({ type, data }) => {
+  const handleBarCodeScanned = ({ data }) => {
     setScanned(true);
     console.log(data, "Scanned data");
     Alert.alert(
-      "Scanned",
-      `Type: ${type}\nData: ${data}`,
+      "Scanned successfully!",
+      ``,
       [{ text: "OK", onPress: () => setScanned(false) }],
       { cancelable: false }
     );

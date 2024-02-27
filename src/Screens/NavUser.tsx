@@ -41,7 +41,7 @@ export default function NavUser() {
                   alignItems: "center",
                   justifyContent: "center",
                   paddingTop: 20,
-                  marginLeft: 30,
+                  marginLeft: 20,
                 }}
               >
                 <Entypo
@@ -114,7 +114,7 @@ export default function NavUser() {
                   alignItems: "center",
                   justifyContent: "center",
                   paddingTop: 20,
-                  marginRight: 30,
+                  marginRight: 20,
                 }}
               >
                 <AntDesign

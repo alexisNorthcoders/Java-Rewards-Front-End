@@ -44,10 +44,12 @@ export default function CustomerHomeScreen({navigation}: any) {
           contentStyle={{ alignItems: "center" }}
         />
       </Card>
-      {shops.map((shop) => {
+      {shops.map((shop,index) => {
         return (
+
           
           <View style={styles.root} key={shop.email}>
+
           <Card style={styles.card1} onPress={() => {
             navigation.navigate("IndividualShop", {email: shop.email})
         }}>
@@ -72,7 +74,9 @@ export default function CustomerHomeScreen({navigation}: any) {
       })
     } 
       </View>
+      <Feed></Feed>
       </ScrollView>
+      
       </SafeAreaView>
     // <Button title="Sign Out"onPress={() => {auth.signOut()}}></Button>
   )
@@ -85,7 +89,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "center",
     flexDirection: "column",
-    backgroundColor: "#C4A484",
+    backgroundColor: "#f5e7da",
   },
   card0: {
     flex: 1.5,

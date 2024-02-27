@@ -2,6 +2,8 @@ import axios from 'axios';
 
 const api = axios.create({
   baseURL: "https://javarewards-api.onrender.com/"
+  //baseURL: "http://192.168.248.249:9999/"
+
 })
 
 interface Offer {
@@ -33,8 +35,8 @@ export function postOrder(order:{}){
     console.log(data)
     return data.order})
 }
-export function getBusinessOrders(){
-  return api.get('/orders?shop_id=1').then(({data}) => data)
+export function getBusinessOrders(id){
+  return api.get(`/orders?shop_id=${id}`).then(({data}) => data)
 }
 export function updateOrderStatus(order_id:number){
   return api.patch('orders/status',{order_id:order_id}).then(({data:{order}})=> order)

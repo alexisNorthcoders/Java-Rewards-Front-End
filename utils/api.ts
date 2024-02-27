@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: "https://javarewards-api.onrender.com/"
+ baseURL: "https://javarewards-api.onrender.com/"
+ //baseURL: "http://192.168.248.249:9999/"
 })
 
 interface SuccessfulUserPost {
@@ -64,4 +65,14 @@ export function updateShopData({
 
 export function getOrdersByShopId(id: number) {
   return api.get(`/orders?shop_id=${id}`)
+}
+
+export function addMenuItem(email: string, menu:[], newMenuItem:{}) {
+  const newMenu = [...menu, newMenuItem]
+  return api.patch('/shops/menu', {email, menu: newMenu})
+}
+
+export async function getItemsByShopId(id: number) {
+  const {data} = await api.get(`/orders/total/${id}`)
+    return data
 }

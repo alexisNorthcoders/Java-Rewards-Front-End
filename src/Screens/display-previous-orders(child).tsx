@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, Animated} from 'react-native';
+import { Card, Button } from "@rneui/themed";
 import { green } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 
 
@@ -7,11 +8,10 @@ export default function DisplayPreviousOrders({items}) {
 
     const itemsArr = items.items;
 
-   
-
-    return (<>
-    <View style={styles.orderView}>
-    <Text>Order on {items.date}</Text>
+    return (
+    <Card >
+    <Text >Order Number {items.order_id} </Text>    
+    <Text>Ordered on {items.date}</Text>
     
     {
         itemsArr.map((item) => {
@@ -22,9 +22,8 @@ export default function DisplayPreviousOrders({items}) {
     }
 
     <Text>Total cost: £{items.totalCost}</Text>
-
-    </View>
-    </>)
+    </Card>
+    )
 
 }
 
