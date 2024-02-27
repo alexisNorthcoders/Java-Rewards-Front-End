@@ -91,7 +91,7 @@ export default function UserProfile() {
       <View>
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-          <Card >
+          <Card containerStyle={{ borderRadius: 8 }}>
             <ProgressBar
               width={CoffeCount}
               height={20}
@@ -154,8 +154,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginTop: 20,
     marginBottom: 5,
-    textAlign: "center",
-    
-  }
+    textAlign: "center",   
+  },
+
 
 });
