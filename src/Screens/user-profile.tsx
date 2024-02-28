@@ -85,7 +85,7 @@ export default function UserProfile() {
         </View>
       )}
       <View>
-        <Text style={styles.previousOrders} >Loyality Porgress bar</Text>
+        <Text style={styles.previousOrders} >Loyality Progress bar</Text>
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
           <Card containerStyle={{ borderRadius: 8 }}>
