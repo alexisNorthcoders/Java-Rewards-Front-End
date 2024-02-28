@@ -75,7 +75,7 @@ const UpdateOffers = ({route}) => {
           <TextInput
           style={styles.input}
           value={newOffer.date}
-            placeholder="Expiry Date e.g. 01/06/2024"
+            placeholder="Expiry Date YYYY-MM-DD"
             returnKeyType="next"
             onChangeText={(text) => 
               {setNewOffer((currItem) => {
