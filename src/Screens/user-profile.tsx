@@ -33,12 +33,15 @@ export default function UserProfile() {
       });
   }, []);
 
+
   const isFocused = useIsFocused();
   useEffect(() => {
     if (isFocused) {
-      axios
+     
+      getUserEmail().then((result) => {
+        axios
         .post(`https://javarewards-api.onrender.com/users/email`, {
-          email: "john@example.com",
+          email: result.email,
         })
         .then((res) => {
           setUserList(res.data.user);
@@ -46,20 +49,10 @@ export default function UserProfile() {
           if (res.data.user[0].coffee_count + 1) {
           }
         });
+      })
+        
     }
   }, [isFocused]);
-
-  useEffect(() => {
-    const fetchEmailFromStorage = async () => {
-      try {
-        const { email } = await getUserEmail();
-        setEmail(email);
-      } catch (err) {
-        console.log("Error fetching account email");
-      }
-    };
-    fetchEmailFromStorage();
-  }, []);
 
   const updateCoffeeCount = (increment: number) => {
     setCoffeCount((PrevCoffeeCount) => PrevCoffeeCount + increment);
