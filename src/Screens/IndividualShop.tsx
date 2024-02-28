@@ -45,7 +45,7 @@ export default function IndividualShop({route}: any) {
     <SafeAreaView style={styles.root}>
       <StatusBar/>
           <Card containerStyle={styles.card1}>
-            <Card.Title style={{fontSize: 35, fontWeight: 'bold'}}>{shop[0].name}</Card.Title>
+            <Card.Title style={{fontSize: 25, fontWeight: 'bold', marginTop: 20}}>{shop[0].name}</Card.Title>
             <Card.Image
               style={styles.image}
               source={{ uri: `${shop[0].avatar_url}` }}

@@ -32,8 +32,8 @@ export default function CustomerHomeScreen({navigation}: any) {
   return loading ? (
     <Loading />
   ) : (
-    <SafeAreaView style={styles.safeArea}>
-    <ScrollView>
+    <SafeAreaView>
+    <ScrollView style={styles.safeArea}>
       <View style={styles.root}>
         <Card containerStyle={styles.titleCard}>
           <View style={{flexDirection: 'row', alignItems: 'center', height: 30, width: '100%', justifyContent: 'space-between'}}>
@@ -115,6 +115,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   safeArea: {
-    marginBottom: 35
+    marginBottom: 70
   }
 });
