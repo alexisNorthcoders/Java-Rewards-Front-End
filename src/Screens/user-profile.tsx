@@ -7,6 +7,7 @@ import { auth } from '../config/firebase';
 import { Card, Button } from '@rneui/themed';
 import { useIsFocused } from "@react-navigation/native";
 import ProgressBar from "react-native-progress/Bar";
+import Loading from "./Loading";
 
 export default function UserProfile() {
   interface User {
@@ -14,6 +15,7 @@ export default function UserProfile() {
     name: string;
   }
 
+  const [isLoading, setIsLoading] = useState(true);
   const currentUserId = 1;
   const [userList, setUserList] = useState<User[]>([]);
   const [previousOrders, setPreviousOrders] = useState([]);
@@ -46,6 +48,7 @@ export default function UserProfile() {
         .then((res) => {
           setUserList(res.data.user);
           setCoffeCount(res.data.user[0].coffee_count);
+          setIsLoading(false);
           if (res.data.user[0].coffee_count + 1) {
           }
         });
@@ -58,7 +61,11 @@ export default function UserProfile() {
     setCoffeCount((PrevCoffeeCount) => PrevCoffeeCount + increment);
   };
 
-  return (
+
+  
+  return isLoading ? (
+    <Loading />
+  ) : (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Profile</Text>
       {userList.length > 0 && (
