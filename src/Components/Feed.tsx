@@ -7,7 +7,7 @@ import {
   ScrollView,
   Dimensions,
 } from "react-native";
-import { getOffers } from "../../utils/feedapi";
+import { formatDate, getOffers } from "../../utils/feedapi";
 
 interface Offer {
   img?: string;
@@ -31,13 +31,14 @@ export default function Feed() {
         <Text style={styles.h1}>Offers</Text>
       </View>
       {offers.map((offer) => {
+        const formattedDate = formatDate(offer.date);
         return (
           <View key={offer.name} style={styles.card}>
             <Image source={{ uri: offer.img }} style={styles.image} />
             <View style={styles.cardContent}>
               <Text style={styles.shopName}>{offer.name}</Text>
               <Text style={styles.description}>{offer.description}</Text>
-              <Text style={styles.date}>{offer.date}</Text>
+              <Text style={styles.date}>Offer ends {formattedDate}</Text>
             </View>
           </View>
         );
