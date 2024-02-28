@@ -63,8 +63,7 @@ const styles = StyleSheet.create({
     // marginBottom: width * 0.02,
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 20
-    
+    marginBottom: 20,
   },
   image: {
     width: width * 0.25,
@@ -84,8 +83,8 @@ const styles = StyleSheet.create({
     color: "#666",
     marginVertical: width * 0.005,
 
-    flex: 1,
-    flexWrap: "wrap",
+    // flex: 1,
+    // flexWrap: "wrap",
   },
   date: {
     fontSize: width * 0.03,
