@@ -1,13 +1,4 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  Dimensions,
-  TouchableOpacity,
-  Animated,
-  ScrollView,
-} from "react-native";
+import { View, Text, StyleSheet, Image, Alert, ScrollView } from "react-native";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import DisplayPreviousOrders from "./display-previous-orders(child)";
@@ -23,6 +14,7 @@ import ProgressBar from "react-native-progress/Bar";
 import Loading from "./Loading";
 import { FontAwesome } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { AutoFocus } from "expo-camera";
 
 export default function UserProfile() {
   interface User {
@@ -31,24 +23,13 @@ export default function UserProfile() {
   }
 
   const [isLoading, setIsLoading] = useState(true);
-  const currentUserId = 1;
   const [userList, setUserList] = useState<User[]>([]);
   const [previousOrders, setPreviousOrders] = useState([]);
-  const [profileImage, setProfileImage] = useState("");
-  const [email, setEmail] = useState("");
   const [CoffeCount, setCoffeCount] = useState(0);
 
   let newCoffeeCount = CoffeCount % 7;
   let coffeeProg = newCoffeeCount * 0.15;
   let remainingCoffees = 7 - newCoffeeCount;
-
-  useEffect(() => {
-    axios
-      .get(`https://javarewards-api.onrender.com/orders?user_id=9`)
-      .then((res) => {
-        setPreviousOrders(res.data.orders[0].orders);
-      });
-  }, []);
 
   const isFocused = useIsFocused();
   useEffect(() => {
@@ -61,9 +42,26 @@ export default function UserProfile() {
           .then((res) => {
             setUserList(res.data.user);
             setCoffeCount(res.data.user[0].coffee_count);
-            setIsLoading(false);
+
             if (res.data.user[0].coffee_count + 1) {
             }
+
+            return axios.get(
+              `https://javarewards-api.onrender.com/orders?user_id=${res.data.user[0]._id}`
+            );
+          })
+          .then((res) => {
+            if (res.data.orders.length === 0) {
+              setIsLoading(false);
+              return;
+            } else {
+              setPreviousOrders(res.data.orders[0].orders);
+              setIsLoading(false);
+            }
+          })
+          .catch((err) => {
+            Alert.alert("Oops, something went wrong!");
+            console.log(err);
           });
       });
     }
@@ -73,11 +71,16 @@ export default function UserProfile() {
     setCoffeCount((PrevCoffeeCount) => PrevCoffeeCount + increment);
   };
 
-  const sortedByDate = previousOrders.sort((a, b) => {
-    let dateA = new Date(a.date)
-    let dateB = new Date(b.date)
-    return dateB - dateA
-  });
+  const sortedArr = [];
+  if (previousOrders.length > 0) {
+    const sortedByDate = previousOrders.sort((a, b) => {
+      let dateA = new Date(a.date);
+      let dateB = new Date(b.date);
+      return dateB - dateA;
+    });
+
+    sortedArr.push(...sortedByDate);
+  }
 
   return isLoading ? (
     <Loading />
@@ -114,13 +117,11 @@ export default function UserProfile() {
         <Text style={styles.previousOrders}>
           Buy 7 coffees and your next coffee is on us
         </Text>
-        <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
           <Card containerStyle={{ borderRadius: 8 }}>
             <View style={styles.progress}>
               <ProgressBar
-                width={300}
+                width={270}
                 progress={coffeeProg}
                 height={20}
                 color="#d2691e"
@@ -136,9 +137,18 @@ export default function UserProfile() {
       </View>
       <View>
         <Text style={styles.previousOrders}>Previous Orders</Text>
-        {sortedByDate.slice(0, 10).map((item) => (
-          <DisplayPreviousOrders key={item._id} items={item} />
-        ))}
+
+        {previousOrders.length > 0 ? (
+          sortedArr
+            .slice(0, 10)
+            .map((item) => <DisplayPreviousOrders items={item} />)
+        ) : (
+          <View>
+            <Text style={{ textAlign: "center", marginTop: 10, fontSize: 16 }}>
+              No previous orders
+            </Text>
+          </View>
+        )}
       </View>
     </ScrollView>
   );
@@ -147,6 +157,7 @@ export default function UserProfile() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#f5ece4",
+    flexGrow: 1,
   },
   headingContainer: {
     marginTop: 50,

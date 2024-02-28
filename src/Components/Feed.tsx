@@ -8,6 +8,7 @@ import {
   Dimensions,
 } from "react-native";
 import { formatDate, getOffers } from "../../utils/feedapi";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface Offer {
   img?: string;
@@ -26,24 +27,27 @@ export default function Feed() {
   }, []);
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.headingContainer}>
-        <Text style={styles.title}>Offers</Text>
-      </View>
-      {offers.map((offer) => {
-        const formattedDate = formatDate(offer.date);
-        return (
-          <View key={offer.name} style={styles.card}>
-            <Image source={{ uri: offer.img }} style={styles.image} />
-            <View style={styles.cardContent}>
-              <Text style={styles.shopName}>{offer.name}</Text>
-              <Text style={styles.description}>{offer.description}</Text>
-              <Text style={styles.date}>Offer ends {formattedDate}</Text>
+    <SafeAreaView style={styles.container}>
+      <ScrollView >
+        <View style={styles.headingContainer}>
+          <Text style={styles.title}>Offers</Text>
+        </View>
+        {offers.map((offer) => {
+          const formattedDate = formatDate(offer.date);
+          return (
+            <View key={offer.name} style={styles.card}>
+              <Image source={{ uri: offer.img }} style={styles.image} />
+              <View style={styles.cardContent}>
+                <Text style={styles.shopName}>{offer.name}</Text>
+                <Text style={styles.description}>{offer.description}</Text>
+                <Text style={styles.date}>Offer ends {formattedDate}</Text>
+              </View>
             </View>
-          </View>
-        );
-      })}
-    </ScrollView>
+          );
+        })}
+      </ScrollView>
+
+    </SafeAreaView>
   );
 }
 
@@ -55,13 +59,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#f5ece4",
   },
   headingContainer: {
-    marginTop: 35,
     marginBottom: 20,
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    marginTop: 20,
+    marginTop: 10,
     marginBottom: 20,
     textAlign: "center",
   },
