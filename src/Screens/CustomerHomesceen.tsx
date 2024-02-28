@@ -69,6 +69,7 @@ export default function CustomerHomeScreen({navigation}: any) {
       })
     } 
       </View>
+      <View style={{height: 70, backgroundColor: '#f5ece4'}}></View>
       </ScrollView>
       
       </SafeAreaView>
@@ -113,8 +114,5 @@ const styles = StyleSheet.create({
   image: {
     width: "95%",
     borderRadius: 8,
-  },
-  safeArea: {
-    marginBottom: 70
   }
 });
