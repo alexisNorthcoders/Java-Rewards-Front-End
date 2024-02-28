@@ -12,29 +12,30 @@ export default function Swipe({ order, handleUpdateStatus }: any) {
     return (showCard ?
 
         <Swiper
-
             cardVerticalMargin={0}
             cardHorizontalMargin={0}
             marginBottom={0}
             marginTop={0}
             cards={[order]}
+            verticalSwipe={false}
             renderCard={(card) => {
 
-                return (<Card containerStyle={{marginTop:0,borderRadius: 8, padding: 0, backgroundColor: "white", marginHorizontal: 60, alignContent: "center" ,justifyContent:"center",marginBottom:0,elevation:3}} >
+                return (<Card containerStyle={{ marginTop: 0, borderRadius: 8, padding: 0, backgroundColor: "white", marginHorizontal: 60, alignContent: "center", justifyContent: "center", marginBottom: 0, elevation: 3 }} >
 
                     <Text style={{ fontSize: 30, fontWeight: "bold", color: "black", alignSelf: "center" }}>Order # {card.order_id}</Text>
                     <SingleOrder items={order.items}></SingleOrder>
                     <Text style={styles.description}>Customer #{card.user_id}</Text>
                     <Text style={styles.description}>{formatDate(card.date)}</Text>
-                    <Button onPress={() => { handleUpdateStatus(order.order_id) }} title="Close Order" titleStyle={{ fontWeight: "bold", fontSize: 13 }} buttonStyle={{ borderRadius: 8, marginLeft: width * 0.04, marginTop: 5, marginBottom: 5, width: 100, backgroundColor: "#bf6240" ,alignSelf:"center"}} accessibilityLabel="Change order status" />
+                    <Button onPress={() => { handleUpdateStatus(order.order_id) }} title="Close Order" titleStyle={{ fontWeight: "bold", fontSize: 13 }} buttonStyle={{ borderRadius: 8, marginLeft: width * 0.04, marginTop: 5, marginBottom: 5, width: 100, backgroundColor: "#bf6240", alignSelf: "center" }} accessibilityLabel="Change order status" />
 
-                    
+
                 </Card>
                 )
             }}
-            onSwiped={(cardIndex) => { 
+            onSwiped={(cardIndex) => {
                 setShowCard((show) => !show)
-                handleUpdateStatus(order.order_id)}}
+                handleUpdateStatus(order.order_id)
+            }}
 
             onSwipedAll={() => { }}
             cardIndex={0}
