@@ -28,7 +28,7 @@ export default function Feed() {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.headingContainer}>
-        <Text style={styles.h1}>Offers</Text>
+        <Text style={styles.title}>Offers</Text>
       </View>
       {offers.map((offer) => {
         const formattedDate = formatDate(offer.date);
@@ -55,14 +55,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#f5ece4",
   },
   headingContainer: {
-    marginTop: 50,
+    marginTop: 35,
     marginBottom: 20,
   },
-  h1: {
-    fontSize: 32,
+  title: {
+    fontSize: 24,
     fontWeight: "bold",
-    textAlign: "center",
+    marginTop: 20,
     marginBottom: 20,
+    textAlign: "center",
   },
   card: {
     backgroundColor: "#fff",

@@ -19,8 +19,8 @@ export default function DisplayPreviousOrders({items}) {
     })
 
     return (
-    <Card containerStyle={{ borderRadius: 8 }} >
-    <Text >Order Number #{items.order_id} </Text>    
+    <Card containerStyle={{ borderRadius: 8, borderColor: '#bf6420', borderWidth: 0.5 }} >
+    <Text style={{fontWeight: 'bold'}}>Order Number #{items.order_id} </Text>    
     <Text>Ordered on {f.format(orderDate)}</Text>
     
     {
