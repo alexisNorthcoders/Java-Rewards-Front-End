@@ -76,3 +76,10 @@ export async function getItemsByShopId(id: number) {
   const {data} = await api.get(`/orders/total/${id}`)
     return data
 }
+
+export async function patchCoffeeCount(email:string){
+  console.log("patching coffee count")
+  const {data} = await api.patch(`/users/coffee/`,{email})
+  console.log(data)
+  return data
+}
