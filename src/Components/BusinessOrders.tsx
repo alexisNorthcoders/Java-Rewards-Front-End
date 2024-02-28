@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, Dimensions } from 'react-native';
-import { Card, Button } from "@rneui/themed";
-import SingleOrder from './SingleOrder';
-
-import { auth } from '../config/firebase';
-import { formatDate, getBusinessOrders, updateOrderStatus } from "../../utils/feedapi"
+import { getBusinessOrders, updateOrderStatus } from "../../utils/feedapi"
 import Loading from '../Screens/Loading';
-import { clearUserEmail, clearUserType, getUserEmail } from '../../utils/rememberUserType';
+import { getUserEmail } from '../../utils/rememberUserType';
 import { getShopData } from '../../utils/api';
-import { prepareUIRegistry } from 'react-native-reanimated/lib/typescript/reanimated2/frameCallback/FrameCallbackRegistryUI';
+import Swipe from './Swipe';
 
 export default function BusinessOrders() {
     const [businessOrders, setBusinessOrders] = useState<any[]>([])
@@ -23,7 +19,6 @@ export default function BusinessOrders() {
     }
     useEffect(() => {
         getUserEmail().then(({ email }) => {
-            console.log(email, "email after getUserEmail")
             if (!email) { return }
             getShopData(email).then(({ _id, name }) => {
                 setShop((previousShop) => ({ ...previousShop, id: _id, name: name }))
@@ -46,38 +41,20 @@ export default function BusinessOrders() {
 
         return () => clearInterval(interval);
 
-    }, []);
+    }, [shop.id]);
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
-            <View style={{}}>
-                <Text style={styles.h1}>{shop.name}</Text>
-            </View>
-            <Button title="Sign Out"
-                titleStyle={{ fontWeight: "bold", fontSize: 13 }}
-                buttonStyle={{ backgroundColor: "#bf6240" }}
-                onPress={() => {
-                    clearUserType()
-                    clearUserEmail()
-                    auth.signOut();
-                }}
-            />
+        <ScrollView contentContainerStyle={styles.container} stickyHeaderIndices={[0]}>
+          
+             <View style={{ backgroundColor: "#f5ece4", justifyContent: "center", paddingBottom: 15,paddingTop:30 ,alignItems:"center"}}><Text style={styles.h1}>{shop.name}</Text></View>
+      
             {isLoading ? <Loading /> : businessOrders.some((order) => order.orders.some((singleorder: any) => singleorder.status === "open")) ? businessOrders.map((order) => {
 
-                return order.orders.slice(-20).map((singleorder: any) => {
+                return order.orders.slice(-40).map((singleorder: any) => {
                     if (singleorder.status === "closed") { return }
-                    return (
-                        hide[singleorder.order_id] === true ? null : <Card containerStyle={{ borderRadius: 8, padding: 0 }} key={singleorder.date} >
-                            <Card.Title><Text style={styles.orderId}>Order # {singleorder.order_id}</Text></Card.Title>
-
-                            <Text style={styles.description}>Customer #{singleorder.user_id}</Text>
-                            <Text style={styles.description}>{formatDate(singleorder.date)}</Text>
-
-                            <SingleOrder items={singleorder.items} hide={true}></SingleOrder>
-
-                            <Button onPress={() => { handleUpdateStatus(singleorder.order_id) }} title="Close Order" titleStyle={{ fontWeight: "bold", fontSize: 13 }} buttonStyle={{ borderRadius: 8, marginLeft: width * 0.04, marginTop: 5, marginBottom: 5, width: 100, backgroundColor: "#bf6240" }} accessibilityLabel="Change order status" />
-
-                        </Card>
+                    return (hide[singleorder.order_id] === true ? null : <View style={{minHeight:220,maxHeight:220}}>
+                          <Swipe key={singleorder.order_id}order={singleorder} handleUpdateStatus={handleUpdateStatus}></Swipe></View>
+                   
                     );
                 })
             }) : <Text style={styles.h1}>You have no pending orders</Text>}
@@ -85,17 +62,29 @@ export default function BusinessOrders() {
         </ScrollView>
     );
 }
-const { width } = Dimensions.get('window');
+const { width,height } = Dimensions.get('window');
 const styles = StyleSheet.create({
+    
     container: {
-        padding: width * 0.04,
+        display:"flex",
+        flexDirection:"column",
+       paddingBottom:100,
+       marginTop:0,
+        backgroundColor: "#f5ece4",
+    
+        
     },
+         text: {
+        textAlign: "center",
+        fontSize: 50,
+        backgroundColor: "transparent"
+      },
     h1: {
-        marginTop: 20,
+        
         fontSize: 32,
         fontWeight: 'bold',
         textAlign: 'center',
-        marginBottom: 20,
+    
 
     },
 
@@ -104,15 +93,8 @@ const styles = StyleSheet.create({
         height: width * 0.25,
         resizeMode: 'cover',
     },
-    cardContent: {
-        padding: width * 0.04,
-        flexShrink: 1,
-    },
-    orderId: {
-        fontSize: width * 0.06,
-        fontWeight: 'bold',
-    },
-    description: {
+  
+     description: {
         fontSize: width * 0.035,
         color: '#666',
         marginVertical: width * 0.005,

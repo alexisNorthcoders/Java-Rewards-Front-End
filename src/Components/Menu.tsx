@@ -258,11 +258,9 @@ export default function Menu({ route }: any) {
 
 const styles = StyleSheet.create({
     h1: {
-
         fontSize: 32,
         fontWeight: 'bold',
         textAlign: 'center',
-
 
     },
     container: {
