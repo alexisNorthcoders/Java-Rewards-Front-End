@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, Modal, Alert } from 'react-native';
 import { getMenuByEmail, postOrder } from "../../utils/feedapi"
 import { Card, Button } from "@rneui/themed";
-
+import Loading from '../Screens/Loading';
 import { useStripe } from '@stripe/stripe-react-native';
 import { getUserEmail } from '../../utils/rememberUserType';
 import { useNavigation } from '@react-navigation/native';
+import { patchCoffeeCount } from '../../utils/api';
 
 type MenuItem = {
     item: string;
@@ -201,7 +202,7 @@ export default function Menu({ route }: any) {
         }
         postOrder(order).then((res) => {
             setPostedOrder(res)
-
+            patchCoffeeCount(email)
             setModalVisible(true)
 
         })
@@ -236,7 +237,7 @@ export default function Menu({ route }: any) {
                 </View>
             </Modal>
             {state.isLoading ? (
-                <Text>Loading menu...</Text>
+                <Loading/>
             ) : (
                 <>
                     {renderMenuItems(state.menu)}
