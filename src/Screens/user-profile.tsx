@@ -59,7 +59,7 @@ export default function UserProfile() {
   };
 
   return (
-    <ScrollView>
+    <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Profile</Text>
       {userList.length > 0 && (
         <View style={styles.profileContainer}>
@@ -112,10 +112,7 @@ export default function UserProfile() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "#f5ece4",
   },
   title: {
     fontSize: 24,
