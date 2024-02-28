@@ -6,9 +6,11 @@ import {
   SafeAreaView,
   StatusBar,
 } from "react-native";
-import { Card, Button } from "@rneui/themed";
+import { Card, Button, ThemeProvider, createTheme, Icon, Header } from "@rneui/themed";
 import { StarRatingDisplay } from 'react-native-star-rating-widget';
 import { ScrollView } from "react-native-gesture-handler";
+import { AntDesign } from '@expo/vector-icons';
+
 
 import { auth } from "../config/firebase";
 import { useEffect, useState } from "react";
@@ -64,6 +66,7 @@ export default function BusinessProfile() {
   return isLoading ? (
     <Loading />
   ) : (
+    <ThemeProvider theme={theme}>
     <SafeAreaView style={{ flexGrow: 1 }}>
       <StatusBar />
       <ScrollView
@@ -75,6 +78,22 @@ export default function BusinessProfile() {
           alignItems: "center",
         }}
       >
+        <Header
+      backgroundImageStyle={{}}
+      barStyle="default"
+      centerContainerStyle={{}}
+      containerStyle={{ width: 350 }}
+      leftComponent={{
+        text: "My Business Profile",
+        style: { color: "black" }
+      }}
+      leftContainerStyle={{}}
+      linearGradientProps={{}}
+      placement="left"
+      rightComponent={{ icon: "logout", color: "black" }}
+      rightContainerStyle={{}}
+      statusBarProps={{}}
+    />
 
         <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between" }}>
 
@@ -91,9 +110,8 @@ export default function BusinessProfile() {
           >
             Sign Out
           </Button>
-
         </View>
-        <View style={styles.profile}>
+                <View style={styles.profile}>
           <Card containerStyle={{ borderRadius: 8 }}>
             <Card.Title>{shopData.name}</Card.Title>
             <Card.Image
@@ -169,8 +187,19 @@ export default function BusinessProfile() {
 
       </ScrollView>
     </SafeAreaView>
+    </ThemeProvider>
   );
 }
+
+const theme = createTheme({
+  lightColors: {
+    primary: '#f5ece4',
+  },
+  darkColors: {
+    primary: '#BF6240',
+  },
+  mode: 'light',
+});
 
 const styles = StyleSheet.create({
   container: {
