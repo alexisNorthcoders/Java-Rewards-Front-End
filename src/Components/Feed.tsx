@@ -9,8 +9,15 @@ import {
 } from "react-native";
 import { getOffers } from "../../utils/feedapi";
 
+interface Offer {
+  img?: string;
+  description: string;
+  date?: string;
+  name?: string;
+}
+
 export default function Feed() {
-  const [offers, setOffers] = useState<any[]>([]);
+  const [offers, setOffers] = useState<Offer[]>([]);
 
   useEffect(() => {
     getOffers().then((data) => {

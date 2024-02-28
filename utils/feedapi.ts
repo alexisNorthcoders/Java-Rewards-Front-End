@@ -48,7 +48,7 @@ export function postOrder(order:{}){
     console.log(data)
     return data.order})
 }
-export function getBusinessOrders(id){
+export function getBusinessOrders(id:string){
 
   return api.get(`/orders?shop_id=${id}`).then(({data}) => data)
 }
@@ -56,17 +56,17 @@ export function updateOrderStatus(order_id:number){
   return api.patch('orders/status',{order_id:order_id}).then(({data:{order}})=> order)
 }
 
-export function updateOffer(email,offer:{}){
+export function updateOffer(email:string,offer:{}){
  return api.patch("/shops/offers",{email:email,offers:offer}).then(({data})=> data.offers)
  .catch(err=> {console.log(err) 
   return err;
  })
 }
-export const formatDate = (dateString) => {
+export const formatDate = (dateString:string) => {
   const date = new Date(dateString);
  return date.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' });
 };
-export function getOrdersByMonth(shop_id,year,month:{}){
+export function getOrdersByMonth(shop_id:string,year:string,month:string){
   console.log("updating shop data");
   
 
