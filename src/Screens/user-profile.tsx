@@ -67,6 +67,7 @@ export default function UserProfile() {
             source={{ uri: userList[0].avatar_url }}
             style={styles.profileImage}
           />
+          <View style={styles.profileName}>
           <Text style={styles.userName}>{userList[0].name}</Text>
           <Button
             containerStyle={styles.button}
@@ -80,9 +81,11 @@ export default function UserProfile() {
             }}>
             Sign Out
           </Button>
+          </View>
         </View>
       )}
       <View>
+        <Text style={styles.previousOrders} >Loyality Porgress bar</Text>
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
           <Card containerStyle={{ borderRadius: 8 }}>
@@ -99,8 +102,8 @@ export default function UserProfile() {
       </View>
       <View>
         <Text style={styles.previousOrders}>Previous Orders</Text>
-        {previousOrders.map((item) => (
-          <DisplayPreviousOrders key={item._id} items={item} />
+        {previousOrders.slice(0, 10).map((item) => (
+            <DisplayPreviousOrders key={item._id} items={item} />
         ))}
       </View>
     </ScrollView>
@@ -117,6 +120,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
+    marginTop: 20,
     marginBottom: 20,
     textAlign: "center",
   },
@@ -141,8 +145,10 @@ const styles = StyleSheet.create({
   previousOrders: {
     fontSize: 18,
     fontWeight: "bold",
-    marginTop: 20,
-    marginBottom: 5,
+    marginTop: 25,
     textAlign: "center",
+  },
+  profileName: {
+    marginLeft: 20,
   },
 });
