@@ -2,17 +2,20 @@ import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, Button, Alert } from "react-native";
 import { Camera } from "expo-camera";
 import axios, { Axios } from "axios";
+import { useIsFocused } from "@react-navigation/native";
 
 export default function QrcodeScan() {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
 
+  const isFocused = useIsFocused()
+  
   useEffect(() => {
-    (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      setHasPermission(status === "granted");
-    })();
-  }, []);
+      (async () => {
+        const { status } = await Camera.requestCameraPermissionsAsync();
+        setHasPermission(status === "granted");
+      })();
+  }, [isFocused]);
 
   const handleBarCodeScanned = ({ data }) => {
     setScanned(true);
@@ -41,12 +44,16 @@ export default function QrcodeScan() {
   }
 
   return (
+    
     <View style={styles.container}>
-      <Camera
-        style={styles.camera}
-        type={Camera.Constants.Type.back}
-        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-      />
+      {isFocused &&
+        <Camera
+          style={styles.camera}
+          type={Camera.Constants.Type.back}
+          onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+        />
+
+      }
 
       {scanned && (
         <Button title={"Tap to Scan Again"} onPress={() => setScanned(false)} />
