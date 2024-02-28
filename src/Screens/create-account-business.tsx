@@ -1,186 +1,266 @@
 import {
   Alert,
   View,
-  Text,
   TextInput,
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
-  ScrollView
+  ScrollView,
+  ImageBackground,
+  Button,
 } from "react-native";
-import { useState} from "react";
+import { Text } from "@rneui/themed";
+import { useState } from "react";
 import { auth } from "../config/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { postNewShop} from "../../utils/api";
+import { postNewShop } from "../../utils/api";
 import * as Location from "expo-location";
-import { validateAvatarURL, validateEmail, validatePassword, validatePostcode } from "../../utils/formValidation";
+import {
+  validateAvatarURL,
+  validateEmail,
+  validatePassword,
+  validatePostcode,
+} from "../../utils/formValidation";
+import { SafeAreaView } from "react-native-safe-area-context";
+import background from "../Images/coffee-background.jpeg";
+import { storeUserEmail, storeUserType } from "../../utils/rememberUserType";
+import { useAccountContext } from "../contexts/AccountContext";
+import { Octicons } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function CreateAccountBusiness() {
   const [name, setName] = useState("");
-
+  const { accountType } = useAccountContext();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [avatar, setAvatarUrl] = useState("");
   const [description, setDescription] = useState("");
   const [postcode, setPostcode] = useState("");
-  const [lat, setLat] = useState(0)
-  const [long, setLong] = useState(0)
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const [emailValid, setEmailValid] = useState(true);
   const [passwordValid, setPasswordValid] = useState(true);
   const [urlValid, setURLValid] = useState(true);
-  const [postcodeValid, setPostcodeValid] = useState(true)
- 
+  const [postcodeValid, setPostcodeValid] = useState(true);
+  const [allFieldsComplete, setAllFieldsComplete] = useState(true);
 
-    const geoCode = async () => {
-      const geoCodedLocation = await Location.geocodeAsync(postcode)
-      setLat(geoCodedLocation[0].latitude)
-      setLong(geoCodedLocation[0].longitude)
-    }
+  const geoCode = async () => {
+    const geoCodedLocation = await Location.geocodeAsync(postcode);
+
+    return {
+      lat: geoCodedLocation[0].latitude,
+      long: geoCodedLocation[0].longitude,
+    };
+  };
 
   const signUp = async () => {
     setLoading(true);
-    await geoCode()
-
-    if (email === "" || password === "") {
-      setError("Email and password are mandatory.");
-      setLoading(false);
-      return;
-    }
+    const location = await geoCode();
 
     try {
-      setError("");
+      console.log(email);
+      console.log(accountType);
+      await storeUserType(accountType);
+      await storeUserEmail(email);
+      const resNewShop = await postNewShop(
+        name,
+        email,
+        location.lat,
+        location.long,
+        description,
+        avatar
+      );
       const res = await createUserWithEmailAndPassword(auth, email, password);
-      const resNewShop = await postNewShop(name, email, lat, long, description, avatar)
 
       setName("");
       setEmail("");
       setPassword("");
       setAvatarUrl("");
       setDescription("");
-      setLat(0)
-      setLong(0)
 
       if (res && resNewShop) {
         Alert.alert("You've successfully registered!");
       }
     } catch (err: any) {
       console.log(err);
-      Alert.alert("Sign up failed" + err.message);
+      Alert.alert("Sign up failed, please try again");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <ScrollView automaticallyAdjustKeyboardInsets={true} 
-    style={styles.form}  
-    contentContainerStyle={{
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-    }}>
-      <Text>Create a Business Account</Text>
-      {error && (
-        <View style={styles.error}>
-          <Text>{error}</Text>
-        </View>
-      )}
-
-      <View>
-        {!emailValid && <Text style={styles.error}>Email is invalid</Text>}
-        {!passwordValid && (
-          <Text style={styles.error}>
-            Password should be at least 6 characters
+    <SafeAreaView style={{ flex: 1 }}>
+      <ScrollView
+        automaticallyAdjustKeyboardInsets={true}
+        style={styles.form}
+        contentContainerStyle={{
+          flex: 1,
+        }}
+      >
+        <ImageBackground
+          source={background}
+          style={styles.container}
+          imageStyle={styles.image}
+        >
+          <Text h4 style={{ color: "#bf6240" }}>
+            Create a Business Account
           </Text>
-        )}
-        {!urlValid && <Text style={styles.error}>URL is invalid</Text>}
-        {!postcodeValid && <Text style={styles.error}>Postcode is invalid</Text>}
-      </View>
 
-      <View>
-        <TextInput
-          value={name}
-          style={styles.input}
-          placeholder="Business Name"
-          autoCapitalize="none"
-          onChangeText={(text) => {
-            setName(text);
-          }}
-        />
+          <View style={styles.errContainer}>
+            {!allFieldsComplete && (
+              <Text style={styles.error}>All fields must be completed</Text>
+            )}
+            {!emailValid && <Text style={styles.error}>Email is invalid</Text>}
+            {!passwordValid && (
+              <Text style={styles.error}>
+                Password should be at least 6 characters
+              </Text>
+            )}
+            {!urlValid && <Text style={styles.error}>URL is invalid</Text>}
+            {!postcodeValid && (
+              <Text style={styles.error}>Postcode is invalid</Text>
+            )}
+          </View>
 
-        <TextInput
-          value={email}
-          style={styles.input}
-          placeholder="Email"
-          autoCapitalize="none"
-          onChangeText={(text) => {
-            setEmail(text);
-          }}
-          onBlur={() => {validateEmail(setEmailValid, email)}}
-        />
-        <TextInput
-          value={password}
-          style={styles.input}
-          secureTextEntry={true}
-          placeholder="Password"
-          autoCapitalize="none"
-          onChangeText={(text) => {
-            setPassword(text);
-          }}
-          onBlur={() => {validatePassword(setPasswordValid, password)}}
-        />
-        <TextInput
-          value={postcode}
-          style={styles.input}
-          placeholder="Postcode"
-          autoCapitalize="none"
-          onChangeText={(text) => {
-            setPostcode(text);
-          }}
-          onBlur={() => {validatePostcode(setPostcodeValid, postcode)}}
-        />
-        <TextInput
-          value={avatar}
-          style={styles.input}
-          placeholder="Avatar URL"
-          autoCapitalize="none"
-          onChangeText={(text) => {
-            setAvatarUrl(text);
-          }}
-          onBlur={() => {validateAvatarURL(setURLValid, avatar)}}
-        />
-        <TextInput
-          value={description}
-          style={styles.input}
-          placeholder="Add a brief description of your business"
-          autoCapitalize="none"
-          onChangeText={(text) => {
-            setDescription(text);
-          }}
-        />
-      </View>
+          <View>
 
-      <View style={styles.buttonContainer}>
-        {loading ? (
-          <ActivityIndicator size="large" color="0000ff" />
-        ) : (
-          <TouchableOpacity
-            onPress={signUp}
-            style={[styles.button, styles.buttonOutline]}
-          >
-            <Text style={styles.buttonOutlineText}>Register</Text>
-          </TouchableOpacity>
-        )}
-      </View>
-    </ScrollView>
+          <View style={styles.singleInput}>
+            <FontAwesome name="pencil" size={20} color="#BF6240" />
+            <TextInput
+              value={name}
+              style={styles.input}
+              placeholder="Business Name"
+              placeholderTextColor="grey"
+              autoCapitalize="none"
+              onChangeText={(text) => {
+                setName(text);
+              }}
+            />
+          </View>
+
+          <View style={styles.singleInput}>
+            <Octicons name="mail" size={17} color="#BF6240" />
+            <TextInput
+              value={email}
+              style={styles.input}
+              placeholder="Email"
+              placeholderTextColor="grey"
+              autoCapitalize="none"
+              onChangeText={(text) => {
+                setEmail(text);
+              }}
+              onBlur={() => {
+                validateEmail(setEmailValid, email);
+              }}
+            />
+          </View>
+
+          <View style={styles.singleInput}>
+            <FontAwesome name="key" size={17} color="#BF6240" />
+            <TextInput
+              value={password}
+              style={styles.input}
+              secureTextEntry={true}
+              placeholder="Password"
+              placeholderTextColor="grey"
+              autoCapitalize="none"
+              onChangeText={(text) => {
+                setPassword(text);
+              }}
+              onBlur={() => {
+                validatePassword(setPasswordValid, password);
+              }}
+            />
+          </View>
+            
+          <View style={styles.singleInput}>
+            <Octicons name="location" size={20} color="#BF6240" />
+            <TextInput
+              value={postcode}
+              style={styles.input}
+              placeholder="Postcode"
+              placeholderTextColor="grey"
+              autoCapitalize="none"
+              onChangeText={(text) => {
+                setPostcode(text);
+              }}
+              onBlur={() => {
+                validatePostcode(setPostcodeValid, postcode);
+              }}
+            />
+          </View>
+
+          <View style={styles.singleInput}>
+            <FontAwesome name="file-image-o" size={19} color="#BF6240" />
+            <TextInput
+              value={avatar}
+              style={styles.input}
+              placeholder="Avatar URL"
+              placeholderTextColor="grey"
+              autoCapitalize="none"
+              onChangeText={(text) => {
+                setAvatarUrl(text);
+              }}
+              onBlur={() => {
+                validateAvatarURL(setURLValid, avatar);
+              }}
+            />
+          </View>
+
+          <View style={styles.singleInput}>
+          <FontAwesome name="file-text" size={19} color="#BF6240" />
+              <TextInput
+                value={description}
+                style={styles.input}
+                placeholder="Add a business description"
+                placeholderTextColor="grey"
+                autoCapitalize="none"
+                onChangeText={(text) => {
+                  setDescription(text);
+                }}
+              />
+          </View>
+          </View>
+
+          <View style={styles.buttonContainer}>
+            {loading ? (
+              <ActivityIndicator size="large" color="0000ff" />
+            ) : (
+              <TouchableOpacity
+                onPress={() => {
+                  if (
+                    !name ||
+                    !postcode ||
+                    !email ||
+                    !avatar ||
+                    !password ||
+                    !emailValid ||
+                    !passwordValid ||
+                    !urlValid ||
+                    !postcodeValid
+                  ) {
+                    setAllFieldsComplete(false);
+                  } else {
+                    setAllFieldsComplete(true);
+                    signUp();
+                  }
+                }}
+                style={[styles.button, styles.buttonOutline]}
+              >
+                <Text style={styles.buttonOutlineText}>Register</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        </ImageBackground>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   form: {
-    flex: 1
+    flex: 1,
   },
   input: {
     paddingHorizontal: 15,
@@ -188,7 +268,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#ECE1DD",
     borderRadius: 10,
     marginTop: 5,
-    width: 300,
+    width: 270,
+    borderColor: "brown",
+    borderWidth: 1,
   },
   buttonContainer: {
     width: "60%",
@@ -214,8 +296,24 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   error: {
-    marginTop: 10,
-    padding: 10,
+    marginTop: 1,
+    padding: 1,
     color: "red",
   },
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "space-evenly",
+  },
+  image: {
+    opacity: 0.2,
+  },
+  errContainer: {
+    marginTop: 2,
+  },
+  singleInput: {
+    flexDirection: 'row', 
+    alignItems: 'center',
+    gap: 5
+  }
 });

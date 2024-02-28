@@ -1,12 +1,12 @@
-import { StyleSheet, StatusBar } from "react-native"
-import { auth } from "../config/firebase"
-import { useState, useEffect, Component } from 'react'
+import { StyleSheet, TouchableOpacity, View } from "react-native"
+import { useState, useEffect } from 'react'
 import axios from "axios";
-import { View, Card, Button, Text} from 'react-native-ui-lib'
+import {Card, Text, Image} from '@rneui/themed'
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-gesture-handler";
-import Map from "./Map";
-import Feed from "../Components/Feed";
+import Loading from "./Loading";
+import MapHome from "./MapHome";
+import logo from '../Images/1eDC0L-LogoMakr.png'
 
 export default function CustomerHomeScreen({navigation}: any) {
 
@@ -30,19 +30,20 @@ export default function CustomerHomeScreen({navigation}: any) {
   }, []);
 
   return loading ? (
-    <View>
-      <Text>...Loading</Text>
-    </View>
+    <Loading />
   ) : (
     <SafeAreaView style={styles.safeArea}>
-    <StatusBar backgroundColor={'black'}/>
     <ScrollView>
       <View style={styles.root}>
-      <Card style={styles.card0}>
-        <Map latitude={0} longitude={0} name=""/>
-        <Card.Section
-          contentStyle={{ alignItems: "center" }}
-        />
+        <Card containerStyle={styles.titleCard}>
+          <View style={{flexDirection: 'row', alignItems: 'center', height: 30, width: '100%', justifyContent: 'space-between'}}>
+          <Text style={{fontSize: 20, fontWeight: 'bold'}}>Java Rewards</Text>
+          <Image source={logo} style={{ height: 80, width: 30, marginTop: 10}}/>
+          </View>
+        </Card>
+        <Text style={{fontSize: 15, fontWeight: 'bold'}}>Nearby Shops</Text>
+      <Card containerStyle={styles.card0}>
+        <MapHome/>
       </Card>
       {shops.map((shop,index) => {
         return (
@@ -50,35 +51,27 @@ export default function CustomerHomeScreen({navigation}: any) {
           
           <View style={styles.root} key={shop.email}>
 
-          <Card style={styles.card1} onPress={() => {
+          <TouchableOpacity style={{width: '90%', alignItems: 'center'}} onPress={() => {
             navigation.navigate("IndividualShop", {email: shop.email})
         }}>
-            <Card.Section
-              content={[{ text: `${shop.name}`, text30BO: true, grey10: true }]}
-              contentStyle={{ alignItems: "center" }}
-            />
+          <Card containerStyle={styles.card1}>
+            <Card.Title>{shop.name}</Card.Title>
             <Card.Image
               style={styles.image}
               source={{ uri: `${shop.avatar_url}` }}
-              height={115}
             />
-            <Card.Section
-              content={[
-              { text: `${shop.description}`, text70: true, grey10: true },
-            ]}
-            contentStyle={{ alignItems: "center" }}
-            />
+            <Card.Title>{shop.description}</Card.Title>
+ 
           </Card>
+          </TouchableOpacity>
           </View>
         )
       })
     } 
       </View>
-      <Feed></Feed>
       </ScrollView>
       
       </SafeAreaView>
-    // <Button title="Sign Out"onPress={() => {auth.signOut()}}></Button>
   )
 }
 
@@ -89,7 +82,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "center",
     flexDirection: "column",
-    backgroundColor: "#f5e7da",
+    backgroundColor: "#f5ece4",
+  },
+  titleCard: {
+    width: '90%',
+    borderRadius: 8,
+    marginBottom: 5,
   },
   card0: {
     flex: 1.5,
@@ -97,23 +95,26 @@ const styles = StyleSheet.create({
     padding: 10,
     width: "90%",
     justifyContent: "space-evenly",
-    marginTop: 10,
-    marginBottom: 10,
+    marginTop: 5,
+    marginBottom: 5,
+    borderRadius: 8
   },
   card1: {
     flex: 1.5,
     alignItems: "center",
     padding: 10,
-    width: "90%",
+    width: "100%",
     justifyContent: "space-evenly",
-    marginTop: 10,
-    marginBottom: 10,
+    marginTop: 5,
+    marginBottom: 5,
+    borderRadius: 8,
+    alignContent: 'center'
   },
   image: {
     width: "95%",
-    borderRadius: 10,
+    borderRadius: 8,
   },
   safeArea: {
-    marginBottom: 30
+    marginBottom: 35
   }
 });

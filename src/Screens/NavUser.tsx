@@ -1,14 +1,13 @@
-import { View, Text } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import { View, Text, SafeAreaView } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Homepage from "./IntroPage";
-import Login from "./login";
 import IndividualShop from "./IndividualShop";
-import { Entypo, AntDesign } from "@expo/vector-icons";
+import { Entypo, AntDesign, MaterialIcons } from "@expo/vector-icons";
 import CustomerHomeScreen from "./CustomerHomesceen";
 import QRCodePage from "./QRCodePage";
 import UserProfile from "./user-profile";
 import Menu from "../Components/Menu";
+import Feed from "../Components/Feed";
+import { SafeAreaSpacerView } from "react-native-ui-lib";
 
 const Tab = createBottomTabNavigator();
 
@@ -28,7 +27,6 @@ export default function NavUser() {
   };
 
   return (
-    // <NavigationContainer >
     <Tab.Navigator screenOptions={screenOptions}>
       <Tab.Screen
         name={"Home"}
@@ -42,6 +40,8 @@ export default function NavUser() {
                   justifyContent: "center",
                   paddingTop: 20,
                   marginLeft: 20,
+                  marginRight: -10
+
                 }}
               >
                 <Entypo
@@ -78,6 +78,7 @@ export default function NavUser() {
                   alignItems: "center",
                   justifyContent: "center",
                   paddingTop: 20,
+                  marginLeft: -35
                 }}
               >
                 <AntDesign
@@ -86,6 +87,27 @@ export default function NavUser() {
                   color={focused ? "#16247d" : "#111"}
                 />
                 <Text style={{ fontSize: 12, color: "#16247d" }}>QR CODE</Text>
+              </View>
+            );
+          },
+        }}
+      />
+      <Tab.Screen
+        name={"Feed"}
+        component={Feed}
+        options={{
+          tabBarIcon: ({ focused }) => {
+            return (
+              <View
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  paddingTop: 20,
+                  marginRight: -35
+                }}
+              >
+                <MaterialIcons name="local-offer" size={24} color="black" />
+                <Text style={{ fontSize: 12, color: "#16247d" }}>OFFERS</Text>
               </View>
             );
           },
@@ -115,6 +137,7 @@ export default function NavUser() {
                   justifyContent: "center",
                   paddingTop: 20,
                   marginRight: 20,
+                  marginLeft: -10
                 }}
               >
                 <AntDesign
@@ -129,6 +152,5 @@ export default function NavUser() {
         }}
       />
     </Tab.Navigator>
-    // </NavigationContainer>
   );
 }

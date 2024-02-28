@@ -1,21 +1,12 @@
+import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, Animated, ScrollView} from 'react-native';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
+import DisplayPreviousOrders from './display-previous-orders(child)';
+import { clearUserEmail, clearUserType, getUserEmail } from '../../utils/rememberUserType';
+import { auth } from '../config/firebase';
+import { Card, Button } from '@rneui/themed';
 import { useIsFocused } from "@react-navigation/native";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  Dimensions,
-  TouchableOpacity,
-  Animated,
-  ScrollView,
-} from "react-native";
-import axios from "axios";
-import { useState, useEffect } from "react";
-import DisplayPreviousOrders from "./display-previous-orders(child)";
-import { clearUserEmail, clearUserType, getUserEmail } from "../../utils/rememberUserType";
 import ProgressBar from "react-native-progress/Bar";
-import { auth } from "../config/firebase";
-import { Card, Button } from "@rneui/themed";
 
 export default function UserProfile() {
   interface User {
@@ -28,8 +19,11 @@ export default function UserProfile() {
   const [previousOrders, setPreviousOrders] = useState([]);
   const [profileImage, setProfileImage] = useState("");
   const [email, setEmail] = useState("");
-  const [progress, setProgress] = useState();
-  const newProgress = progress % 8;
+  const [CoffeCount, setCoffeCount] = useState(0);
+
+  let newCoffeeCount = CoffeCount % 7;
+  let coffeeProg = newCoffeeCount * 0.15;
+  let remainingCoffees = 7 - newCoffeeCount
 
   useEffect(() => {
     axios
@@ -48,7 +42,9 @@ export default function UserProfile() {
         })
         .then((res) => {
           setUserList(res.data.user);
-          setProgress(res.data.user[0].coffee_count);
+          setCoffeCount(res.data.user[0].coffee_count);
+          if (res.data.user[0].coffee_count + 1) {
+          }
         });
     }
   }, [isFocused]);
@@ -64,6 +60,10 @@ export default function UserProfile() {
     };
     fetchEmailFromStorage();
   }, []);
+
+  const updateCoffeeCount = (increment: number) => {
+    setCoffeCount((PrevCoffeeCount) => PrevCoffeeCount + increment);
+  };
 
   return (
     <ScrollView>
@@ -81,8 +81,8 @@ export default function UserProfile() {
             titleStyle={{ fontWeight: "bold", fontSize: 13 }}
             buttonStyle={{ backgroundColor: "#bf6240" }}
             onPress={() => {
-              clearUserType()
-              clearUserEmail()
+              clearUserType();
+              clearUserEmail();
               auth.signOut();
             }}>
             Sign Out
@@ -92,20 +92,17 @@ export default function UserProfile() {
       <View>
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-          <Card >
+          <Card containerStyle={{ borderRadius: 8 }}>
             <ProgressBar
-              width={200}
+              width={300}
+              progress={coffeeProg}
               height={20}
               color="#d2691e"
               borderWidth={2}
-              newProgress={newProgress}
             />
-            <Text >
-          4 more coffees to go before a free coffee!
-        </Text>
+            <Text>{remainingCoffees} more coffees to go before a free coffee!</Text>
           </Card>
         </View>
-        
       </View>
       <View>
         <Text style={styles.previousOrders}>Previous Orders</Text>
@@ -141,19 +138,18 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginBottom: 10,
     marginLeft: 15,
-
   },
   userName: {
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
   },
-  previousOrders:{
+
+  previousOrders: {
     fontSize: 18,
     fontWeight: "bold",
     marginTop: 20,
     marginBottom: 5,
     textAlign: "center",
-    
-  }
+  },
 });
