@@ -172,7 +172,7 @@ export default function BusinessProfile() {
               
             
             
-            <Button title="Add Offer" containerStyle={styles.button}
+            <Button title="Update" containerStyle={styles.button}
                     titleStyle={{fontWeight: "bold", fontSize: 13}}
                     buttonStyle={{backgroundColor: "#BF6240"}}
                     onPress={() => {
