@@ -134,7 +134,7 @@ export default function BusinessProfile() {
                 </View>
               )
             })}
-            <Button title="Add Item" containerStyle={styles.button}
+            <Button title="Add" containerStyle={styles.button}
                     titleStyle={{fontWeight: "bold", fontSize: 13}}
                     buttonStyle={{backgroundColor: "#BF6240"}}
                     onPress={() => {
