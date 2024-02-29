@@ -1,4 +1,3 @@
-
 import {
   View,
   Text,
@@ -25,22 +24,16 @@ import { FontAwesome } from "@expo/vector-icons";
 import logo from "../Images/7AiXuD-LogoMakr.png";
 import { getUserCoffee } from "../../utils/feedapi";
 
-
 export default function UserProfile() {
   interface User {
     avatar_url: string;
     name: string;
-    email:string;
   }
 
   const [isLoading, setIsLoading] = useState(true);
-
-  
-  const [userList, setUserList] = useState<User[]>([{email:""}]);
-
+  const [userList, setUserList] = useState<User[]>([]);
   const [previousOrders, setPreviousOrders] = useState([]);
   const [CoffeCount, setCoffeCount] = useState(0);
-
   const [showModal, setShowModal] = useState(false);
 
   let newCoffeeCount = CoffeCount % 7;
@@ -53,13 +46,8 @@ export default function UserProfile() {
     }
   };
 
-
   const isFocused = useIsFocused();
-
   useEffect(() => {
-    if (progress === 1 && !showModal) {
-      handleProgressBarComplete();
-
     if (isFocused) {
       getUserEmail().then((result) => {
         axios
@@ -70,7 +58,10 @@ export default function UserProfile() {
             setUserList(res.data.user);
             setCoffeCount(res.data.user[0].coffee_count);
 
-         return axios.get(
+            if (res.data.user[0].coffee_count + 1) {
+            }
+
+            return axios.get(
               `https://javarewards-api.onrender.com/orders?user_id=${res.data.user[0]._id}`
             );
           })
@@ -88,21 +79,9 @@ export default function UserProfile() {
             console.log(err);
           });
       });
-
+    
     }
-  }, [progress,isFocused]);
-
- 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      if (isFocused) {
-        getUserCoffee(userList[0].email).then((count) => setCoffeCount(count));
-      }
-    }, 5000)
-  
-    return () => clearInterval(intervalId)
   }, [isFocused]);
-
 
   useEffect(() => {
     if (coffeeProg === 1 && !showModal) {
@@ -112,7 +91,6 @@ export default function UserProfile() {
 
   const updateCoffeeCount = (increment: number) => {
     setCoffeCount((PrevCoffeeCount) => PrevCoffeeCount + increment);
-
   };
 
   const sortedArr = [];
@@ -150,9 +128,8 @@ export default function UserProfile() {
                 clearUserType();
                 clearUserEmail();
                 auth.signOut();
-
-              }}>
-
+              }}
+            >
               Sign Out
             </Button>
           </View>
@@ -164,18 +141,6 @@ export default function UserProfile() {
         </Text>
         <View style={{ justifyContent: "center", alignItems: "center" }}>
           <Card containerStyle={{ borderRadius: 8 }}>
-
-            <ProgressBar
-              width={270}
-              progress={progress}
-              height={20}
-              color="#d2691e"
-              borderWidth={2}
-              
-            />
-         <FontAwesome name="coffee" size={24} color="#bf6240" />
-            <Text>{7 - CoffeCount % 7} more coffees to go before a free coffee!</Text>
-
             <View style={styles.progress}>
               <ProgressBar
                 width={270}
@@ -184,14 +149,12 @@ export default function UserProfile() {
                 color="#d2691e"
                 borderWidth={2}
               />
-             
+              <FontAwesome name="coffee" size={24} color="#bf6240" />
             </View>
             <Text style={styles.coffeeProgress}>
-             
+              {remainingCoffees} more coffees to go before a free coffee!
             </Text>
-
           </Card>
-
           {coffeeProg === 1 ? (
             <Button
               titleStyle={{ color: "white", fontSize: 16, fontWeight: "bold" }}
@@ -206,13 +169,13 @@ export default function UserProfile() {
             />
           ) : null}
         </View>
+
         <Modal
           visible={showModal}
           transparent={true}
           animationType="fade"
           onRequestClose={() => setShowModal(false)}
         >
-
           <View
             style={{
               flex: 1,
@@ -250,14 +213,12 @@ export default function UserProfile() {
                 title="Close"
                 onPress={() => setShowModal(false)}
               />
-
             </View>
           </View>
         </Modal>
       </View>
       <View>
         <Text style={styles.previousOrders}>Previous Orders</Text>
-
 
         {previousOrders.length > 0 ? (
           sortedArr
@@ -272,7 +233,6 @@ export default function UserProfile() {
             </Text>
           </View>
         )}
-
       </View>
       <View style={{ marginBottom: 70, backgroundColor: "#f5ece4" }}></View>
     </ScrollView>
