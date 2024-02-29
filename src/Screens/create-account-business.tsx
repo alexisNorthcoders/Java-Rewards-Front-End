@@ -219,7 +219,6 @@ export default function CreateAccountBusiness() {
                 onChangeText={(text) => {
                   setDescription(text);
                 }}
-                multiline={true}
               />
           </View>
           </View>

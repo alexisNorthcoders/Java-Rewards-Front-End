@@ -1,4 +1,4 @@
-import { View, Text, TextInput, StyleSheet } from 'react-native'
+import { Alert, TextInput, StyleSheet } from 'react-native'
 import { Button, Card } from '@rneui/themed';
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useState } from 'react'
@@ -37,8 +37,20 @@ const UpdateBusinessProfile = ({route}) => {
                   marginVertical: 20,
                 }}
                 onPress={() => {
-                  updateShopData({...shop, description: newDesc })
-                .then((navigation.navigate("Nav")))}}
+                  if(!newDesc) {
+                    Alert.alert('All fields must be completed')
+                  } else {
+                    updateShopData({...shop, description: newDesc })
+                  .then((navigation.navigate("Nav"))
+
+                  )
+                  .catch((err) => {
+                    console.log(err)
+                    Alert.alert('Something went wrong. Please try again.')
+                  })}}
+                  
+
+                  }
               />
 
       </Card>

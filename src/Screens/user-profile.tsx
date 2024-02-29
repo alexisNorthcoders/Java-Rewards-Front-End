@@ -1,3 +1,4 @@
+
 import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, Animated, ScrollView, Modal } from 'react-native';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
@@ -10,6 +11,7 @@ import ProgressBar from "react-native-progress/Bar";
 import Loading from "./Loading";
 import logo from '../Images/7AiXuD-LogoMakr.png'
 import { getUserCoffee } from '../../utils/feedapi';
+        import { FontAwesome } from "@expo/vector-icons";
 
 export default function UserProfile() {
   interface User {
@@ -19,11 +21,11 @@ export default function UserProfile() {
   }
 
   const [isLoading, setIsLoading] = useState(true);
-  const currentUserId = 1;
+
+  
   const [userList, setUserList] = useState<User[]>([{email:""}]);
+
   const [previousOrders, setPreviousOrders] = useState([]);
-  const [profileImage, setProfileImage] = useState("");
-  const [email, setEmail] = useState("");
   const [CoffeCount, setCoffeCount] = useState(0);
   const [showModal, setShowModal] = useState(false)
 
@@ -36,32 +38,45 @@ export default function UserProfile() {
     }
   };
 
-  useEffect(() => {
-    getUserEmail().then((result) => {
-      axios
-        .post(`https://javarewards-api.onrender.com/users/email`, {
-          email: result.email,
-        })
-        .then((res) => {
-          setUserList(res.data.user);
-          setCoffeCount(res.data.user[0].coffee_count);
-          setIsLoading(false);
-         
-        });
-    })
-    axios
-      .get(`https://javarewards-api.onrender.com/orders?user_id=9`)
-      .then((res) => {
-        setPreviousOrders(res.data.orders[0].orders);
-      });
-  }, []);
+ const isFocused = useIsFocused();
+  
   useEffect(() => {
     if (progress === 1 && !showModal) {
       handleProgressBarComplete();
-    }
-  }, [progress]);
 
-  const isFocused = useIsFocused();
+    if (isFocused) {
+      getUserEmail().then((result) => {
+        axios
+          .post(`https://javarewards-api.onrender.com/users/email`, {
+            email: result.email,
+          })
+          .then((res) => {
+            setUserList(res.data.user);
+            setCoffeCount(res.data.user[0].coffee_count);
+
+         return axios.get(
+              `https://javarewards-api.onrender.com/orders?user_id=${res.data.user[0]._id}`
+            );
+          })
+          .then((res) => {
+            if (res.data.orders.length === 0) {
+              setIsLoading(false);
+              return;
+            } else {
+              setPreviousOrders(res.data.orders[0].orders);
+              setIsLoading(false);
+            }
+          })
+          .catch((err) => {
+            Alert.alert("Oops, something went wrong!");
+            console.log(err);
+          });
+      });
+
+    }
+  }, [progress,isFocused]);
+
+ 
   useEffect(() => {
     const intervalId = setInterval(() => {
       if (isFocused) {
@@ -76,13 +91,24 @@ export default function UserProfile() {
     
   };
 
+  const sortedArr = [];
+  if (previousOrders.length > 0) {
+    const sortedByDate = previousOrders.sort((a, b) => {
+      let dateA = new Date(a.date);
+      let dateB = new Date(b.date);
+      return dateB - dateA;
+    });
 
+    sortedArr.push(...sortedByDate);
+  }
 
   return isLoading ? (
     <Loading />
   ) : (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Profile</Text>
+      <View style={styles.headingContainer}>
+        <Text style={styles.title}>My Profile</Text>
+      </View>
       {userList.length > 0 && (
         <View style={styles.profileContainer}>
           <Image
@@ -100,28 +126,46 @@ export default function UserProfile() {
                 clearUserType();
                 clearUserEmail();
                 auth.signOut();
+
               }}>
+
               Sign Out
             </Button>
           </View>
         </View>
       )}
       <View>
-        <Text style={styles.previousOrders} >Loyality Progress bar</Text>
-        <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text style={styles.previousOrders}>
+          Buy 7 coffees and your next coffee is on us
+        </Text>
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
           <Card containerStyle={{ borderRadius: 8 }}>
+
             <ProgressBar
-              width={300}
+              width={270}
               progress={progress}
               height={20}
               color="#d2691e"
               borderWidth={2}
               
-
-
             />
+         <FontAwesome name="coffee" size={24} color="#bf6240" />
             <Text>{7 - CoffeCount % 7} more coffees to go before a free coffee!</Text>
+
+            <View style={styles.progress}>
+              <ProgressBar
+                width={270}
+                progress={coffeeProg}
+                height={20}
+                color="#d2691e"
+                borderWidth={2}
+              />
+             
+            </View>
+            <Text style={styles.coffeeProgress}>
+             
+            </Text>
+
           </Card>
         {progress === 1 ? <Button titleStyle={{ color: "white", fontSize: 16, fontWeight: "bold" }} buttonStyle={{ backgroundColor: "#bf6240", borderRadius: 8, marginTop: 5, height: 40 }} title="Click for Free Coffee" onPress={() => setShowModal(true)} /> : null}
         </View>
@@ -145,10 +189,22 @@ export default function UserProfile() {
       </View>
       <View>
         <Text style={styles.previousOrders}>Previous Orders</Text>
-        {previousOrders.slice(0, 10).map((item) => (
-          <DisplayPreviousOrders key={item.order_id} items={item} />
-        ))}
+
+
+        {previousOrders.length > 0 ? (
+          sortedArr
+            .slice(0, 10)
+            .map((item, index) => <DisplayPreviousOrders key={index} items={item} />)
+        ) : (
+          <View>
+            <Text style={{ textAlign: "center", marginTop: 10, fontSize: 16 }}>
+              No previous orders
+            </Text>
+          </View>
+        )}
+
       </View>
+      <View style={{marginBottom: 70, backgroundColor: '#f5ece4'}}></View>
     </ScrollView>
   );
 }
@@ -156,6 +212,10 @@ export default function UserProfile() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#f5ece4",
+    flexGrow: 1,
+  },
+  headingContainer: {
+    marginTop: 50,
   },
   title: {
     fontSize: 24,
@@ -167,12 +227,16 @@ const styles = StyleSheet.create({
   profileContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 20,
+    marginLeft: 14,
+    marginRight: 14,
+    backgroundColor: "white",
+    borderRadius: 8,
   },
   profileImage: {
-    width: 100,
-    height: 100,
+    width: 90,
+    height: 90,
     borderRadius: 50,
+    marginTop: 10,
     marginBottom: 10,
     marginLeft: 15,
   },
@@ -190,5 +254,14 @@ const styles = StyleSheet.create({
   },
   profileName: {
     marginLeft: 20,
+  },
+  coffeeProgress: {
+    marginTop: 8,
+    textAlign: "center",
+  },
+  progress: {
+    flexDirection: "row",
+    gap: 5,
+    alignItems: "center",
   },
 });

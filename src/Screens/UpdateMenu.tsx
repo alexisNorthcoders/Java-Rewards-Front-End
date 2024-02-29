@@ -2,6 +2,7 @@ import {
   Text,
   TextInput,
   StyleSheet,
+  Alert,
 } from "react-native";
 import { useState, useEffect} from "react";
 import { addMenuItem, getMenu } from "../../utils/api";
@@ -107,16 +108,21 @@ export default function UpdateMenu({route}) {
               marginVertical: 20,
             }}
             onPress={() => {
-              addMenuItem(email, menu, newMenuItem).then(() => {
-                setNewMenuItem(
-                  {item: "",
-                  cost: "",
-                  description: "",
-                  item_img: ""}
-                )
-                
-                navigation.navigate("Nav")
-              })
+              if(newMenuItem.item === '' || newMenuItem.cost === '' || newMenuItem.item_img === '' || newMenuItem.description === '') {
+                Alert.alert('All fields must be completed!')
+              } else {
+                addMenuItem(email, menu, newMenuItem).then(() => {
+                  setNewMenuItem(
+                    {item: "",
+                    cost: "",
+                    description: "",
+                    item_img: ""}
+                  )
+                  
+                  navigation.navigate("Nav")
+                })
+
+              }
             }
             }
           />
