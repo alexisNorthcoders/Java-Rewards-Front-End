@@ -71,12 +71,14 @@ export const formatDate = (dateString: string) => {
 };
 export function getOrdersByMonth(shop_id: string, year: string, month: string) {
   console.log("updating shop data");
-  return api.get(`/orders?shop_id=${shop_id}&year=${year}&month=${month}`).then(({ data: { orders } }) => orders[0].orders)
-    .catch(err => {
-      console.log(err)
-      return err;
-    })
-}
-export function getUserCoffee(email) {
-  return api.post(`/users/email`, { email: email }).then(({data})=> data.user[0].coffee_count).catch((err)=> console.log(err))
-}
+
+  return api.get(`/orders?shop_id=${shop_id}&year=${year}&month=${month}`).then(({data:{orders}})=> orders[0].orders)
+  .catch(err=> {console.log(err) 
+   return err;
+  })
+ }
+
+ export function getUserCoffee(email) {
+  return api.post(`/users/email`, {email}).then(({data}) => data.user[0].coffee_count).catch((err) => console.log(err))
+ }
+

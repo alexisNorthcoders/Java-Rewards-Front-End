@@ -1,17 +1,30 @@
 
-import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, Animated, ScrollView, Modal } from 'react-native';
-import axios from 'axios';
-import { useState, useEffect } from 'react';
-import DisplayPreviousOrders from './display-previous-orders(child)';
-import { clearUserEmail, clearUserType, getUserEmail } from '../../utils/rememberUserType';
-import { auth } from '../config/firebase';
-import { Card, Button } from '@rneui/themed';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Alert,
+  ScrollView,
+  Modal,
+} from "react-native";
+import axios from "axios";
+import { useState, useEffect } from "react";
+import DisplayPreviousOrders from "./display-previous-orders(child)";
+import {
+  clearUserEmail,
+  clearUserType,
+  getUserEmail,
+} from "../../utils/rememberUserType";
+import { auth } from "../config/firebase";
+import { Card, Button } from "@rneui/themed";
 import { useIsFocused } from "@react-navigation/native";
 import ProgressBar from "react-native-progress/Bar";
 import Loading from "./Loading";
-import logo from '../Images/7AiXuD-LogoMakr.png'
-import { getUserCoffee } from '../../utils/feedapi';
-        import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
+import logo from "../Images/7AiXuD-LogoMakr.png";
+import { getUserCoffee } from "../../utils/feedapi";
+
 
 export default function UserProfile() {
   interface User {
@@ -27,19 +40,22 @@ export default function UserProfile() {
 
   const [previousOrders, setPreviousOrders] = useState([]);
   const [CoffeCount, setCoffeCount] = useState(0);
-  const [showModal, setShowModal] = useState(false)
 
+  const [showModal, setShowModal] = useState(false);
 
-  const progress = CoffeCount % 7 === 0 ? 1 : (CoffeCount % 7) / 7;
+  let newCoffeeCount = CoffeCount % 7;
+  let coffeeProg = newCoffeeCount === 0 ? 1 : newCoffeeCount / 7;
+  let remainingCoffees = 7 - newCoffeeCount;
+
   const handleProgressBarComplete = () => {
-    console.log("bar completed")
-    if (CoffeCount % 7 === 0) {
+    if (newCoffeeCount === 0) {
       setShowModal(true);
     }
   };
 
- const isFocused = useIsFocused();
-  
+
+  const isFocused = useIsFocused();
+
   useEffect(() => {
     if (progress === 1 && !showModal) {
       handleProgressBarComplete();
@@ -87,8 +103,16 @@ export default function UserProfile() {
     return () => clearInterval(intervalId)
   }, [isFocused]);
 
-  const updateCoffeeCount = () => {
-    
+
+  useEffect(() => {
+    if (coffeeProg === 1 && !showModal) {
+      handleProgressBarComplete();
+    }
+  }, [coffeeProg]);
+
+  const updateCoffeeCount = (increment: number) => {
+    setCoffeCount((PrevCoffeeCount) => PrevCoffeeCount + increment);
+
   };
 
   const sortedArr = [];
@@ -167,7 +191,20 @@ export default function UserProfile() {
             </Text>
 
           </Card>
-        {progress === 1 ? <Button titleStyle={{ color: "white", fontSize: 16, fontWeight: "bold" }} buttonStyle={{ backgroundColor: "#bf6240", borderRadius: 8, marginTop: 5, height: 40 }} title="Click for Free Coffee" onPress={() => setShowModal(true)} /> : null}
+
+          {coffeeProg === 1 ? (
+            <Button
+              titleStyle={{ color: "white", fontSize: 16, fontWeight: "bold" }}
+              buttonStyle={{
+                backgroundColor: "#BF6240",
+                borderRadius: 8,
+                marginTop: 5,
+                height: 40,
+              }}
+              title="Click for Free Coffee"
+              onPress={() => setShowModal(true)}
+            />
+          ) : null}
         </View>
         <Modal
           visible={showModal}
@@ -175,11 +212,42 @@ export default function UserProfile() {
           animationType="fade"
           onRequestClose={() => setShowModal(false)}
         >
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
-            <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10 }}>
-              <Text style={{ fontSize: 30, textAlign: "justify" }}>Your next coffee is on us. Just show this message!</Text>
-              <Image source={logo} style={{ height: 200, width: 200, alignSelf: "center" }} />
-              <Button titleStyle={{ color: "white", fontSize: 16, fontWeight: "bold" }} buttonStyle={{ backgroundColor: "#bf6240", borderRadius: 8, marginTop: 5, height: 40 }} title="Close"
+
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+            }}
+          >
+            <View
+              style={{
+                backgroundColor: "white",
+                padding: 20,
+                borderRadius: 10,
+              }}
+            >
+              <Text style={{ fontSize: 30, textAlign: "justify" }}>
+                Your next coffee is on us. Just show this message!
+              </Text>
+              <Image
+                source={logo}
+                style={{ height: 200, width: 200, alignSelf: "center" }}
+              />
+              <Button
+                titleStyle={{
+                  color: "white",
+                  fontSize: 16,
+                  fontWeight: "bold",
+                }}
+                buttonStyle={{
+                  backgroundColor: "#BF6240",
+                  borderRadius: 8,
+                  marginTop: 5,
+                  height: 40,
+                }}
+                title="Close"
                 onPress={() => setShowModal(false)}
               />
 
@@ -194,7 +262,9 @@ export default function UserProfile() {
         {previousOrders.length > 0 ? (
           sortedArr
             .slice(0, 10)
-            .map((item, index) => <DisplayPreviousOrders key={index} items={item} />)
+            .map((item, index) => (
+              <DisplayPreviousOrders key={index} items={item} />
+            ))
         ) : (
           <View>
             <Text style={{ textAlign: "center", marginTop: 10, fontSize: 16 }}>
@@ -204,7 +274,7 @@ export default function UserProfile() {
         )}
 
       </View>
-      <View style={{marginBottom: 70, backgroundColor: '#f5ece4'}}></View>
+      <View style={{ marginBottom: 70, backgroundColor: "#f5ece4" }}></View>
     </ScrollView>
   );
 }
