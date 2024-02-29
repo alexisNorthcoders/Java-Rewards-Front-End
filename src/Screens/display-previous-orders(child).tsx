@@ -35,6 +35,7 @@ export default function DisplayPreviousOrders({ items }) {
       })}
 
       <Text>Total cost: £{items.totalCost}</Text>
+
     </Card>
   );
 }

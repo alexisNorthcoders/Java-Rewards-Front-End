@@ -20,10 +20,11 @@ type Order = {
     user_email: string;
     shop_email: string;
     items: [];
+    status?:string;
 };
 type PostedOrder = {
     totalCost: number;
-    order_id: number;
+    order_id?: number;
 };
 
 type Menu = MenuItem[];
@@ -39,8 +40,8 @@ export default function Menu({ route }: any) {
     const [state, setState] = useState<State>({ menu: [], isLoading: true });
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [postedOrder, setPostedOrder] = useState<PostedOrder>({ totalCost: 0 })
-    const [total, setTotal] = useState(0)
-    const { initPaymentSheet, presentPaymentSheet } = useStripe();
+    const [total, setTotal] :any= useState(0)
+    const { initPaymentSheet, presentPaymentSheet }:any = useStripe();
     const navigation = useNavigation();
 
     const initializePaymentSheet = async (totalCost: number) => {
@@ -79,7 +80,7 @@ export default function Menu({ route }: any) {
     };
     const handlePayment = async () => {
         const orderItems: any = []
-        const { email } = await getUserEmail()
+        const { email } :any= await getUserEmail()
         state.menu.forEach(item => {
             if (item.quantity > 0) {
                 orderItems.push({ price: item.cost, item_name: item.item, quantity: item.quantity })
@@ -93,7 +94,8 @@ export default function Menu({ route }: any) {
         const order: Order = {
             shop_email: shop_email,
             user_email: email,
-            items: orderItems
+            items: orderItems,
+            status: "paid"
         }
         const totalCost = state.menu.reduce((acc, item) => acc + item.cost * item.quantity, 0);
 
@@ -184,7 +186,7 @@ export default function Menu({ route }: any) {
 
     const handleOrder = async () => {
         const orderItems: any = []
-        const { email } = await getUserEmail()
+        const { email }:any = await getUserEmail()
 
         state.menu.forEach(item => {
             if (item.quantity > 0) {

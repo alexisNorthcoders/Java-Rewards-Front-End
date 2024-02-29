@@ -5,6 +5,7 @@ import SingleOrder from './SingleOrder';
 import { Card, Button } from "@rneui/themed";
 import { formatDate, updateOrderStatus } from '../../utils/feedapi';
 import { useState } from 'react';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function Swipe({ order, handleUpdateStatus }: any) {
     const [showCard, setShowCard] = useState(true)
@@ -22,11 +23,22 @@ export default function Swipe({ order, handleUpdateStatus }: any) {
 
                 return (<Card containerStyle={{ marginTop: 0, borderRadius: 8, padding: 0, backgroundColor: "white", marginHorizontal: 60, alignContent: "center", justifyContent: "center", marginBottom: 0, elevation: 3 }} >
 
-                    <Text style={{ fontSize: 30, fontWeight: "bold", color: "black", alignSelf: "center" }}>Order # {card.order_id}</Text>
+<View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+  <View style={{marginRight:20}}>
+    {card.status === "open" ? (
+      <MaterialIcons name="paid" size={25} color="red" />
+    ) : (
+      <MaterialIcons name="paid" size={25} color="green" />
+    )}
+  </View>
+  <Text style={{ fontSize: 30, fontWeight: "bold", color: "black",marginRight:20 }}>
+    Order # {card.order_id}
+  </Text>
+</View>
                     <SingleOrder items={order.items}></SingleOrder>
-                    <Text style={styles.description}>Customer #{card.user_id}</Text>
+                    <Text style={styles.description}>Customer #{card.user_id} </Text>
                     <Text style={styles.description}>{formatDate(card.date)}</Text>
-                    <Button onPress={() => { handleUpdateStatus(order.order_id) }} title="Close Order" titleStyle={{ fontWeight: "bold", fontSize: 13 }} buttonStyle={{ borderRadius: 8, marginLeft: width * 0.04, marginTop: 5, marginBottom: 5, width: 100, backgroundColor: "#bf6240", alignSelf: "center" }} accessibilityLabel="Change order status" />
+                  <Button onPress={() => { handleUpdateStatus(order.order_id) }} title="Close Order" titleStyle={{ fontWeight: "bold", fontSize: 13 }} buttonStyle={{ borderRadius: 8, marginLeft: width * 0.04, marginTop: 5, marginBottom: 5, width: 100, backgroundColor: "#bf6240", alignSelf: "center" }} accessibilityLabel="Change order status" />
 
 
                 </Card>
