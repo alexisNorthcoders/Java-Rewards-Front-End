@@ -26,7 +26,7 @@ export default function DisplayPreviousOrders({items}) {
     {
         itemsArr.map((item) => {
 
-            return <Text>{item.quantity} x {item.item_name} £{item.price}</Text>
+            return <Text key={`${item.item_name}_${Date.now()}`}>{item.quantity} x {item.item_name} £{item.price}</Text>
 
         })
     }
