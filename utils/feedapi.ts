@@ -75,3 +75,7 @@ export function getOrdersByMonth(shop_id:string,year:string,month:string){
    return err;
   })
  }
+
+ export function getUserCoffee(email) {
+  return api.post(`/users/email`, {email}).then(({data}) => data.user[0].coffee_count).catch((err) => console.log(err))
+ }

@@ -1,4 +1,12 @@
-import { View, Text, StyleSheet, Image, Alert, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Alert,
+  ScrollView,
+  Modal,
+} from "react-native";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import DisplayPreviousOrders from "./display-previous-orders(child)";
@@ -13,8 +21,8 @@ import { useIsFocused } from "@react-navigation/native";
 import ProgressBar from "react-native-progress/Bar";
 import Loading from "./Loading";
 import { FontAwesome } from "@expo/vector-icons";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { AutoFocus } from "expo-camera";
+import logo from "../Images/7AiXuD-LogoMakr.png";
+import { getUserCoffee } from "../../utils/feedapi";
 
 export default function UserProfile() {
   interface User {
@@ -26,10 +34,17 @@ export default function UserProfile() {
   const [userList, setUserList] = useState<User[]>([]);
   const [previousOrders, setPreviousOrders] = useState([]);
   const [CoffeCount, setCoffeCount] = useState(0);
+  const [showModal, setShowModal] = useState(false);
 
   let newCoffeeCount = CoffeCount % 7;
-  let coffeeProg = newCoffeeCount * 0.15;
+  let coffeeProg = newCoffeeCount === 0 ? 1 : newCoffeeCount / 7;
   let remainingCoffees = 7 - newCoffeeCount;
+
+  const handleProgressBarComplete = () => {
+    if (newCoffeeCount === 0) {
+      setShowModal(true);
+    }
+  };
 
   const isFocused = useIsFocused();
   useEffect(() => {
@@ -64,8 +79,15 @@ export default function UserProfile() {
             console.log(err);
           });
       });
+    
     }
   }, [isFocused]);
+
+  useEffect(() => {
+    if (coffeeProg === 1 && !showModal) {
+      handleProgressBarComplete();
+    }
+  }, [coffeeProg]);
 
   const updateCoffeeCount = (increment: number) => {
     setCoffeCount((PrevCoffeeCount) => PrevCoffeeCount + increment);
@@ -133,7 +155,67 @@ export default function UserProfile() {
               {remainingCoffees} more coffees to go before a free coffee!
             </Text>
           </Card>
+          {coffeeProg === 1 ? (
+            <Button
+              titleStyle={{ color: "white", fontSize: 16, fontWeight: "bold" }}
+              buttonStyle={{
+                backgroundColor: "#BF6240",
+                borderRadius: 8,
+                marginTop: 5,
+                height: 40,
+              }}
+              title="Click for Free Coffee"
+              onPress={() => setShowModal(true)}
+            />
+          ) : null}
         </View>
+
+        <Modal
+          visible={showModal}
+          transparent={true}
+          animationType="fade"
+          onRequestClose={() => setShowModal(false)}
+        >
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+            }}
+          >
+            <View
+              style={{
+                backgroundColor: "white",
+                padding: 20,
+                borderRadius: 10,
+              }}
+            >
+              <Text style={{ fontSize: 30, textAlign: "justify" }}>
+                Your next coffee is on us. Just show this message!
+              </Text>
+              <Image
+                source={logo}
+                style={{ height: 200, width: 200, alignSelf: "center" }}
+              />
+              <Button
+                titleStyle={{
+                  color: "white",
+                  fontSize: 16,
+                  fontWeight: "bold",
+                }}
+                buttonStyle={{
+                  backgroundColor: "#BF6240",
+                  borderRadius: 8,
+                  marginTop: 5,
+                  height: 40,
+                }}
+                title="Close"
+                onPress={() => setShowModal(false)}
+              />
+            </View>
+          </View>
+        </Modal>
       </View>
       <View>
         <Text style={styles.previousOrders}>Previous Orders</Text>
@@ -141,7 +223,9 @@ export default function UserProfile() {
         {previousOrders.length > 0 ? (
           sortedArr
             .slice(0, 10)
-            .map((item, index) => <DisplayPreviousOrders key={index} items={item} />)
+            .map((item, index) => (
+              <DisplayPreviousOrders key={index} items={item} />
+            ))
         ) : (
           <View>
             <Text style={{ textAlign: "center", marginTop: 10, fontSize: 16 }}>
@@ -150,7 +234,7 @@ export default function UserProfile() {
           </View>
         )}
       </View>
-      <View style={{marginBottom: 70, backgroundColor: '#f5ece4'}}></View>
+      <View style={{ marginBottom: 70, backgroundColor: "#f5ece4" }}></View>
     </ScrollView>
   );
 }
