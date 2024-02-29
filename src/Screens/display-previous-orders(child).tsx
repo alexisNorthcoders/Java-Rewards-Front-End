@@ -1,6 +1,4 @@
-import {
-  Text,
-} from "react-native";
+import { Text } from "react-native";
 import { Card } from "@rneui/themed";
 
 export default function DisplayPreviousOrders({ items }) {
@@ -28,9 +26,9 @@ export default function DisplayPreviousOrders({ items }) {
       </Text>
       <Text>Ordered on {f.format(orderDate)}</Text>
 
-      {itemsArr.map((item) => {
+      {itemsArr.map((item, index) => {
         return (
-          <Text key={item._id}>
+          <Text key={index}>
             {item.quantity} x {item.item_name} £{item.price}
           </Text>
         );

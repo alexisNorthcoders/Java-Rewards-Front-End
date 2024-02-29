@@ -141,7 +141,7 @@ export default function UserProfile() {
         {previousOrders.length > 0 ? (
           sortedArr
             .slice(0, 10)
-            .map((item) => <DisplayPreviousOrders items={item} />)
+            .map((item, index) => <DisplayPreviousOrders key={index} items={item} />)
         ) : (
           <View>
             <Text style={{ textAlign: "center", marginTop: 10, fontSize: 16 }}>
@@ -150,6 +150,7 @@ export default function UserProfile() {
           </View>
         )}
       </View>
+      <View style={{marginBottom: 70, backgroundColor: '#f5ece4'}}></View>
     </ScrollView>
   );
 }

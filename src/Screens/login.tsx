@@ -18,7 +18,7 @@ import {
 } from "firebase/auth";
 import background from "../../images/login_background.jpg";
 import { useNavigation } from "@react-navigation/native";
-import { useAccountContext} from "../contexts/AccountContext";
+import { useAccountContext } from "../contexts/AccountContext";
 import { storeUserEmail, storeUserType } from "../../utils/rememberUserType";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -27,31 +27,32 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [loginError, setLoginError] = useState("")
+  const [loginError, setLoginError] = useState("");
 
-  const { accountType } = useAccountContext()
+  const { accountType } = useAccountContext();
 
-  const navigation = useNavigation<any>()
+  const navigation = useNavigation<any>();
 
   const signIn = async () => {
     setLoading(true);
 
     try {
-      await storeUserType(accountType)
-       await storeUserEmail(email)
+      await storeUserType(accountType);
+      await storeUserEmail(email);
       const res = await signInWithEmailAndPassword(auth, email, password);
     } catch (err: any) {
       console.log(err);
       Alert.alert("Sign in failed, please try again");
     } finally {
-      
       setLoading(false);
     }
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <ImageBackground source={background} style={styles.background}
+      <ImageBackground
+        source={background}
+        style={styles.background}
         resizeMode="cover"
       >
         <View style={styles.inputContainer}>
@@ -62,36 +63,39 @@ export default function Login() {
             </View>
           )}
 
-        {loginError && (
-            <View >
+          {loginError && (
+            <View>
               <Text style={styles.error}>{loginError}</Text>
             </View>
-          )}  
-          
+          )}
+
           <Input
             value={email}
-            inputContainerStyle={{borderBottomWidth:0}}
+            inputContainerStyle={{ borderBottomWidth: 0 }}
             style={styles.input}
             placeholder="Email"
             autoCapitalize="none"
             onChangeText={(text) => {
               setEmail(text);
             }}
-            leftIcon={{type: 'font-awesome', name:'envelope', color: 'white'}}
+            leftIcon={{
+              type: "font-awesome",
+              name: "envelope",
+              color: "white",
+            }}
           />
 
           <Input
             value={password}
-            
             style={styles.input}
-            inputContainerStyle={{borderBottomWidth:0}}
+            inputContainerStyle={{ borderBottomWidth: 0 }}
             secureTextEntry={true}
             placeholder="Password"
             autoCapitalize="none"
             onChangeText={(text) => {
               setPassword(text);
             }}
-            leftIcon={{type: 'font-awesome', name:'key', color: 'white'}}
+            leftIcon={{ type: "font-awesome", name: "key", color: "white" }}
           ></Input>
         </View>
 
@@ -100,17 +104,18 @@ export default function Login() {
             <ActivityIndicator size="large" color="0000ff" />
           ) : (
             <>
-              <TouchableOpacity onPress={() => {
-                if(!email || !password) {
-                  setLoginError("Email and password are required")
-                  return
-                } else {
-                  setLoginError("")
-                  signIn()
-
-                }
-                
-                }} style={styles.button}>
+              <TouchableOpacity
+                onPress={() => {
+                  if (!email || !password) {
+                    setLoginError("Email and password are required");
+                    return;
+                  } else {
+                    setLoginError("");
+                    signIn();
+                  }
+                }}
+                style={styles.button}
+              >
                 <Text style={styles.buttonText}>Login</Text>
               </TouchableOpacity>
               <Text style={styles.orText}>Or</Text>
@@ -161,7 +166,7 @@ const styles = StyleSheet.create({
     width: 300,
     borderColor: "#BF6240",
     borderWidth: 1,
-    fontSize: 14
+    fontSize: 14,
   },
   inputContainer: {
     width: "90%",
@@ -202,7 +207,8 @@ const styles = StyleSheet.create({
     padding: 10,
     color: "white",
     textDecorationStyle: "solid",
-    textDecorationLine: "underline"
+    textDecorationLine: "underline",
+    fontWeight: 'bold'
   },
   orText: {
     color: "white",
