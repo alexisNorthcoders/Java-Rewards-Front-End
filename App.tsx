@@ -7,7 +7,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import UserProfile from "./src/Screens/user-profile";
 import { StripeProvider } from '@stripe/stripe-react-native';
 import { Alert } from "react-native";
-
+import Constants from 'expo-constants'
 
 const Stack = createNativeStackNavigator();
 
@@ -26,10 +26,10 @@ export default function App() {
     getPermissions();
   }, []);
 
-  
+
   return (
     <StripeProvider
-    publishableKey="pk_test_51OkRuMIEw4TLc4pSBaJKzQx2JlNMxJxVs4orWx4CUWwNwf4WkNpXCS6Z0PydUSWdK32vuYBPNphYrDrBAbYh4tim00TQesbcaB"
+    publishableKey={Constants.expoConfig?.extra?.stripe}
     urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
     merchantIdentifier="merchant.com.{{JavaRewards}}" // required for Apple Pay
   >
@@ -40,17 +40,3 @@ export default function App() {
   );
 }
 
-{/* <UserProvider>
-      <RootNavigation/>
-    </UserProvider> */}
-
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     marginTop: Constants.statusBarHeight
-//   },
-// });

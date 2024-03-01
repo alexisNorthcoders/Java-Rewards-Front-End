@@ -36,7 +36,8 @@ export default {
       firebaseStorageBucket: process.env.FIREBASE_STORAGE_BUCKET,
       firebaseMessagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
       firebaseAppId: process.env.FIREBASE_APP_ID,
-      firebaseMeasurementId: process.env.FIREBASE_MEASUREMENT_ID
+      firebaseMeasurementId: process.env.FIREBASE_MEASUREMENT_ID,
+      stripe:process.env.STRIPE
     },
     "plugins": [
       [

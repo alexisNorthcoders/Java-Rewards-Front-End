@@ -61,3 +61,18 @@ A QR code will be generated that can be scanned using the Expo Go app on Android
 If you have an iOS simulator installed you can press `i` in the terminal to run the app in the simulator.
 
 If you have an Android simulator installed you can press `a` in the terminal to run the app in the simulator.
+
+## Screenshots
+
+<img src="images/ss1.jpg" alt="Screenshot 1" width="200px">
+<img src="images/ss2.jpg" alt="Screenshot 2" width="200px">
+<img src="images/ss3.jpg" alt="Screenshot 3" width="200px">
+<img src="images/ss4.jpg" alt="Screenshot 4" width="200px">
+<img src="images/ss5.jpg" alt="Screenshot 5" width="200px">
+<img src="images/ss6.jpg" alt="Screenshot 6" width="200px">
+<img src="images/ss7.jpg" alt="Screenshot 7" width="200px">
+<img src="images/ss8.jpg" alt="Screenshot 8" width="200px">
+<img src="images/ss9.jpg" alt="Screenshot 9" width="200px">
+<img src="images/ss10.jpg" alt="Screenshot 10" width="200px">
+<img src="images/ss11.jpg" alt="Screenshot 11" width="200px">
+<img src="images/ss12.jpg" alt="Screenshot 12" width="200px">
